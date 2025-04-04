@@ -21,7 +21,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "ce8fb6ea3b200d6ff0e1a9967ff07a6dbbb53ba7"
+      "hash": "fa57e97fff6563f1c1739856852707a7ffc78117"
     },
     "com.nebulateme.behaviortree": {
       "version": "https://github.com/Nebulate-me/Behavior-Tree.git",
@@ -35,21 +35,21 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "f0b34d96bf720e9f4d59d7aaf459d8cf0c48c260"
+      "hash": "542c8b20d2e1645a6c35394b85b2f0954553feba"
     },
     "com.nebulateme.signals": {
       "version": "https://github.com/Nebulate-me/SignalsHub.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "911dde27854009901a6177686e3fe8e657cff2fa"
+      "hash": "4db048c3ae9b2af7ea31674bd59f2c2673efa940"
     },
     "com.nebulateme.utilities": {
       "version": "https://github.com/Nebulate-me/Unity-Utilities.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "3744e29e349211fc13adf964e8f098fb5ae35685"
+      "hash": "ca8f61ba8a3e3a891e380c75221783658fc14080"
     },
     "com.unity.2d.animation": {
       "version": "10.1.3",
@@ -374,7 +374,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.8.7",
+      "version": "1.8.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {
