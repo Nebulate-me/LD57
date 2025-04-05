@@ -5,7 +5,6 @@ using _Scripts.Cards;
 using _Scripts.Utils;
 using ModestTree;
 using UnityEngine;
-using Utilities.Monads;
 using Utilities.Prefabs;
 using Zenject;
 
@@ -88,9 +87,9 @@ namespace _Scripts.Rooms
             if (!GetAdjacentDirections(gridPosition, out var adjacentOpenDirections, out var adjacentClosedDirections))
                 return false;
 
-            Debug.Log($"TryGetValidDirection > gridPosition {gridPosition}, " +
-                      $"adjacentOpenDirections {adjacentOpenDirections.Select(d => Enum.GetName(typeof(RoomDirection), d)).Join(",")}, " +
-                      $"adjacentClosedDirections {adjacentClosedDirections.Select(d => Enum.GetName(typeof(RoomDirection), d)).Join(",")}");
+            // Debug.Log($"TryGetValidDirection > gridPosition {gridPosition}, " +
+            //           $"adjacentOpenDirections {adjacentOpenDirections.Select(d => Enum.GetName(typeof(RoomDirection), d)).Join(",")}, " +
+            //           $"adjacentClosedDirections {adjacentClosedDirections.Select(d => Enum.GetName(typeof(RoomDirection), d)).Join(",")}");
             if (IsValidDirection(currentDirection, selectedRoomCardView.Dto.OpenDirections, adjacentOpenDirections, adjacentClosedDirections))
                 return true;
 
@@ -202,5 +201,7 @@ namespace _Scripts.Rooms
             handManager.RefillHand();
             roomGhostInstance.gameObject.SetActive(false);
         }
+
+        public IReadOnlyList<DungeonRoomView> Rooms => rooms;
     }
 }

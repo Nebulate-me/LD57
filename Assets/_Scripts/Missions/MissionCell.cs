@@ -1,9 +1,15 @@
+using System;
+using UnityEngine;
+
 namespace _Scripts.Missions
 {
-    internal enum MissionCell
+    [Serializable]
+    public class MissionCell
     {
-        Any = 0,
-        Room = 1,
-        Empty = 2
+        [SerializeField] private MissionCellType type = MissionCellType.Room;
+        [SerializeField] private Vector2Int position;
+
+        public MissionCellType Type => type;
+        public Vector2Int Position => position;
     }
 }

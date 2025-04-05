@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace _Scripts.Missions
@@ -6,6 +7,9 @@ namespace _Scripts.Missions
     public class Mission : ScriptableObject
     {
         [SerializeField] private string missionName;
-        [SerializeField] private MissionCell[][] pattern = {};
+        [SerializeField] private List<MissionCell> pattern = new();
+
+        public string MissionName => missionName;
+        public List<MissionCell> Pattern => pattern;
     }
 }

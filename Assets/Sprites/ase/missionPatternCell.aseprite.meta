@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e6d23aa6ccc32d94b86779fcc888e7ac
+guid: 748bca8b0c239214096cc1cc52a69a4c
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -124,7 +124,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: base
     originalName: 
-    pivot: {x: 0.5, y: 0.3}
+    pivot: {x: 0.5, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -132,8 +132,8 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 240
-      height: 200
+      width: 6
+      height: 6
     spriteID: d2354cc422a3b414288dea94ec481347
     spriteBone: []
     spriteOutline: []
@@ -152,14 +152,14 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: cardLayout
+    - name: missionPatternCell
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: -90
-        y: -60
-        width: 240
-        height: 200
+        x: 0
+        y: 0
+        width: 6
+        height: 6
       spriteId: d2354cc422a3b414288dea94ec481347
     linkedCells: []
     parentIndex: -1
@@ -179,4 +179,4 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 60, y: 80}
+  canvasSize: {x: 6, y: 6}
