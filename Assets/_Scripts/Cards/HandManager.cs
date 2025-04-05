@@ -1,20 +1,21 @@
-using System;
 using System.Collections.Generic;
+using _Scripts.Utils;
 using UnityEngine;
 using Utilities;
+using Utilities.Monads;
 using Utilities.Prefabs;
 using Zenject;
 
 namespace _Scripts.Cards
 {
-    public class HandManager : MonoBehaviour
+    public class HandManager : MonoBehaviour, IHandManager
     {
         [SerializeField] private GameObject roomCardPrefab;
         [SerializeField] private RectTransform roomCardContainer;
         [SerializeField] private int handSize = 5;
 
-        private List<RoomCard> cards = new();
-
+        private readonly List<RoomCardView> cardViews = new();
+        
         [Inject] private IDeckManager deckManager;
         [Inject] private IPrefabPool prefabPool;
 
@@ -25,15 +26,15 @@ namespace _Scripts.Cards
             RefillHand();
         }
 
-        private void RefillHand()
+        public void RefillHand()
         {
-            while (cards.Count < handSize)
+            while (cardViews.Count < handSize)
             {
                 if (deckManager.TryDraw(out var card))
                 {
-                    cards.Add(card);
-                    var cardObject = prefabPool.Spawn(roomCardPrefab, roomCardContainer);
-                    cardObject.GetComponent<RoomCardView>().SetUp(card);
+                    var cardView = prefabPool.Spawn(roomCardPrefab, roomCardContainer).GetComponent<RoomCardView>();
+                    cardView.SetUp(card);
+                    cardViews.Add(cardView);
                 }
                 else
                 {
@@ -41,6 +42,49 @@ namespace _Scripts.Cards
                     break;
                 }
             }
+        }
+
+        public IMaybe<RoomCardView> SelectedRoomCardView { get; private set; } = Maybe.Empty<RoomCardView>(); 
+        public bool TryPlaySelectRoomCard()
+        {
+            if (SelectedRoomCardView.TryGetValue(out var cardView))
+            {
+                cardViews.Remove(cardView);
+                prefabPool.Despawn(cardView.gameObject);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool SelectRoomCard(RoomCard card)
+        {
+            SelectedRoomCardView = Maybe.Empty<RoomCardView>();
+            foreach (var cardView in cardViews)
+            {
+                if (cardView.Card == card)
+                {
+                    cardView.Select();
+                    SelectedRoomCardView = Maybe.Of(cardView);
+                }
+                else
+                {
+                    cardView.Deselect();
+                }
+            }
+            return true;
+        }
+
+        public bool DeselectRoomCard()
+        {
+            if (SelectedRoomCardView.TryGetValue(out var cardView))
+            {
+                cardView.Deselect();
+                return true;
+            }
+
+            return false;
         }
     }
 }

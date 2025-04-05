@@ -45,6 +45,7 @@ namespace _Scripts.Cards
 
             card = cards.First();
             cards.RemoveAt(0);
+            UpdateRemainingCardsText();
             return true;
         }
 

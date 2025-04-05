@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using _Scripts.Cards;
-using TMPro;
 using UnityEngine;
 
 namespace _Scripts.Rooms
@@ -11,6 +10,7 @@ namespace _Scripts.Rooms
         [SerializeField] private string roomName;
         [SerializeField] private Sprite sprite;
         [SerializeField] private List<RoomDirection> openDirections = new();
+        [SerializeField] private List<RoomDirection> rotations = new(); 
 
         public string RoomName => roomName;
         public Sprite Sprite => sprite;
