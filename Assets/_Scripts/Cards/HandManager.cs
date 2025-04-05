@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Rooms;
 using _Scripts.Utils;
 using UnityEngine;
 using Utilities;
@@ -51,6 +52,7 @@ namespace _Scripts.Cards
             {
                 cardViews.Remove(cardView);
                 prefabPool.Despawn(cardView.gameObject);
+                SelectedRoomCardView = Maybe.Empty<RoomCardView>();
 
                 return true;
             }

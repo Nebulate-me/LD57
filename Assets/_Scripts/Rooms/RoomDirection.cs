@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Utilities;
 
 namespace _Scripts.Rooms
 {
@@ -64,6 +67,12 @@ namespace _Scripts.Rooms
             if (vector == Vector2Int.left) return RoomDirection.West;
             if (vector == Vector2Int.down) return RoomDirection.South;
             throw new ArgumentOutOfRangeException(nameof(vector), vector, $"Invalid Vector to convert: {vector}");
+        }
+
+        public static List<RoomDirection> InvertList(IEnumerable<RoomDirection> directions)
+        {
+            return EnumExtensions.GetAllItems<RoomDirection>().Where(direction => !directions.Contains(direction))
+                .ToList();
         }
     }
 }

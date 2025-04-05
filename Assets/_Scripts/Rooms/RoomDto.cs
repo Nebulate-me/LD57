@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using _Scripts.Rooms;
 using UnityEngine;
 
-namespace _Scripts.Cards
+namespace _Scripts.Rooms
 {
     [Serializable]
     public class RoomDto

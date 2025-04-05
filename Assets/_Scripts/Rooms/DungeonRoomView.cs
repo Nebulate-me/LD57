@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using _Scripts.Cards;
 using UnityEngine;
 
 namespace _Scripts.Rooms
@@ -9,16 +8,23 @@ namespace _Scripts.Rooms
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
 
-        public Vector2Int GridPosition { get; set; }
-        public List<RoomDirection> OpenDirections = new();
+        [Header("Do Not Edit")] 
+        [SerializeField] private Vector2Int gridPosition;
+        [SerializeField] private RoomDirection direction;
+        [SerializeField] private List<RoomDirection> openDirections = new();
+        
+        public Vector2Int GridPosition => gridPosition;
+        public RoomDirection Direction => direction;
+        public List<RoomDirection> OpenDirections => openDirections;
 
-        public void SetUp(RoomDto dto, Vector2Int gridPosition, RoomDirection direction)
+        public void SetUp(RoomDto dto, Vector2Int initialGridPosition, RoomDirection initialDirection)
         {
-            GridPosition = gridPosition;
+            gridPosition = initialGridPosition;
             spriteRenderer.sprite = dto.Sprite;
+            direction = initialDirection;
             transform.rotation = direction.ToRotation();
 
-            OpenDirections = dto.OpenDirections.Select(openDirection => openDirection.Rotate(direction)).ToList();
+            openDirections = dto.OpenDirections.Select(openDirection => openDirection.Rotate(direction)).ToList();
         }
     }
 }
