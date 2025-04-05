@@ -74,6 +74,12 @@ namespace _Scripts.Rooms
 
             if (Input.GetMouseButtonDown(0)) 
                 PlaceRoom(selectedRoomCardView.Dto, gridPosition);
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                roomGhostInstance.gameObject.SetActive(false);
+                handManager.DeselectRoomCard();   
+            }
         }
 
         private bool TryGetValidDirection(RoomCardView selectedRoomCardView, Vector2Int gridPosition,
@@ -202,5 +208,17 @@ namespace _Scripts.Rooms
         }
 
         public IReadOnlyList<DungeonRoomView> Rooms => rooms;
+        public Bounds GetRoomBounds()
+        {
+            var minX = rooms.Min(room => room.GridPosition.x);
+            var minY = rooms.Min(room => room.GridPosition.y);
+            var maxX = rooms.Max(room => room.GridPosition.x);
+            var maxY = rooms.Max(room => room.GridPosition.y);
+
+            var center = new Vector3((minX + maxX) / 2f, (minY + maxX) / 2f);
+            var size = new Vector3(maxX - minX, maxY - minY);
+            
+            return new Bounds(center, size);
+        }
     }
 }

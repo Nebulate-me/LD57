@@ -12,12 +12,13 @@ namespace _Scripts.Missions
         [SerializeField] private string missionName;
         [SerializeField] private List<MissionCell> pattern;
         [SerializeField] private List<RoomDto> rewardCards;
+        [SerializeField] private bool mirrorPattern;
 
         public MissionDto(Mission mission)
         {
             missionName = mission.MissionName;
             pattern = mission.Pattern;
-            rewardCards = mission.Rewards.Select(reward => reward.ToDto()).ToList();
+            rewardCards = mission.Rewards.Select(reward => reward.ToDto()).ToList(); ;
         }
         
         public string MissionName => missionName;

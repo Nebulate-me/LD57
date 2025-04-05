@@ -5,6 +5,7 @@ using _Scripts.Rooms;
 using _Scripts.Utils;
 using Signals;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Utilities;
 using Utilities.Monads;
 using Utilities.Prefabs;
@@ -122,10 +123,10 @@ namespace _Scripts.Missions
 
         private List<MissionCell> NormalizePattern(List<MissionCell> missionDtoPattern)
         {
-            var normalizeShift = new Vector2Int(missionDtoPattern.Min(cell => cell.Position.x), missionDtoPattern.Min(cell => cell.Position.y));
+            var firstPatternCell = missionDtoPattern.First();
+            var normalizeShift = new Vector2Int(firstPatternCell.Position.x, firstPatternCell.Position.y);
             return missionDtoPattern
                 .Select(cell => new MissionCell(cell.Type, cell.Position - normalizeShift))
-                .OrderBy(cell => cell.Position.ManhattanDistance())
                 .ToList();
         }
         

@@ -82,6 +82,7 @@ namespace _Scripts.Cards
         {
             if (SelectedRoomCardView.TryGetValue(out var cardView))
             {
+                SelectedRoomCardView = Maybe.Empty<RoomCardView>();
                 cardView.Deselect();
                 return true;
             }

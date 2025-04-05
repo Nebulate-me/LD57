@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
+  - component: {fileID: 330585548}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -252,7 +253,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 30
   orthographic: 0
   orthographic size: 2.8125
   m_Depth: -1
@@ -330,6 +331,23 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &330585548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c208cecb7940d0959f1ddaf4afe6e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 330585545}
+  cameraPositionOffset: {x: 0, y: 1, z: 0}
+  zoomSpeed: 2
+  minZoom: 30
+  maxZoom: 60
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,7 +653,8 @@ PrefabInstance:
       value: Move
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2764009579904583258, guid: 3e23e730c728f924aa2942ff699deeda, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e23e730c728f924aa2942ff699deeda, type: 3}
@@ -736,7 +755,7 @@ MonoBehaviour:
   dungeonRoomPrefab: {fileID: 8651394372544261446, guid: ff0f4c226b3a3644e9da2492e0923455, type: 3}
   dungeonRoomGhostPrefab: {fileID: 8651394372544261446, guid: 61b3776979716db42a914a51b9e04143, type: 3}
   startingRoom: {fileID: 11400000, guid: b01aaed4d392196429e16164675738c1, type: 2}
-  mousePositionOffset: {x: 0, y: 0.5}
+  mousePositionOffset: {x: 0, y: 0}
 --- !u!114 &952633112 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4178347808312068466, guid: a87bc171c382cee41b6736148e700fa5, type: 3}
@@ -767,14 +786,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 262065868150238379, guid: a87bc171c382cee41b6736148e700fa5, type: 3}
-      propertyPath: m_Spacing
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 262065868150238379, guid: a87bc171c382cee41b6736148e700fa5, type: 3}
-      propertyPath: m_ChildForceExpandWidth
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 339861239457740774, guid: a87bc171c382cee41b6736148e700fa5, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -875,14 +886,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 4947430730015512087, guid: a87bc171c382cee41b6736148e700fa5, type: 3}
-      propertyPath: availableMissions.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4947430730015512087, guid: a87bc171c382cee41b6736148e700fa5, type: 3}
-      propertyPath: 'availableMissions.Array.data[2]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 6d5ff557b975d24468866ccd193794ef, type: 2}
     - target: {fileID: 5110373662679856584, guid: a87bc171c382cee41b6736148e700fa5, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
