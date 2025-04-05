@@ -15,7 +15,7 @@ namespace _Scripts.Rooms
         public Sprite Sprite => sprite;
         public List<RoomDirection> OpenDirections => openDirections;
 
-        public RoomDto ToCard()
+        public RoomDto ToDto()
         {
             return new RoomDto(this);
         }

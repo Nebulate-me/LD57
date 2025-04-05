@@ -26,7 +26,7 @@ namespace _Scripts.Cards
             {
                 for (var i = 0; i < initialRoom.Amount; i++)
                 {
-                    cards.Add(initialRoom.Room.ToCard());   
+                    cards.Add(initialRoom.Room.ToDto());   
                 }
             }
             randomService.ShuffleInPlace(cards);
@@ -53,6 +53,7 @@ namespace _Scripts.Cards
         public void Bury(List<RoomDto> cardsToBury)
         {
             cards.AddRange(cardsToBury);
+            UpdateRemainingCardsText();
         }
     }
 }

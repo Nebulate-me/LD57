@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using _Scripts.Cards;
+using _Scripts.Missions;
+using _Scripts.Rooms;
 using DITools;
 using UnityEngine;
 using Utilities.Prefabs;
@@ -15,6 +17,8 @@ namespace _Scripts.DI
         
         [SerializeField] private DeckManager deckManager;
         [SerializeField] private HandManager handManager;
+        [SerializeField] private DungeonGridManager dungeonGridManager;
+        [SerializeField] private MissionManager missionManager;
 
         [Header("Do Not Edit")]
         [SerializeField] private Camera uiCamera;
@@ -39,6 +43,8 @@ namespace _Scripts.DI
 
             Container.BindInterfacesTo<HandManager>().FromInstance(handManager).AsSingle();
             Container.BindInterfacesTo<DeckManager>().FromInstance(deckManager).AsSingle();
+            Container.BindInterfacesTo<DungeonGridManager>().FromInstance(dungeonGridManager).AsSingle();
+            Container.BindInterfacesTo<MissionManager>().FromInstance(missionManager).AsSingle();
         }
 
         private void OnDisable()

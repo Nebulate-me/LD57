@@ -1,10 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
 using _Scripts.Utils;
 using ModestTree;
+using Signals;
 using UnityEngine;
+using Utilities;
 using Utilities.Prefabs;
 using Zenject;
 
@@ -33,12 +34,8 @@ namespace _Scripts.Rooms
             roomGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
                 .GetComponent<DungeonRoomGhostView>();
 
-            var startingRoomView = prefabPool.Spawn(dungeonRoomPrefab, roomContainer).GetComponent<DungeonRoomView>();
             var startingRoomPosition = new Vector2Int(); // 0, 0
-            startingRoomView.SetUp(startingRoom.ToCard(), startingRoomPosition,
-                RoomDirection.North); // Direction should be irrelevant
-            startingRoomView.transform.position = GridToWorld(startingRoomPosition);
-            rooms.Add(startingRoomView);
+            PlaceRoom(startingRoom.ToDto(), startingRoomPosition);
         }
 
         private void Update()
@@ -76,7 +73,7 @@ namespace _Scripts.Rooms
                 RotateGhostView(selectedRoomCardView, gridPosition, Input.mouseScrollDelta.y > 0);
 
             if (Input.GetMouseButtonDown(0)) 
-                BuildRoom(selectedRoomCardView.Dto, gridPosition);
+                PlaceRoom(selectedRoomCardView.Dto, gridPosition);
         }
 
         private bool TryGetValidDirection(RoomCardView selectedRoomCardView, Vector2Int gridPosition,
@@ -93,7 +90,7 @@ namespace _Scripts.Rooms
             if (IsValidDirection(currentDirection, selectedRoomCardView.Dto.OpenDirections, adjacentOpenDirections, adjacentClosedDirections))
                 return true;
 
-            foreach (var roomDirection in EnumExtensions.GetAllValues<RoomDirection>())
+            foreach (var roomDirection in EnumExtensions.GetAllItems<RoomDirection>())
             {
                 if (IsValidDirection(roomDirection, selectedRoomCardView.Dto.OpenDirections,
                         adjacentOpenDirections, adjacentClosedDirections))
@@ -188,7 +185,7 @@ namespace _Scripts.Rooms
                     adjacentOpenDirections, adjacentClosedDirections)) currentDirection = invertedRotatedDirection;
         }
 
-        private void BuildRoom(RoomDto selectedRoomDto, Vector2Int gridPosition)
+        private void PlaceRoom(RoomDto selectedRoomDto, Vector2Int gridPosition)
         {
             var worldPosition = GridToWorld(gridPosition);
             var dungeonRoom = prefabPool.Spawn(dungeonRoomPrefab, roomContainer)
@@ -200,6 +197,8 @@ namespace _Scripts.Rooms
             handManager.TryPlaySelectRoomCard();
             handManager.RefillHand();
             roomGhostInstance.gameObject.SetActive(false);
+            
+            SignalsHub.DispatchAsync(new RoomPlacedSignal(dungeonRoom));
         }
 
         public IReadOnlyList<DungeonRoomView> Rooms => rooms;

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Utilities;
 using Utilities.Prefabs;
@@ -8,9 +9,10 @@ using Zenject;
 
 namespace _Scripts.Missions
 {
-    public class MissionCardView : MonoBehaviour, IPoolableResource
+    public class MissionCardView : MonoBehaviour, IPoolableResource, IPointerClickHandler
     {
         [SerializeField] private TextMeshProUGUI missionName;
+        [SerializeField] private TextMeshProUGUI rewardCount;
         [SerializeField] private Image missionBackgroundImage;
         [SerializeField] private RectTransform missionPatternContainer;
         [SerializeField] private GameObject missionPatternCellPrefab;
@@ -20,19 +22,21 @@ namespace _Scripts.Missions
         [Space] [SerializeField] private Sprite completableMissionBackgroundSprite;
 
         [Inject] private IPrefabPool prefabPool;
+        [Inject] private IMissionManager missionManager;
         
-        private Mission mission;
+        private MissionDto dto;
         private readonly List<MissionPatternCellView> patternCellViews = new();
+        private bool isCompletable;
 
-        public Mission Mission => mission;
-        public void SetUp(Mission newMission, bool completable = false)
+        public MissionDto Dto => dto;
+        public void SetUp(MissionDto missionDto)
         {
-            mission = newMission;
-            missionName.text = newMission.MissionName;
-            Completable = completable;
+            dto = missionDto;
+            missionName.text = missionDto.MissionName;
+            rewardCount.text = missionDto.RewardCards.Count.ToString();
 
             missionPatternContainer.DestroyChildren();
-            foreach (var patternCell in newMission.Pattern)
+            foreach (var patternCell in missionDto.Pattern)
             {
                 if (patternCell.Type == MissionCellType.Any) continue;
                 var patternCellView = prefabPool.Spawn(missionPatternCellPrefab, missionPatternContainer).GetComponent<MissionPatternCellView>();
@@ -44,8 +48,12 @@ namespace _Scripts.Missions
 
         public bool Completable
         {
-            set => missionBackgroundImage.sprite =
+            set
+            {
+                isCompletable = value;
+                missionBackgroundImage.sprite =
                     value ? completableMissionBackgroundSprite : uncompletableMissionBackgroundSprite;
+            }
         }
 
         public void OnSpawn()
@@ -55,11 +63,20 @@ namespace _Scripts.Missions
 
         public void OnDespawn()
         {
+            isCompletable = false;
             foreach (var cellView in patternCellViews)
             {
                 prefabPool.Despawn(cellView.gameObject);
             }
             patternCellViews.Clear();
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (isCompletable)
+            {
+                missionManager.CompleteMission(this);
+            }
         }
     }
 }

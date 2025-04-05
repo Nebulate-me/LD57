@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Rooms;
 using UnityEngine;
 
 namespace _Scripts.Missions
@@ -8,8 +9,15 @@ namespace _Scripts.Missions
     {
         [SerializeField] private string missionName;
         [SerializeField] private List<MissionCell> pattern = new();
+        [SerializeField] private List<Room> rewards = new();
 
         public string MissionName => missionName;
         public List<MissionCell> Pattern => pattern;
+        public List<Room> Rewards => rewards;
+
+        public MissionDto ToDto()
+        {
+            return new MissionDto(this);
+        }
     }
 }
