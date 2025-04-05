@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-using _Scripts.Utils.AudioTool;
-using _Scripts.Utils.AudioTool.Sounds;
-using AudioTools.Sound;
+using _Scripts.Cards;
 using DITools;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Utilities.Prefabs;
 using Utilities.Random;
@@ -15,8 +12,12 @@ namespace _Scripts.DI
     public class DiInstaller : MonoInstaller
     {
         [SerializeField] private PrefabPool prefabPool;
+        
+        [SerializeField] private DeckManager deckManager;
+        [SerializeField] private HandManager handManager;
 
-        [ShowInInspector, ReadOnly] private Camera uiCamera;
+        [Header("Do Not Edit")]
+        [SerializeField] private Camera uiCamera;
 
         protected virtual void ConfigureServices()
         {
@@ -36,7 +37,8 @@ namespace _Scripts.DI
             uiCamera = GameObject.Find("UICamera").GetComponent<Camera>();
             Container.Bind<Camera>().WithId("uiCamera").FromInstance(uiCamera).AsSingle();
 
-            Container.Bind<ISoundManager<SoundType>>().To<SoundManager>().AsSingle().NonLazy();
+            Container.BindInterfacesTo<HandManager>().FromInstance(handManager).AsSingle();
+            Container.BindInterfacesTo<DeckManager>().FromInstance(deckManager).AsSingle();
         }
 
         private void OnDisable()

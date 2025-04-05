@@ -23,13 +23,6 @@
       "dependencies": {},
       "hash": "fa57e97fff6563f1c1739856852707a7ffc78117"
     },
-    "com.nebulateme.behaviortree": {
-      "version": "https://github.com/Nebulate-me/Behavior-Tree.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "0806de8fdfcf32074c4b38d49f89e73a656e0cc7"
-    },
     "com.nebulateme.di_tools": {
       "version": "https://github.com/Nebulate-me/DI-Tools.git",
       "depth": 0,
