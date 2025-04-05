@@ -15,6 +15,8 @@ namespace _Scripts.Rooms
         [SerializeField] private List<RoomDirection> openDirections = new();
         [SerializeField] private bool isUsed = false;
         
+        private RoomDto dto;
+
         public Vector2Int GridPosition => gridPosition;
         public RoomDirection Direction => direction;
         public List<RoomDirection> OpenDirections => openDirections;
@@ -22,13 +24,18 @@ namespace _Scripts.Rooms
         public bool IsUsed
         {
             get => isUsed;
-            set => isUsed = value;
+            set
+            {
+                isUsed = value;
+                spriteRenderer.sprite = isUsed ? dto.UsedSprite : dto.UnusedSprite;
+            }
         }
 
-        public void SetUp(RoomDto dto, Vector2Int initialGridPosition, RoomDirection initialDirection)
+        public void SetUp(RoomDto roomDto, Vector2Int initialGridPosition, RoomDirection initialDirection)
         {
+            dto = roomDto;
             gridPosition = initialGridPosition;
-            spriteRenderer.sprite = dto.Sprite;
+            spriteRenderer.sprite = dto.UnusedSprite;
             direction = initialDirection;
             transform.rotation = direction.ToRotation();
 

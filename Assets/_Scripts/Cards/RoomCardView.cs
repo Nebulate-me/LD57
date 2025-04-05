@@ -28,7 +28,7 @@ namespace _Scripts.Cards
         {
             dto = roomDto;
             roomName.text = roomDto.Name;
-            roomImage.sprite = roomDto.Sprite;
+            roomImage.sprite = roomDto.UnusedSprite;
         }
 
         public void OnPointerClick(PointerEventData eventData)

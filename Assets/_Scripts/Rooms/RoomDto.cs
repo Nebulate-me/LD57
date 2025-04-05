@@ -8,16 +8,19 @@ namespace _Scripts.Rooms
     public class RoomDto
     {
         [SerializeField] private string name;
-        [SerializeField] private Sprite sprite;
+        [SerializeField] private Sprite usedSprite;
+        [SerializeField] private Sprite unusedSprite;
         [SerializeField] private List<RoomDirection> openDirections;
         public RoomDto(Room room)
         {
             name = room.RoomName;
-            sprite = room.Sprite;
+            usedSprite = room.UsedSprite;
+            unusedSprite = room.UnusedSprite;
             openDirections = room.OpenDirections;
         }
         
-        public Sprite Sprite => sprite;
+        public Sprite UsedSprite => usedSprite;
+        public Sprite UnusedSprite => unusedSprite;
         public IReadOnlyList<RoomDirection> OpenDirections => openDirections;
         public string Name => name;
     }

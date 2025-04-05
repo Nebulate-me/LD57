@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 444c8c6c84a541d7916edbfea60eceab, type: 3}
   m_Name: NE_Room
   m_EditorClassIdentifier: 
-  roomName: 
-  sprite: {fileID: 1635575430, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
+  roomName: Runebend
+  usedSprite: {fileID: 1635575430, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
+  unusedSprite: {fileID: 1969821803, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
   openDirections: 0000000003000000

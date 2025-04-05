@@ -11,13 +11,13 @@ namespace _Scripts.Rooms
         
         public void SetUpValid(RoomDto room)
         {
-            spriteRenderer.sprite = room.Sprite;
+            spriteRenderer.sprite = room.UnusedSprite;
             spriteRenderer.color = validPlacementColor;
         }
 
         public void SetUpInvalid(RoomDto room)
         {
-            spriteRenderer.sprite = room.Sprite;
+            spriteRenderer.sprite = room.UnusedSprite;
             spriteRenderer.color = invalidPlacementColor;
         }
     }

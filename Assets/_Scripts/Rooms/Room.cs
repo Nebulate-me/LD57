@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Scripts.Cards;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Scripts.Rooms
 {
@@ -8,11 +9,13 @@ namespace _Scripts.Rooms
     public class Room : ScriptableObject
     {
         [SerializeField] private string roomName;
-        [SerializeField] private Sprite sprite;
+        [FormerlySerializedAs("sprite")] [SerializeField] private Sprite usedSprite;
+        [SerializeField] private Sprite unusedSprite;
         [SerializeField] private List<RoomDirection> openDirections = new();
 
         public string RoomName => roomName;
-        public Sprite Sprite => sprite;
+        public Sprite UsedSprite => usedSprite;
+        public Sprite UnusedSprite => unusedSprite;
         public List<RoomDirection> OpenDirections => openDirections;
 
         public RoomDto ToDto()
