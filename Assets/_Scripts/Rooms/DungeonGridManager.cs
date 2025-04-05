@@ -94,11 +94,17 @@ namespace _Scripts.Rooms
             if (IsValidDirection(currentDirection, selectedRoomCardView.Dto.OpenDirections, adjacentOpenDirections, adjacentClosedDirections))
                 return true;
 
-            var firstValidDirection = EnumExtensions.GetAllValues<RoomDirection>()
-                .FirstOrEmpty(roomDirection => IsValidDirection(roomDirection, selectedRoomCardView.Dto.OpenDirections,
-                    adjacentOpenDirections, adjacentClosedDirections));
+            foreach (var roomDirection in EnumExtensions.GetAllValues<RoomDirection>())
+            {
+                if (IsValidDirection(roomDirection, selectedRoomCardView.Dto.OpenDirections,
+                        adjacentOpenDirections, adjacentClosedDirections))
+                {
+                    validDirection = roomDirection;
+                    return true;
+                }
+            }
 
-            return firstValidDirection.TryGetValue(out validDirection);
+            return false;
         }
 
         private bool GetAdjacentDirections(Vector2Int roomPosition, out List<RoomDirection> adjacentOpenDirections,
@@ -131,8 +137,11 @@ namespace _Scripts.Rooms
         {
             var rotatedDtoOpenDirections = dtoOpenDirections.Select(direction => direction.Rotate(directionToCheck)).ToList();
             var rotatedDtoClosedDirections = RoomDirectionExtensions.InvertList(rotatedDtoOpenDirections);
-            return adjacentOpenDirections.All(openDirection => rotatedDtoOpenDirections.Contains(openDirection)) &&
-                   adjacentClosedDirections.All(closedDirection => rotatedDtoClosedDirections.Contains(closedDirection));
+            var allOpenDirectionsOpen = adjacentOpenDirections.All(openDirection => rotatedDtoOpenDirections.Contains(openDirection));
+            var allClosedDirectionsClosed = adjacentClosedDirections.All(closedDirection => rotatedDtoClosedDirections.Contains(closedDirection));
+
+            return allOpenDirectionsOpen && allClosedDirectionsClosed;
+
         }
 
         private bool IsPositionEmptyAndAdjacent(Vector2Int gridPosition)
