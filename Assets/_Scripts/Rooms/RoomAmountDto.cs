@@ -5,7 +5,7 @@ using UnityEngine;
 namespace _Scripts.Cards
 {
     [Serializable]
-    public class RoomCardAmount
+    public class RoomAmountDto
     {
         [SerializeField] private Room room;
         [SerializeField] private int amount;

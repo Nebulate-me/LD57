@@ -19,20 +19,20 @@ namespace _Scripts.Cards
 
         [Inject] private IHandManager handManager;
         
-        private RoomCard card;
-        public RoomCard Card => card;
+        private RoomDto dto;
+        public RoomDto Dto => dto;
 
 
-        public void SetUp(RoomCard roomCard)
+        public void SetUp(RoomDto roomDto)
         {
-            card = roomCard;
-            roomName.text = roomCard.Name;
-            roomImage.sprite = roomCard.Sprite;
+            dto = roomDto;
+            roomName.text = roomDto.Name;
+            roomImage.sprite = roomDto.Sprite;
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            handManager.SelectRoomCard(card);
+            handManager.SelectRoomCard(dto);
         }
 
         public void Select()

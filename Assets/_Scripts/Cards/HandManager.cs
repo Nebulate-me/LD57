@@ -58,12 +58,12 @@ namespace _Scripts.Cards
             return false;
         }
 
-        public bool SelectRoomCard(RoomCard card)
+        public bool SelectRoomCard(RoomDto dto)
         {
             SelectedRoomCardView = Maybe.Empty<RoomCardView>();
             foreach (var cardView in cardViews)
             {
-                if (cardView.Card == card)
+                if (cardView.Dto == dto)
                 {
                     cardView.Select();
                     SelectedRoomCardView = Maybe.Of(cardView);

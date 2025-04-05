@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using _Scripts.Cards;
 using UnityEngine;
 
@@ -7,10 +9,16 @@ namespace _Scripts.Rooms
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
 
-        public void SetUp(RoomCard card, RoomDirection direction)
+        public Vector2Int GridPosition { get; set; }
+        public List<RoomDirection> OpenDirections = new();
+
+        public void SetUp(RoomDto dto, Vector2Int gridPosition, RoomDirection direction)
         {
-            spriteRenderer.sprite = card.Sprite;
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, direction.ToRotation()));
+            GridPosition = gridPosition;
+            spriteRenderer.sprite = dto.Sprite;
+            transform.rotation = direction.ToRotation();
+
+            OpenDirections = dto.OpenDirections.Select(openDirection => openDirection.Rotate(direction)).ToList();
         }
     }
 }

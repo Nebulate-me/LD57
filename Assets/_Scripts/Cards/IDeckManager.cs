@@ -4,7 +4,7 @@ namespace _Scripts.Cards
 {
     public interface IDeckManager
     {
-        bool TryDraw(out RoomCard card);
-        void Bury(List<RoomCard> cardsToBury);
+        bool TryDraw(out RoomDto dto);
+        void Bury(List<RoomDto> cardsToBury);
     }
 }

@@ -6,12 +6,12 @@ using UnityEngine;
 namespace _Scripts.Cards
 {
     [Serializable]
-    public class RoomCard
+    public class RoomDto
     {
         [SerializeField] private string name;
         [SerializeField] private Sprite sprite;
         [SerializeField] private List<RoomDirection> openDirections;
-        public RoomCard(Room room)
+        public RoomDto(Room room)
         {
             name = room.RoomName;
             sprite = room.Sprite;

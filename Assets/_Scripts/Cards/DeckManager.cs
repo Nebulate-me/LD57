@@ -10,17 +10,17 @@ namespace _Scripts.Cards
     public class DeckManager : MonoBehaviour, IDeckManager
     {
         [SerializeField] private TextMeshProUGUI remainingCardsText;
-        [SerializeField] private List<RoomCardAmount> initialRooms = new();
+        [SerializeField] private List<RoomAmountDto> initialRooms = new();
 
         [Header("Do Not Edit")]
-        [SerializeField] private List<RoomCard> cards = new();
+        [SerializeField] private List<RoomDto> cards = new();
 
         [Inject] private IRandomService randomService;
         private int RemainingCardsAmount => cards.Count;
 
         private void Start()
         {
-            cards = new List<RoomCard>();
+            cards = new List<RoomDto>();
             foreach (var initialRoom in initialRooms)
             {
                 for (var i = 0; i < initialRoom.Amount; i++)
@@ -38,18 +38,18 @@ namespace _Scripts.Cards
             remainingCardsText.text = RemainingCardsAmount.ToString();
         }
 
-        public bool TryDraw(out RoomCard card)
+        public bool TryDraw(out RoomDto dto)
         {
-            card = null;
+            dto = null;
             if (RemainingCardsAmount <= 0) return false;
 
-            card = cards.First();
+            dto = cards.First();
             cards.RemoveAt(0);
             UpdateRemainingCardsText();
             return true;
         }
 
-        public void Bury(List<RoomCard> cardsToBury)
+        public void Bury(List<RoomDto> cardsToBury)
         {
             cards.AddRange(cardsToBury);
         }

@@ -1,5 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using _Scripts.Cards;
+using _Scripts.Utils;
+using ModestTree;
 using UnityEngine;
+using Utilities.Monads;
 using Utilities.Prefabs;
 using Zenject;
 
@@ -7,56 +13,121 @@ namespace _Scripts.Rooms
 {
     public class DungeonGridManager : MonoBehaviour, IDungeonGridManager
     {
-        [SerializeField] private Grid grid;
-        [SerializeField] private float gridSize = 1f;
+        [SerializeField] private Transform roomContainer;
         [SerializeField] private GameObject dungeonRoomPrefab;
         [SerializeField] private GameObject dungeonRoomGhostPrefab;
+        [SerializeField] private Room startingRoom;
+        [SerializeField] private Vector2 mousePositionOffset;
         
         [Inject] private IHandManager handManager;
         [Inject] private IPrefabPool prefabPool;
+        [Inject(Id = "uiCamera")] private Camera uiCamera;
 
-        private DungeonRoomGhostView _roomGhostInstance;
+        private DungeonRoomGhostView roomGhostInstance;
+        private List<DungeonRoomView> rooms = new();
+        private RoomDirection currentRoomDirection = RoomDirection.North;
 
         private void Start()
         {
-            _roomGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab).GetComponent<DungeonRoomGhostView>();
+            currentRoomDirection = RoomDirection.North;
+            rooms = new List<DungeonRoomView>();
+            roomGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer).GetComponent<DungeonRoomGhostView>();
             
+            var startingRoomView = prefabPool.Spawn(dungeonRoomPrefab, roomContainer).GetComponent<DungeonRoomView>();
+            var startingRoomPosition = new Vector2Int(); // 0, 0
+            startingRoomView.SetUp(startingRoom.ToCard(), startingRoomPosition, RoomDirection.North); // Direction should be irrelevant
+            startingRoomView.transform.position = GridToWorld(startingRoomPosition);
+            rooms.Add(startingRoomView);
         }
 
         private void Update()
         {
-            // if (handManager.SelectedRoomCard.IsPresent && _roomGhostInstance != null)
-            // {
-            //     _roomGhostInstance.
-            //     return;
-            // }
+            if (handManager.SelectedRoomCardView.TryGetValue(out var selectedRoomCardView))
+            {
+                roomGhostInstance.gameObject.SetActive(true);
+            }
+            else
+            {
+                roomGhostInstance.gameObject.SetActive(false);
+                return;
+            }
+            
+            Vector2 mouseWorld = uiCamera.ScreenToWorldPoint(Input.mousePosition);
+            var gridPosition = WorldToGrid(mouseWorld);
+            var snappedPosition = GridToWorld(gridPosition);
+            // Debug.Log($"Mouse Position {mouseWorld}, gridPosition {gridPosition}, snappedPosition {snappedPosition}");
+            
+            roomGhostInstance.transform.position = snappedPosition;
+
+            if (!IsPositionEmptyAndAdjacent(gridPosition) || 
+                !TryGetValidDirection(selectedRoomCardView, gridPosition, currentRoomDirection, out var validDirection))
+            {
+                roomGhostInstance.transform.rotation = currentRoomDirection.ToRotation();
+                roomGhostInstance.SetUpInvalid(selectedRoomCardView.Dto);
+                return;
+            }
+
+            currentRoomDirection = validDirection;
+            roomGhostInstance.transform.rotation = validDirection.ToRotation();
+            roomGhostInstance.SetUpValid(selectedRoomCardView.Dto);
+            
+            // if (Input.GetMouseButtonDown(0)) PlaceRoom(gridPosition);
             //
-            // Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            // var gridPos = WorldToGrid(mouseWorld);
-            // var snappedPos = GridToWorld(gridPos);
-            //
-            // if (previewGhostInstance == null) previewGhostInstance = Instantiate(previewGhostPrefab);
-            //
-            // previewGhostInstance.SetActive(true);
-            // previewGhostInstance.transform.position = snappedPos;
-            // previewGhostInstance.transform.rotation = currentRotation;
-            //
-            // if (IsPlacementValid(gridPos))
-            // {
-            //     if (Input.GetMouseButtonDown(0)) PlaceRoom(gridPos);
-            //
-            //     if (Input.mouseScrollDelta.y != 0) RotatePreview(Input.mouseScrollDelta.y);
-            // }
+            // if (Input.mouseScrollDelta.y != 0) RotatePreview(Input.mouseScrollDelta.y);
+        }
+
+        private bool TryGetValidDirection(RoomCardView selectedRoomCardView, Vector2Int gridPosition,
+            RoomDirection currentDirection, out RoomDirection validDirection)
+        {
+            validDirection = currentDirection;
+            var adjacentRooms = rooms.Where(room => room.GridPosition.ManhattanDistance(gridPosition) == 1).ToList();
+
+            if (adjacentRooms.IsEmpty())
+                return false;
+
+            var adjacentOpenDirections = new List<RoomDirection>();
+            var adjacentClosedDirections = new List<RoomDirection>();
+            foreach (var adjacentRoom in adjacentRooms)
+            {
+                var adjacentRoomDirection = (adjacentRoom.GridPosition - gridPosition).FromVector2Int();
+                if (adjacentRoom.OpenDirections.Contains(adjacentRoomDirection))
+                    adjacentOpenDirections.Add(adjacentRoomDirection);
+                else
+                    adjacentClosedDirections.Add(adjacentRoomDirection);
+            }
+            
+            if (CheckValidDirection(currentDirection, selectedRoomCardView.Dto.OpenDirections, adjacentOpenDirections, adjacentClosedDirections))
+                return true;
+
+            var firstValidDirection = EnumExtensions.GetAllValues<RoomDirection>()
+                .FirstOrEmpty(roomDirection => CheckValidDirection(roomDirection, selectedRoomCardView.Dto.OpenDirections, adjacentOpenDirections, adjacentClosedDirections));
+            
+            return firstValidDirection.TryGetValue(out validDirection);
+        }
+
+        private bool CheckValidDirection(RoomDirection currentDirection, 
+            IEnumerable<RoomDirection> dtoOpenDirections, 
+            IEnumerable<RoomDirection> adjacentOpenDirections,
+            IEnumerable<RoomDirection> adjacentClosedDirections)
+        {
+            var rotatedDtoOpenDirections = dtoOpenDirections.Select(direction => direction.Rotate(currentDirection));
+            return adjacentOpenDirections.All(openDirection => rotatedDtoOpenDirections.Contains(openDirection)) &&
+                   adjacentClosedDirections.All(closedDirection => !rotatedDtoOpenDirections.Contains(closedDirection));
+        }
+
+        private bool IsPositionEmptyAndAdjacent(Vector2Int gridPosition)
+        {
+            return rooms.All(room => room.GridPosition != gridPosition) && rooms.Any(room => room.GridPosition.ManhattanDistance(gridPosition) == 1);
         }
 
         private Vector2Int WorldToGrid(Vector2 worldPos)
         {
-            return new Vector2Int(Mathf.RoundToInt(worldPos.x / gridSize), Mathf.RoundToInt(worldPos.y / gridSize));
+            return new Vector2Int(Mathf.RoundToInt(worldPos.x + mousePositionOffset.x), Mathf.RoundToInt(worldPos.y + mousePositionOffset.y));
         }
 
         private Vector3 GridToWorld(Vector2Int gridPos)
         {
-            return new Vector3(gridPos.x * gridSize, gridPos.y * gridSize, 0);
+            return new Vector3(gridPos.x, gridPos.y, 0);
         }
 
         // private bool IsPlacementValid(Vector2Int gridPos)

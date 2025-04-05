@@ -1,31 +1,69 @@
 using System;
+using UnityEngine;
 
 namespace _Scripts.Rooms
 {
     public enum RoomDirection
     {
         North = 0,
-        East = 1,
+        West = 1,
         South = 2,
-        West = 3
+        East = 3
     }
-    
+
     public static class RoomDirectionExtensions {
-        public static int ToRotation(this RoomDirection direction)
+        
+        private static int ToZDegrees(this RoomDirection direction)
         {
-            switch (direction)
+              return direction switch
+              {
+                  RoomDirection.North => 0,
+                  RoomDirection.West => 90,
+                  RoomDirection.South => 180,
+                  RoomDirection.East => 270,
+                  _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, $"Invalid Direction to convert: {direction}")
+              };  
+        }
+
+        private static RoomDirection FromZDegrees(this int degrees)
+        {
+            var zDegrees = degrees % 360;
+            if (zDegrees == 0) return RoomDirection.North;
+            if (zDegrees == 90) return RoomDirection.West;
+            if (zDegrees == 180) return RoomDirection.South;
+            if (zDegrees == 270) return RoomDirection.East;
+            throw new ArgumentOutOfRangeException(nameof(degrees), degrees, $"Invalid ZDegrees to convert: {degrees}");
+        }
+        public static Quaternion ToRotation(this RoomDirection direction)
+        {
+            var zDegrees = direction.ToZDegrees();
+            return Quaternion.Euler(0, 0, zDegrees);
+        }
+
+        public static RoomDirection Rotate(this RoomDirection direction, RoomDirection rotation)
+        {
+            return (direction.ToZDegrees() + rotation.ToZDegrees()).FromZDegrees();
+        }
+
+        public static RoomDirection Invert(this RoomDirection direction)
+        {
+            return direction switch
             {
-                case RoomDirection.North:
-                    return 0;
-                case RoomDirection.East:
-                    return 90;
-                case RoomDirection.South:
-                    return 180;
-                case RoomDirection.West:
-                    return 270;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-            }
-        } 
+                RoomDirection.North => RoomDirection.South,
+                RoomDirection.East => RoomDirection.West,
+                RoomDirection.South => RoomDirection.North,
+                RoomDirection.West => RoomDirection.East,
+                _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, $"Invalid Direction to invert: {direction}")
+            };  
+        }
+
+        public static RoomDirection FromVector2Int(this Vector2Int vector)
+        {
+            if (vector == Vector2Int.up) return RoomDirection.North;
+            if (vector == Vector2Int.right) return RoomDirection.East;
+            if (vector == Vector2Int.left) return RoomDirection.West;
+            if (vector == Vector2Int.down) return RoomDirection.South;
+            throw new ArgumentOutOfRangeException(nameof(vector), vector, $"Invalid Vector to convert: {vector}");
+        }
     }
 }
