@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,6 +6,8 @@ namespace _Scripts.Game
     public class HelpPopoverController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private GameObject helpPopover;
+        
+        private bool clickedAtLeastOnce;
 
         private void Start()
         {
@@ -15,18 +16,23 @@ namespace _Scripts.Game
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) 
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+            {
+                clickedAtLeastOnce = true;
                 helpPopover.SetActive(false);
+            }
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            helpPopover.SetActive(true);
+            if (clickedAtLeastOnce)
+                helpPopover.SetActive(true);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            helpPopover.SetActive(false);
+            if (clickedAtLeastOnce)
+                helpPopover.SetActive(false);
         }
     }
 }

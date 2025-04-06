@@ -48,7 +48,7 @@ namespace _Scripts.Rooms
         private void LateUpdate()
         {
             var mousePosition = uiCamera.ScreenToWorldPoint(Input.mousePosition);
-            Debug.Log($"Move Camera > {mousePosition}");
+            // Debug.Log($"Move Camera > {mousePosition}");
             var cameraDirection = (Mathf.Abs(mousePosition.x) > noMovementRadius.x ||
                                    Mathf.Abs(mousePosition.y) > noMovementRadius.y) &&
                                   mousePosition.y >= minCameraMovementY &&
