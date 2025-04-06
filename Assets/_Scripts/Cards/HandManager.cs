@@ -54,7 +54,7 @@ namespace _Scripts.Cards
                 }
                 else
                 {
-                    Debug.Log("No cards left in the deck, not drawing!");
+                    // Debug.Log("No cards left in the deck, not drawing!");
                     break;
                 }
         }
