@@ -50,6 +50,7 @@ namespace _Scripts.Missions
 
         public bool Completable
         {
+            get => isCompletable;
             set
             {
                 isCompletable = value;

@@ -58,6 +58,8 @@ namespace _Scripts.Missions
             missionCards.Add(missionCardView);
         }
 
+        public int CompletableMissionsCount => missionCards.Count(mission => mission.Completable);
+
         public void CompleteMission(MissionCardView missionCard)
         {
             if (!IsMissionCompletable(missionCard.Dto, dungeonGridManager.Rooms, out var roomsToUse)) return;
@@ -87,6 +89,7 @@ namespace _Scripts.Missions
             }
 
             RefillMissionHand();
+            SignalsHub.DispatchAsync(new MissionsUpdatedSignal());
         }
         
         private void RefillMissionHand()

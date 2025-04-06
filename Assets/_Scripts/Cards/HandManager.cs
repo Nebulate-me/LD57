@@ -59,6 +59,7 @@ namespace _Scripts.Cards
                 }
         }
 
+        public int CardAmount => cardViews.Count;
         public IMaybe<RoomCardView> SelectedRoomCardView { get; private set; } = Maybe.Empty<RoomCardView>();
 
         public bool TryPlaySelectRoomCard()

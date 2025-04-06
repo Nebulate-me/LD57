@@ -5,7 +5,7 @@ namespace _Scripts.Cards
 {
     public interface IDeckManager
     {
-        int DeckSize { get; }
+        int CardAmount { get; }
         bool TryDraw(out RoomDto dto);
         void Bury(List<RoomDto> cardsToBury);
     }

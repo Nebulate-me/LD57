@@ -14,7 +14,7 @@ namespace _Scripts.Missions
         [SerializeField] private bool flipPatternY;
         [SerializeField] private List<RoomDto> rewardCards;
         [SerializeField] private int requiredCompletedMissions;
-        [SerializeField] private int rewardScore = 1;
+        [SerializeField] private int rewardScore;
 
         public MissionDto(Mission mission)
         {
@@ -23,7 +23,7 @@ namespace _Scripts.Missions
             flipPatternY = mission.MirrorPatternY;
             rewardCards = mission.Rewards.Select(reward => reward.ToDto()).ToList();
             requiredCompletedMissions = mission.RequiredCompletedMissions;
-            rewardScore = mission.RewardScore;
+            rewardScore = mission.RewardScore * 50;
         }
 
         public string Name => name;

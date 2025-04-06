@@ -5,6 +5,7 @@ namespace _Scripts.Cards
 {
     public interface IHandManager
     {
+        int CardAmount { get; }
         IMaybe<RoomCardView> SelectedRoomCardView { get; }
         bool SelectRoomCard(RoomDto dto);
         bool DeselectRoomCard();

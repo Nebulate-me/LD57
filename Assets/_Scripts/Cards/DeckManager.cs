@@ -18,7 +18,7 @@ namespace _Scripts.Cards
         [SerializeField] private List<RoomDto> cards = new();
 
         [Inject] private IRandomService randomService;
-        private int RemainingCardsAmount => cards.Count;
+        public int CardAmount => cards.Count;
 
         private void Start()
         {
@@ -38,15 +38,14 @@ namespace _Scripts.Cards
 
         private void UpdateRemainingCardsText()
         {
-            remainingCardsText.text = RemainingCardsAmount.ToString();
+            remainingCardsText.text = CardAmount.ToString();
         }
-
-        public int DeckSize { get; }
+        
 
         public bool TryDraw(out RoomDto dto)
         {
             dto = null;
-            if (RemainingCardsAmount <= 0) return false;
+            if (CardAmount <= 0) return false;
 
             dto = cards.First();
             cards.RemoveAt(0);
