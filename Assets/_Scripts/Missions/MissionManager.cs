@@ -93,7 +93,7 @@ namespace _Scripts.Missions
             while (missionCards.Count < missionHandSize)
             {
                 var missionDto = randomService.Sample(unlockedMissions).ToDto();
-                if (missionCards.Any(card => card.Dto.MissionName == missionDto.MissionName)) continue;
+                if (missionCards.Any(card => card.Dto.Name == missionDto.Name)) continue;
                 var missionCardView = prefabPool.Spawn(missionPrefab, missionContainer).GetComponent<MissionCardView>();
                 missionCardView.SetUp(missionDto);
                 missionCardView.Completable = IsMissionCompletable(missionCardView.Dto, dungeonGridManager.Rooms, out var _);

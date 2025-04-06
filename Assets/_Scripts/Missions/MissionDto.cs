@@ -9,20 +9,20 @@ namespace _Scripts.Missions
     [Serializable]
     public class MissionDto
     {
-        [SerializeField] private string missionName;
+        [SerializeField] private string name;
         [SerializeField] private List<MissionCell> pattern;
         [SerializeField] private List<RoomDto> rewardCards;
         [SerializeField] private int requiredCompletedMissions;
 
         public MissionDto(Mission mission)
         {
-            missionName = mission.MissionName;
+            name = mission.MissionName;
             pattern = mission.Pattern;
             rewardCards = mission.Rewards.Select(reward => reward.ToDto()).ToList();
             requiredCompletedMissions = mission.RequiredCompletedMissions;
         }
         
-        public string MissionName => missionName;
+        public string Name => name;
         public List<MissionCell> Pattern => pattern;
         public List<RoomDto> RewardCards => rewardCards;
         public int RequiredCompletedMissions => requiredCompletedMissions;

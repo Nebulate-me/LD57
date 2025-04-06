@@ -74,5 +74,7 @@ namespace _Scripts.Rooms
             return EnumExtensions.GetAllItems<RoomDirection>().Where(direction => !directions.Contains(direction))
                 .ToList();
         }
+
+        public static RoomDirection Default => RoomDirection.North;
     }
 }

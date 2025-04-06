@@ -32,7 +32,7 @@ namespace _Scripts.Missions
         public void SetUp(MissionDto missionDto)
         {
             dto = missionDto;
-            missionName.text = missionDto.MissionName;
+            missionName.text = missionDto.Name;
             rewardCount.text = missionDto.RewardCards.Count.ToString();
 
             missionPatternContainer.DestroyChildren();

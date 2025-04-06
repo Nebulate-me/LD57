@@ -40,13 +40,17 @@ namespace _Scripts.Rooms
 
         private void Update()
         {
-            if (handManager.SelectedRoomCardView.TryGetValue(out var selectedRoomCardView))
-            {
-                roomGhostInstance.gameObject.SetActive(true);
-            }
-            else
+            if (!handManager.SelectedRoomCardView.TryGetValue(out var selectedRoomCardView))
             {
                 roomGhostInstance.gameObject.SetActive(false);
+                return;
+            }
+
+            roomGhostInstance.gameObject.SetActive(true);
+            if (Input.GetMouseButtonDown(1))
+            {
+                roomGhostInstance.gameObject.SetActive(false);
+                handManager.DeselectRoomCard();
                 return;
             }
 
@@ -58,7 +62,7 @@ namespace _Scripts.Rooms
             roomGhostInstance.transform.position = snappedPosition;
 
             if (!IsPositionEmptyAndAdjacent(gridPosition) ||
-                !TryGetValidDirection(selectedRoomCardView, gridPosition, currentDirection, out var validDirection))
+                !TryGetValidDirection(selectedRoomCardView, gridPosition, out var validDirection))
             {
                 roomGhostInstance.transform.rotation = currentDirection.ToRotation();
                 roomGhostInstance.SetUpInvalid(selectedRoomCardView.Dto);
@@ -69,21 +73,14 @@ namespace _Scripts.Rooms
             roomGhostInstance.transform.rotation = validDirection.ToRotation();
             roomGhostInstance.SetUpValid(selectedRoomCardView.Dto);
 
-            if (Input.mouseScrollDelta.y != 0)
+            if (selectedRoomCardView.Dto.IsRotatable && Input.mouseScrollDelta.y != 0)
                 RotateGhostView(selectedRoomCardView, gridPosition, Input.mouseScrollDelta.y > 0);
 
             if (Input.GetMouseButtonDown(0)) 
                 PlaceRoom(selectedRoomCardView.Dto, gridPosition);
-
-            if (Input.GetMouseButtonDown(1))
-            {
-                roomGhostInstance.gameObject.SetActive(false);
-                handManager.DeselectRoomCard();   
-            }
         }
 
-        private bool TryGetValidDirection(RoomCardView selectedRoomCardView, Vector2Int gridPosition,
-            RoomDirection currentDirection, out RoomDirection validDirection)
+        private bool TryGetValidDirection(RoomCardView selectedRoomCardView, Vector2Int gridPosition, out RoomDirection validDirection)
         {
             validDirection = currentDirection;
 
@@ -197,7 +194,7 @@ namespace _Scripts.Rooms
             var dungeonRoom = prefabPool.Spawn(dungeonRoomPrefab, roomContainer)
                 .GetComponent<DungeonRoomView>();
             dungeonRoom.transform.position = worldPosition;
-            dungeonRoom.SetUp(selectedRoomDto, gridPosition, currentDirection);
+            dungeonRoom.SetUp(selectedRoomDto, gridPosition, selectedRoomDto.IsRotatable ? currentDirection : RoomDirectionExtensions.Default);
             rooms.Add(dungeonRoom);
 
             handManager.TryPlaySelectRoomCard();
