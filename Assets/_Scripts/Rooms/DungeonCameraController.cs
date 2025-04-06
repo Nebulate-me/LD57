@@ -13,8 +13,10 @@ namespace _Scripts.Rooms
         [SerializeField] private float minZoom = 10f;
         [SerializeField] private float maxZoom = 100f;
         [SerializeField] private float cameraMovementSpeed = 0.1f;
-        [SerializeField] private float noMovementRadius = 2f;
-        [SerializeField] private Vector2 positionClampOffset = new Vector2(0, 1f);
+        [SerializeField] private Vector2 noMovementRadius = new(2f, 1f);
+        [SerializeField] private Vector2 positionClampOffset = new(0, 1f);
+        [SerializeField] private float minCameraMovementY = -5f;
+        [SerializeField] private float maxCameraMovementY = 5f;
         
         [Inject] private IHandManager handManager;
         [Inject] private IDungeonGridManager dungeonGridManager;
@@ -46,7 +48,13 @@ namespace _Scripts.Rooms
         private void LateUpdate()
         {
             var mousePosition = uiCamera.ScreenToWorldPoint(Input.mousePosition);
-            var cameraDirection = mousePosition.magnitude > noMovementRadius ? mousePosition.normalized * cameraMovementSpeed : Vector3.zero;
+            Debug.Log($"Move Camera > {mousePosition}");
+            var cameraDirection = (Mathf.Abs(mousePosition.x) > noMovementRadius.x ||
+                                   Mathf.Abs(mousePosition.y) > noMovementRadius.y) &&
+                                  mousePosition.y >= minCameraMovementY &&
+                                  mousePosition.y <= maxCameraMovementY
+                ? mousePosition.normalized * cameraMovementSpeed 
+                : Vector3.zero;
             if (cameraDirection != Vector3.zero)
             {
                 var targetCameraPosition = ClampCameraPosition(mainCamera.transform.position + cameraDirection);
@@ -57,7 +65,7 @@ namespace _Scripts.Rooms
                     (targetCameraPosition.y + position.y) / 2f,
                     -10f);
                 mainCameraTransform.position = position;
-                Debug.Log($"Move Camera > {cameraDirection}");
+                
             }
 
             if (handManager.SelectedRoomCardView.IsNotPresent && Input.mouseScrollDelta.y != 0)
@@ -82,13 +90,10 @@ namespace _Scripts.Rooms
         public Vector3 GetMousePosition()
         {
             var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (worldPlane.Raycast(ray, out float enter)) {
+            if (worldPlane.Raycast(ray, out var enter)) {
                 return ray.GetPoint(enter);
             }
             return Vector3.zero;
         }
-
-        public Camera Camera => mainCamera;
-        public Vector3 Position => mainCamera.transform.position;
     }
 }
