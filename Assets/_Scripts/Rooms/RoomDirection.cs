@@ -60,6 +60,21 @@ namespace _Scripts.Rooms
             };  
         }
 
+        public static RoomDirection FlipY(this RoomDirection direction)
+        {
+            switch (direction)
+            {
+                case RoomDirection.North:
+                case RoomDirection.South:
+                    return direction.Invert();
+                case RoomDirection.East:
+                case RoomDirection.West:
+                    return direction;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, $"Invalid Direction to FlipY: {direction}");
+            }
+        }
+
         public static RoomDirection FromVector2Int(this Vector2Int vector)
         {
             if (vector == Vector2Int.up) return RoomDirection.North;

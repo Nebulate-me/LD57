@@ -110,16 +110,32 @@ namespace _Scripts.Missions
             var unusedRooms = rooms.Where(room => !room.IsUsed).ToList();
             var allDirections = EnumExtensions.GetAllItems<RoomDirection>().ToList();
             var normalizedPattern = NormalizePattern(missionDto.Pattern);
+            if (IsAnyPatternDirectionMatching(ref roomsToUse, allDirections, normalizedPattern, unusedRooms))
+                return true;
+
+            if (missionDto.FlipPatternY)
+            {
+                var normalizedFlippedYPattern = NormalizePattern(FlipYPattern(missionDto.Pattern));
+                if (IsAnyPatternDirectionMatching(ref roomsToUse, allDirections, normalizedFlippedYPattern, unusedRooms)) 
+                    return true;
+            }
+            
+            return false;
+        }
+
+        private bool IsAnyPatternDirectionMatching(ref List<DungeonRoomView> roomsToUse, List<RoomDirection> allDirections, IReadOnlyCollection<MissionCell> normalizedFlippedYPattern,
+            List<DungeonRoomView> unusedRooms)
+        {
             foreach (var direction in allDirections)
             {
-                var rotatedPattern = RotatePattern(normalizedPattern, direction);
+                var rotatedPattern = RotatePattern(normalizedFlippedYPattern, direction);
                 foreach (var dungeonRoomView in unusedRooms)
                 {
                     if (IsPatternMatching(rotatedPattern, dungeonRoomView, unusedRooms, out roomsToUse))
                         return true;
                 }
             }
-            
+
             return false;
         }
 
@@ -153,7 +169,7 @@ namespace _Scripts.Missions
             return true;
         }
 
-        private List<MissionCell> NormalizePattern(List<MissionCell> missionDtoPattern)
+        private List<MissionCell> NormalizePattern(IReadOnlyCollection<MissionCell> missionDtoPattern)
         {
             var firstPatternCell = missionDtoPattern.First();
             var normalizeShift = new Vector2Int(firstPatternCell.Position.x, firstPatternCell.Position.y);
@@ -166,7 +182,7 @@ namespace _Scripts.Missions
                 .ToList();
         }
         
-        private List<MissionCell> RotatePattern(List<MissionCell> pattern, RoomDirection direction)
+        private List<MissionCell> RotatePattern(IEnumerable<MissionCell> pattern, RoomDirection direction)
         {
             var rotation = direction.ToRotation();
             return pattern.Select(cell => 
@@ -175,8 +191,19 @@ namespace _Scripts.Missions
                     (rotation * cell.Position.ToVector3()).ToVector2Int(),
                     cell.OpenDirections.Select(openDirection => openDirection.Rotate(direction)).ToList(),
                     cell.ClosedDirections.Select(closedDirection => closedDirection.Rotate(direction)).ToList()
+                )).ToList();
+        }
+
+        private List<MissionCell> FlipYPattern(IEnumerable<MissionCell> pattern)
+        {
+            return pattern.Select(cell =>
+                new MissionCell(
+                    cell.Type,
+                    new Vector2Int(cell.Position.x, -cell.Position.y),
+                    cell.OpenDirections.Select(openDirection => openDirection.FlipY()).ToList(),
+                    cell.ClosedDirections.Select(closedDirection => closedDirection.FlipY()).ToList()
                 )
-                ).ToList();
+            ).ToList();
         }
     }
 }
