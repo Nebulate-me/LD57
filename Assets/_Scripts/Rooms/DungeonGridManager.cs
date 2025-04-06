@@ -25,11 +25,11 @@ namespace _Scripts.Rooms
 
         private DungeonRoomGhostView roomGhostInstance;
         private List<DungeonRoomView> rooms = new();
-        private RoomDirection currentDirection = RoomDirection.North;
+        private RoomDirection currentDirection = RoomDirectionExtensions.Default;
 
         private void Start()
         {
-            currentDirection = RoomDirection.North;
+            currentDirection = RoomDirectionExtensions.Default;
             rooms = new List<DungeonRoomView>();
             roomGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
                 .GetComponent<DungeonRoomGhostView>();
