@@ -231,7 +231,7 @@ MonoBehaviour:
   missionBackgroundImage: {fileID: 6829015442281912610}
   missionPatternContainer: {fileID: 8287122439674710909}
   missionPatternCellPrefab: {fileID: 1656063877687298406, guid: 38e0fbae1b235ef45a79c95fd026d6eb, type: 3}
-  patternCellSize: 0.25
+  patternCellSize: 0.2
   uncompletableMissionBackgroundSprite: {fileID: 21300000, guid: c9cb3c69527753b44844b6b224a025fe, type: 3}
   completableMissionBackgroundSprite: {fileID: 21300000, guid: 1511cda4adaf68142a020db597152139, type: 3}
 --- !u!222 &8225200337979613953

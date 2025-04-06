@@ -83,6 +83,9 @@ namespace _Scripts.Missions
         {
             if (Input.GetKeyDown(KeyCode.R))
                 RestartGame();
+            
+            if (Input.GetKeyDown(KeyCode.Escape))
+                Application.Quit();
         }
 
         private void UpdateScoreText()
