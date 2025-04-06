@@ -32,6 +32,9 @@ MonoBehaviour:
     closedDirections: 00000000010000000200000003000000
   rewards:
   - {fileID: 11400000, guid: c1183dd5890ba9449a48bc2ac61260fd, type: 2}
+  - {fileID: 11400000, guid: c1183dd5890ba9449a48bc2ac61260fd, type: 2}
   - {fileID: 11400000, guid: ca594d196e478954fa78777a1c887400, type: 2}
   - {fileID: 11400000, guid: ca594d196e478954fa78777a1c887400, type: 2}
+  - {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
   - {fileID: 11400000, guid: b01aaed4d392196429e16164675738c1, type: 2}
+  requiredCompletedMissions: 8

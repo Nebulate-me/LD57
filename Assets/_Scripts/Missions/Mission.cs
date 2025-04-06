@@ -10,10 +10,12 @@ namespace _Scripts.Missions
         [SerializeField] private string missionName;
         [SerializeField] private List<MissionCell> pattern = new();
         [SerializeField] private List<Room> rewards = new();
+        [SerializeField] private int requiredCompletedMissions = 0;
 
         public string MissionName => missionName;
         public List<MissionCell> Pattern => pattern;
         public List<Room> Rewards => rewards;
+        public int RequiredCompletedMissions => requiredCompletedMissions;
 
         public MissionDto ToDto()
         {

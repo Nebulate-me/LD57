@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Rooms;
+using Signals;
 using TMPro;
 using UnityEngine;
 using Utilities.RandomService;
@@ -30,6 +31,7 @@ namespace _Scripts.Cards
                 }
             }
             randomService.ShuffleInPlace(cards);
+            SignalsHub.DispatchAsync(new DeckUpdatedSignal());
 
             UpdateRemainingCardsText();
         }
@@ -54,6 +56,7 @@ namespace _Scripts.Cards
         {
             cards.AddRange(cardsToBury);
             UpdateRemainingCardsText();
+            SignalsHub.DispatchAsync(new DeckUpdatedSignal());
         }
     }
 }

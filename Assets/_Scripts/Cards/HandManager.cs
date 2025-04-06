@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Scripts.Rooms;
 using _Scripts.Utils;
+using Signals;
 using UnityEngine;
 using Utilities;
 using Utilities.Monads;
@@ -16,9 +17,24 @@ namespace _Scripts.Cards
         [SerializeField] private int handSize = 5;
 
         private readonly List<RoomCardView> cardViews = new();
-        
+
         [Inject] private IDeckManager deckManager;
         [Inject] private IPrefabPool prefabPool;
+
+        private void OnEnable()
+        {
+            SignalsHub.AddListener<DeckUpdatedSignal>(OnDeckUpdated);
+        }
+
+        private void OnDisable()
+        {
+            SignalsHub.RemoveListener<DeckUpdatedSignal>(OnDeckUpdated);
+        }
+
+        private void OnDeckUpdated(DeckUpdatedSignal signal)
+        {
+            RefillHand();
+        }
 
         private void Start()
         {
@@ -30,7 +46,6 @@ namespace _Scripts.Cards
         public void RefillHand()
         {
             while (cardViews.Count < handSize)
-            {
                 if (deckManager.TryDraw(out var card))
                 {
                     var cardView = prefabPool.Spawn(roomCardPrefab, roomCardContainer).GetComponent<RoomCardView>();
@@ -42,10 +57,10 @@ namespace _Scripts.Cards
                     Debug.Log("No cards left in the deck, not drawing!");
                     break;
                 }
-            }
         }
 
-        public IMaybe<RoomCardView> SelectedRoomCardView { get; private set; } = Maybe.Empty<RoomCardView>(); 
+        public IMaybe<RoomCardView> SelectedRoomCardView { get; private set; } = Maybe.Empty<RoomCardView>();
+
         public bool TryPlaySelectRoomCard()
         {
             if (SelectedRoomCardView.TryGetValue(out var cardView))
@@ -64,7 +79,6 @@ namespace _Scripts.Cards
         {
             SelectedRoomCardView = Maybe.Empty<RoomCardView>();
             foreach (var cardView in cardViews)
-            {
                 if (cardView.Dto == dto)
                 {
                     cardView.Select();
@@ -74,7 +88,7 @@ namespace _Scripts.Cards
                 {
                     cardView.Deselect();
                 }
-            }
+
             return true;
         }
 

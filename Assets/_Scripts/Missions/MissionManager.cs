@@ -29,7 +29,7 @@ namespace _Scripts.Missions
         [Inject] private IDeckManager deckManager;
 
         private readonly List<MissionCardView> missionCards = new();
-        private int completedMissionCount = 0;
+        private int completedMissionCount;
 
         private void OnEnable()
         {
@@ -88,9 +88,12 @@ namespace _Scripts.Missions
         
         private void RefillMissionHand()
         {
+            var unlockedMissions =
+                availableMissions.Where(mission => completedMissionCount >= mission.RequiredCompletedMissions).ToList();
             while (missionCards.Count < missionHandSize)
             {
-                var missionDto = randomService.Sample(availableMissions).ToDto();
+                var missionDto = randomService.Sample(unlockedMissions).ToDto();
+                if (missionCards.Any(card => card.Dto.MissionName == missionDto.MissionName)) continue;
                 var missionCardView = prefabPool.Spawn(missionPrefab, missionContainer).GetComponent<MissionCardView>();
                 missionCardView.SetUp(missionDto);
                 missionCardView.Completable = IsMissionCompletable(missionCardView.Dto, dungeonGridManager.Rooms, out var _);

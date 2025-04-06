@@ -385,6 +385,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9de2873706b4dd5428a2d51735552c88, type: 2}
   - {fileID: 11400000, guid: 33ddb1fb4baa253468500588b5c4e0bc, type: 2}
   - {fileID: 11400000, guid: 1479481e4da3de240b62527ba9bb1878, type: 2}
+  - {fileID: 11400000, guid: c8e7231640a573d4f85916b6947d6ca3, type: 2}
   initialMission: {fileID: 11400000, guid: 98a4206763a8b354b84313f4101a157b, type: 2}
   missionHandSize: 1
   missionHandSizeIncreases: 02000000050000000a000000

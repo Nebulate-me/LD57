@@ -10,13 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b903d2cf5954fbe931e21dc856c44a9, type: 3}
-  m_Name: 4-Line
+  m_Name: 5-UShape
   m_EditorClassIdentifier: 
-  missionName: Passage
+  missionName: Rostrum
   pattern:
   - type: 1
     position: {x: -1, y: 0}
-    openDirections: 03000000
+    openDirections: 0300000000000000
+    closedDirections: 
+  - type: 1
+    position: {x: -1, y: 1}
+    openDirections: 
     closedDirections: 
   - type: 1
     position: {x: 0, y: 0}
@@ -24,15 +28,17 @@ MonoBehaviour:
     closedDirections: 
   - type: 1
     position: {x: 1, y: 0}
-    openDirections: 03000000
+    openDirections: 0100000000000000
     closedDirections: 
   - type: 1
-    position: {x: 2, y: 0}
+    position: {x: 1, y: 1}
     openDirections: 
     closedDirections: 
   rewards:
-  - {fileID: 11400000, guid: 78e2d6f85cee67c4ebe2941c9139a283, type: 2}
+  - {fileID: 11400000, guid: c1183dd5890ba9449a48bc2ac61260fd, type: 2}
   - {fileID: 11400000, guid: ca594d196e478954fa78777a1c887400, type: 2}
-  - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
-  - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
+  - {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
+  - {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
+  - {fileID: 11400000, guid: 78e2d6f85cee67c4ebe2941c9139a283, type: 2}
+  - {fileID: 11400000, guid: 78e2d6f85cee67c4ebe2941c9139a283, type: 2}
   requiredCompletedMissions: 2
