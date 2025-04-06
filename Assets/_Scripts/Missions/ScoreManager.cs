@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
+using _Scripts.Game;
 using Signals;
 using TMPro;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace _Scripts.Missions
         [Inject] private IDeckManager deckManager;
         [Inject] private IHandManager handManager;
         [Inject] private IMissionManager missionManager;
+        [Inject] private ISoundManager soundManager;
         
         private int currentScore = 0;
 
@@ -54,8 +56,10 @@ namespace _Scripts.Missions
 
         private void CheckDefeat()
         {
+            // TODO: Improve this check to test whether there is no way to place any of the hand cards on the map
             if (deckManager.CardAmount <= 0 && handManager.CardAmount <= 0 && missionManager.CompletableMissionsCount <= 0)
             {
+                soundManager.PlaySound(SoundType.Defeat);
                 ShowRestartButton();
             }
         }

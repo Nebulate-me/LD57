@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
+using _Scripts.Game;
 using _Scripts.Utils;
 using ModestTree;
 using Signals;
@@ -22,6 +23,7 @@ namespace _Scripts.Rooms
         [Inject] private IHandManager handManager;
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IDungeonCameraController dungeonCameraController;
+        [Inject] private ISoundManager soundManager;
 
         private DungeonRoomGhostView roomGhostInstance;
         private List<DungeonRoomView> rooms = new();
@@ -199,6 +201,7 @@ namespace _Scripts.Rooms
             handManager.RefillHand();
             roomGhostInstance.gameObject.SetActive(false);
             
+            soundManager.PlaySound(SoundType.PlaceRoom);
             SignalsHub.DispatchAsync(new RoomPlacedSignal(dungeonRoom));
         }
 

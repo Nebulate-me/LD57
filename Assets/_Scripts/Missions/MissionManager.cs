@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
+using _Scripts.Game;
 using _Scripts.Rooms;
 using _Scripts.Utils;
 using Signals;
@@ -27,6 +28,7 @@ namespace _Scripts.Missions
         [Inject] private IRandomService randomService;
         [Inject] private IDungeonGridManager dungeonGridManager;
         [Inject] private IDeckManager deckManager;
+        [Inject] private ISoundManager soundManager;
 
         private readonly List<MissionCardView> missionCards = new();
         private int completedMissionCount;
@@ -75,6 +77,8 @@ namespace _Scripts.Missions
             completedMissionCount++;
             if (missionHandSizeIncreases.Contains(completedMissionCount)) 
                 missionHandSize++;
+            
+            soundManager.PlaySound(SoundType.CompleteMission);
             SignalsHub.DispatchAsync(new MissionCompletedSignal(missionCard.Dto));
             lastCompletedMissionName = missionCard.Dto.Name;
             
