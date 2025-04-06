@@ -30,6 +30,7 @@ namespace _Scripts.Missions
 
         private readonly List<MissionCardView> missionCards = new();
         private int completedMissionCount;
+        private string lastCompletedMissionName;
 
         private void OnEnable()
         {
@@ -72,7 +73,9 @@ namespace _Scripts.Missions
             completedMissionCount++;
             if (missionHandSizeIncreases.Contains(completedMissionCount)) 
                 missionHandSize++;
-            // TODO: Increase Player Score here
+            SignalsHub.DispatchAsync(new MissionCompletedSignal(missionCard.Dto));
+            lastCompletedMissionName = missionCard.Dto.Name;
+            
             UpdateMissions();
         }
         
@@ -89,7 +92,7 @@ namespace _Scripts.Missions
         private void RefillMissionHand()
         {
             var unlockedMissions =
-                availableMissions.Where(mission => completedMissionCount >= mission.RequiredCompletedMissions).ToList();
+                availableMissions.Where(mission => completedMissionCount >= mission.RequiredCompletedMissions && mission.MissionName != lastCompletedMissionName).ToList();
             while (missionCards.Count < missionHandSize)
             {
                 var missionDto = randomService.Sample(unlockedMissions).ToDto();

@@ -13,6 +13,7 @@ namespace _Scripts.Missions
         [SerializeField] private List<MissionCell> pattern;
         [SerializeField] private List<RoomDto> rewardCards;
         [SerializeField] private int requiredCompletedMissions;
+        [SerializeField] private int rewardScore = 1;
 
         public MissionDto(Mission mission)
         {
@@ -20,11 +21,13 @@ namespace _Scripts.Missions
             pattern = mission.Pattern;
             rewardCards = mission.Rewards.Select(reward => reward.ToDto()).ToList();
             requiredCompletedMissions = mission.RequiredCompletedMissions;
+            rewardScore = mission.RewardScore;
         }
         
         public string Name => name;
         public List<MissionCell> Pattern => pattern;
         public List<RoomDto> RewardCards => rewardCards;
         public int RequiredCompletedMissions => requiredCompletedMissions;
+        public int RewardScore => rewardScore;
     }
 }

@@ -36,3 +36,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
   - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
   requiredCompletedMissions: 2
+  rewardScore: 2

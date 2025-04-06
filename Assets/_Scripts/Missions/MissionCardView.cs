@@ -12,7 +12,8 @@ namespace _Scripts.Missions
     public class MissionCardView : MonoBehaviour, IPoolableResource, IPointerClickHandler
     {
         [SerializeField] private TextMeshProUGUI missionName;
-        [SerializeField] private TextMeshProUGUI rewardCount;
+        [SerializeField] private TextMeshProUGUI rewardCountText;
+        [SerializeField] private TextMeshProUGUI rewardScoreText;
         [SerializeField] private Image missionBackgroundImage;
         [SerializeField] private RectTransform missionPatternContainer;
         [SerializeField] private GameObject missionPatternCellPrefab;
@@ -33,7 +34,8 @@ namespace _Scripts.Missions
         {
             dto = missionDto;
             missionName.text = missionDto.Name;
-            rewardCount.text = missionDto.RewardCards.Count.ToString();
+            rewardCountText.text = missionDto.RewardCards.Count.ToString();
+            rewardScoreText.text = missionDto.RewardScore.ToString();
 
             missionPatternContainer.DestroyChildren();
             foreach (var patternCell in missionDto.Pattern)

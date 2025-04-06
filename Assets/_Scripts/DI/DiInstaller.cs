@@ -19,6 +19,7 @@ namespace _Scripts.DI
         [SerializeField] private HandManager handManager;
         [SerializeField] private DungeonGridManager dungeonGridManager;
         [SerializeField] private MissionManager missionManager;
+        [SerializeField] private ScoreManager scoreManager;
 
         [Header("Do Not Edit")]
         [SerializeField] private Camera uiCamera;
@@ -45,6 +46,7 @@ namespace _Scripts.DI
             Container.BindInterfacesTo<DeckManager>().FromInstance(deckManager).AsSingle();
             Container.BindInterfacesTo<DungeonGridManager>().FromInstance(dungeonGridManager).AsSingle();
             Container.BindInterfacesTo<MissionManager>().FromInstance(missionManager).AsSingle();
+            Container.BindInterfacesTo<ScoreManager>().FromInstance(scoreManager).AsSingle();
         }
 
         private void OnDisable()
