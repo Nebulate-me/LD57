@@ -1,13 +1,19 @@
+using _Scripts.Cards;
 using Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Zenject;
 
 namespace _Scripts.Missions
 {
     public class ScoreManager : MonoBehaviour, IScoreManager
     {
         [SerializeField] private TextMeshProUGUI scoreText;
+        [SerializeField] private Button restartButton;
+
+        [Inject] private IDeckManager deckManager;
         
         private int currentScore = 0;
 
@@ -32,6 +38,12 @@ namespace _Scripts.Missions
             UpdateScoreText();
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+                RestartGame();
+        }
+
         private void UpdateScoreText()
         {
             scoreText.text = $"Score\n*{currentScore}*";
@@ -39,6 +51,7 @@ namespace _Scripts.Missions
 
         public void RestartGame()
         {
+            // TODO: Ask in a popup whether Player really wants to restart
             string currentSceneName = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(currentSceneName);
         }

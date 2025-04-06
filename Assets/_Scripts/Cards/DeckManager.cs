@@ -41,6 +41,8 @@ namespace _Scripts.Cards
             remainingCardsText.text = RemainingCardsAmount.ToString();
         }
 
+        public int DeckSize { get; }
+
         public bool TryDraw(out RoomDto dto)
         {
             dto = null;
