@@ -18,9 +18,8 @@ namespace _Scripts.Rooms
         private RoomDto dto;
 
         public Vector2Int GridPosition => gridPosition;
-        public RoomDirection Direction => direction;
         public List<RoomDirection> OpenDirections => openDirections;
-        
+
         public bool IsUsed
         {
             get => isUsed;

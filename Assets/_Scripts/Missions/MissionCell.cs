@@ -28,6 +28,6 @@ namespace _Scripts.Missions
         public MissionCellType Type => type;
         public Vector2Int Position => position;
         public List<RoomDirection> OpenDirections => openDirections;
-        public List<RoomDirection> ClosedDirections => openDirections;
+        public List<RoomDirection> ClosedDirections => closedDirections;
     }
 }

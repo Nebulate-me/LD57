@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
@@ -18,14 +19,17 @@ namespace _Scripts.Missions
         [SerializeField] private RectTransform missionContainer;
         [SerializeField] private GameObject missionPrefab;
         [SerializeField] private List<Mission> availableMissions = new();
+        [SerializeField] private Mission initialMission;
         [SerializeField] private int missionHandSize = 1;
+        [SerializeField] private List<int> missionHandSizeIncreases = new() {2, 5, 10};
 
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IRandomService randomService;
         [Inject] private IDungeonGridManager dungeonGridManager;
         [Inject] private IDeckManager deckManager;
 
-        private List<MissionCardView> missionCards = new();
+        private readonly List<MissionCardView> missionCards = new();
+        private int completedMissionCount = 0;
 
         private void OnEnable()
         {
@@ -45,8 +49,12 @@ namespace _Scripts.Missions
         private void Start()
         {
             missionContainer.DestroyChildren();
-
-            RefillMissionHand();
+            
+            var missionDto = initialMission.ToDto();
+            var missionCardView = prefabPool.Spawn(missionPrefab, missionContainer).GetComponent<MissionCardView>();
+            missionCardView.SetUp(missionDto);
+            missionCardView.Completable = false;
+            missionCards.Add(missionCardView);
         }
 
         public void CompleteMission(MissionCardView missionCard)
@@ -60,6 +68,11 @@ namespace _Scripts.Missions
             deckManager.Bury(shuffledMissionRewards);
             prefabPool.Despawn(missionCard.gameObject);
             missionCards.Remove(missionCard);
+            
+            completedMissionCount++;
+            if (missionHandSizeIncreases.Contains(completedMissionCount)) 
+                missionHandSize++;
+            // TODO: Increase Player Score here
             UpdateMissions();
         }
         
@@ -112,10 +125,23 @@ namespace _Scripts.Missions
             foreach (var missionCell in rotatedPattern)
             {
                 var maybeMatchingRoom = rooms.FirstOrEmpty(room => room.GridPosition == startingPosition + missionCell.Position);
-                if (!maybeMatchingRoom.TryGetValue(out var matchingRoom)) return false;
-                if (!missionCell.OpenDirections.All(
-                        openDirection => matchingRoom.OpenDirections.Contains(openDirection))) return false;
-                roomsToUse.Add(matchingRoom);
+                var matchingRoomExists = maybeMatchingRoom.TryGetValue(out var matchingRoom);
+                switch (missionCell.Type)
+                {
+                    case MissionCellType.Any:
+                        break;
+                    case MissionCellType.Room:
+                        if (!matchingRoomExists) return false;
+                        if (!missionCell.OpenDirections.All(openDirection => matchingRoom.OpenDirections.Contains(openDirection))) return false;
+                        if (missionCell.ClosedDirections.Any(closedDirection => matchingRoom.OpenDirections.Contains(closedDirection))) return false;
+                        roomsToUse.Add(matchingRoom);
+                        break;
+                    case MissionCellType.Empty:
+                        if (matchingRoomExists) return false;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
             return true;

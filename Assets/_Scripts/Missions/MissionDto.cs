@@ -12,7 +12,6 @@ namespace _Scripts.Missions
         [SerializeField] private string missionName;
         [SerializeField] private List<MissionCell> pattern;
         [SerializeField] private List<RoomDto> rewardCards;
-        [SerializeField] private bool mirrorPattern;
 
         public MissionDto(Mission mission)
         {
