@@ -21,7 +21,7 @@ namespace _Scripts.Rooms
 
         [Inject] private IHandManager handManager;
         [Inject] private IPrefabPool prefabPool;
-        [Inject(Id = "uiCamera")] private Camera uiCamera;
+        [Inject] private IDungeonCameraController dungeonCameraController;
 
         private DungeonRoomGhostView roomGhostInstance;
         private List<DungeonRoomView> rooms = new();
@@ -54,7 +54,7 @@ namespace _Scripts.Rooms
                 return;
             }
 
-            Vector2 mouseWorld = uiCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mouseWorld = dungeonCameraController.GetMousePosition();
             var gridPosition = WorldToGrid(mouseWorld);
             var snappedPosition = GridToWorld(gridPosition);
             // Debug.Log($"Mouse Position {mouseWorld}, gridPosition {gridPosition}, snappedPosition {snappedPosition}");
@@ -86,10 +86,7 @@ namespace _Scripts.Rooms
 
             if (!GetAdjacentDirections(gridPosition, out var adjacentOpenDirections, out var adjacentClosedDirections))
                 return false;
-
-            // Debug.Log($"TryGetValidDirection > gridPosition {gridPosition}, " +
-            //           $"adjacentOpenDirections {adjacentOpenDirections.Select(d => Enum.GetName(typeof(RoomDirection), d)).Join(",")}, " +
-            //           $"adjacentClosedDirections {adjacentClosedDirections.Select(d => Enum.GetName(typeof(RoomDirection), d)).Join(",")}");
+            
             if (IsValidDirection(currentDirection, selectedRoomCardView.Dto.OpenDirections, adjacentOpenDirections, adjacentClosedDirections))
                 return true;
 
@@ -151,7 +148,8 @@ namespace _Scripts.Rooms
 
         private Vector2Int WorldToGrid(Vector2 worldPos)
         {
-            return new Vector2Int(Mathf.RoundToInt(worldPos.x + mousePositionOffset.x),
+            return new Vector2Int(
+                Mathf.RoundToInt(worldPos.x + mousePositionOffset.x),
                 Mathf.RoundToInt(worldPos.y + mousePositionOffset.y));
         }
 

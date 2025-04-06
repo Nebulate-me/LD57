@@ -15,6 +15,7 @@ namespace _Scripts.DI
     {
         [SerializeField] private PrefabPool prefabPool;
         
+        [SerializeField] private DungeonCameraController cameraController;
         [SerializeField] private DeckManager deckManager;
         [SerializeField] private HandManager handManager;
         [SerializeField] private DungeonGridManager dungeonGridManager;
@@ -42,6 +43,7 @@ namespace _Scripts.DI
             uiCamera = GameObject.Find("UICamera").GetComponent<Camera>();
             Container.Bind<Camera>().WithId("uiCamera").FromInstance(uiCamera).AsSingle();
 
+            Container.BindInterfacesTo<DungeonCameraController>().FromInstance(cameraController).AsSingle();
             Container.BindInterfacesTo<HandManager>().FromInstance(handManager).AsSingle();
             Container.BindInterfacesTo<DeckManager>().FromInstance(deckManager).AsSingle();
             Container.BindInterfacesTo<DungeonGridManager>().FromInstance(dungeonGridManager).AsSingle();
