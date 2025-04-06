@@ -376,13 +376,18 @@ MonoBehaviour:
   missionContainer: {fileID: 6964188634272490631}
   missionPrefab: {fileID: 503265729348047692, guid: 1b134855939bf5642b8b6be46ec593c2, type: 3}
   availableMissions:
+  - {fileID: 11400000, guid: e02237acedc343144ab66a06cd69770c, type: 2}
   - {fileID: 11400000, guid: 98a4206763a8b354b84313f4101a157b, type: 2}
+  - {fileID: 11400000, guid: 137462eca7289f5478410f5ad90d3233, type: 2}
+  - {fileID: 11400000, guid: 12a6843916f0a5844a7bca5e7e3f280e, type: 2}
   - {fileID: 11400000, guid: db1a82e51b57fa243959ac8da6ea2688, type: 2}
   - {fileID: 11400000, guid: 6d5ff557b975d24468866ccd193794ef, type: 2}
+  - {fileID: 11400000, guid: 9de2873706b4dd5428a2d51735552c88, type: 2}
+  - {fileID: 11400000, guid: 33ddb1fb4baa253468500588b5c4e0bc, type: 2}
   - {fileID: 11400000, guid: 1479481e4da3de240b62527ba9bb1878, type: 2}
-  - {fileID: 11400000, guid: 12a6843916f0a5844a7bca5e7e3f280e, type: 2}
-  - {fileID: 11400000, guid: e02237acedc343144ab66a06cd69770c, type: 2}
+  initialMission: {fileID: 11400000, guid: 98a4206763a8b354b84313f4101a157b, type: 2}
   missionHandSize: 1
+  missionHandSizeIncreases: 02000000050000000a000000
 --- !u!114 &262065868150238379
 MonoBehaviour:
   m_ObjectHideFlags: 0

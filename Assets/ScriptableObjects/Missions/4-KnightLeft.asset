@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b903d2cf5954fbe931e21dc856c44a9, type: 3}
-  m_Name: Line4
+  m_Name: 4-KnightLeft
   m_EditorClassIdentifier: 
-  missionName: The Corridor IV
+  missionName: Brickturn
   pattern:
   - type: 1
     position: {x: -1, y: 0}
@@ -24,14 +24,14 @@ MonoBehaviour:
     closedDirections: 
   - type: 1
     position: {x: 1, y: 0}
-    openDirections: 03000000
+    openDirections: 02000000
     closedDirections: 
   - type: 1
-    position: {x: 2, y: 0}
+    position: {x: 1, y: -1}
     openDirections: 
     closedDirections: 
   rewards:
-  - {fileID: 11400000, guid: 78e2d6f85cee67c4ebe2941c9139a283, type: 2}
+  - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
+  - {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
   - {fileID: 11400000, guid: ca594d196e478954fa78777a1c887400, type: 2}
-  - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
-  - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
+  - {fileID: 11400000, guid: 78e2d6f85cee67c4ebe2941c9139a283, type: 2}
