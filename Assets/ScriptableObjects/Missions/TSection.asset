@@ -16,14 +16,24 @@ MonoBehaviour:
   pattern:
   - type: 1
     position: {x: -1, y: 0}
+    openDirections: 03000000
+    closedDirections: 
   - type: 1
     position: {x: 0, y: 0}
+    openDirections: 03000000
+    closedDirections: 
   - type: 1
     position: {x: 1, y: 0}
+    openDirections: 0000000002000000
+    closedDirections: 
   - type: 1
     position: {x: 1, y: -1}
+    openDirections: 
+    closedDirections: 
   - type: 1
     position: {x: 1, y: 1}
+    openDirections: 
+    closedDirections: 
   rewards:
   - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
   - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}

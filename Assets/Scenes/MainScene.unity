@@ -560,6 +560,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 480185226111720968, guid: 3e23e730c728f924aa2942ff699deeda, type: 3}
+      propertyPath: poolsTransform
+      value: 
+      objectReference: {fileID: 1063138365}
     - target: {fileID: 2178921146081422122, guid: 3e23e730c728f924aa2942ff699deeda, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -778,6 +782,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd8213cffcb649728bff63a1155bed93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1063138364
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1063138365}
+  m_Layer: 0
+  m_Name: PrefabPools
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1063138365
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063138364}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1241163990
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -987,3 +1022,4 @@ SceneRoots:
   - {fileID: 277608409}
   - {fileID: 733143486}
   - {fileID: 628187572}
+  - {fileID: 1063138365}

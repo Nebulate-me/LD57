@@ -5,7 +5,6 @@ using _Scripts.Rooms;
 using _Scripts.Utils;
 using Signals;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Utilities;
 using Utilities.Monads;
 using Utilities.Prefabs;
@@ -113,8 +112,9 @@ namespace _Scripts.Missions
             foreach (var missionCell in rotatedPattern)
             {
                 var maybeMatchingRoom = rooms.FirstOrEmpty(room => room.GridPosition == startingPosition + missionCell.Position);
-                // TODO: Implement check for neighbor directions
                 if (!maybeMatchingRoom.TryGetValue(out var matchingRoom)) return false;
+                if (!missionCell.OpenDirections.All(
+                        openDirection => matchingRoom.OpenDirections.Contains(openDirection))) return false;
                 roomsToUse.Add(matchingRoom);
             }
 
@@ -126,7 +126,11 @@ namespace _Scripts.Missions
             var firstPatternCell = missionDtoPattern.First();
             var normalizeShift = new Vector2Int(firstPatternCell.Position.x, firstPatternCell.Position.y);
             return missionDtoPattern
-                .Select(cell => new MissionCell(cell.Type, cell.Position - normalizeShift))
+                .Select(cell => new MissionCell(
+                    cell.Type,
+                    cell.Position - normalizeShift,
+                    cell.OpenDirections,
+                    cell.ClosedDirections))
                 .ToList();
         }
         
@@ -134,8 +138,13 @@ namespace _Scripts.Missions
         {
             var rotation = direction.ToRotation();
             return pattern.Select(cell => 
-                new MissionCell(cell.Type, (rotation * cell.Position.ToVector3()).ToVector2Int()))
-                .ToList();
+                new MissionCell(
+                    cell.Type,
+                    (rotation * cell.Position.ToVector3()).ToVector2Int(),
+                    cell.OpenDirections.Select(openDirection => openDirection.Rotate(direction)).ToList(),
+                    cell.ClosedDirections.Select(closedDirection => closedDirection.Rotate(direction)).ToList()
+                )
+                ).ToList();
         }
     }
 }
