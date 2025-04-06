@@ -12,6 +12,7 @@ namespace _Scripts.Missions
     {
         [SerializeField] private TextMeshProUGUI scoreText;
         [SerializeField] private Button restartButton;
+        [SerializeField] private int scoreMultiplier = 50;
 
         [Inject] private IDeckManager deckManager;
         
