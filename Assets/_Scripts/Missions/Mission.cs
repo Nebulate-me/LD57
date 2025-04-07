@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Scripts.Rooms;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Scripts.Missions
 {
@@ -11,14 +12,16 @@ namespace _Scripts.Missions
         [SerializeField] private List<MissionCell> pattern = new();
         [SerializeField] private bool mirrorPatternY;
         [SerializeField] private List<Room> rewards = new();
-        [SerializeField] private int requiredCompletedMissions = 0;
+        [FormerlySerializedAs("requiredCompletedMissions")] [SerializeField] private int minCompletedMissions = 0;
+        [SerializeField] private int maxCompletedMissions = 0; // 0 - no max value here
         [SerializeField] private int rewardScore = 1;
 
         public string MissionName => missionName;
         public List<MissionCell> Pattern => pattern;
         public bool MirrorPatternY => mirrorPatternY;
         public List<Room> Rewards => rewards;
-        public int RequiredCompletedMissions => requiredCompletedMissions;
+        public int MinCompletedMissions => minCompletedMissions;
+        public int MaxCompletedMissions => maxCompletedMissions;
         public int RewardScore => rewardScore;
 
         public MissionDto ToDto()

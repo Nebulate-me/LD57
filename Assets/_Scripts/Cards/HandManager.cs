@@ -89,7 +89,8 @@ namespace _Scripts.Cards
                 {
                     cardView.Deselect();
                 }
-
+            SignalsHub.DispatchAsync(new RoomCardSelectedSignal());
+            
             return true;
         }
 

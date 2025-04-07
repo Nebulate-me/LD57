@@ -13,7 +13,8 @@ namespace _Scripts.Missions
         [SerializeField] private List<MissionCell> pattern;
         [SerializeField] private bool flipPatternY;
         [SerializeField] private List<RoomDto> rewardCards;
-        [SerializeField] private int requiredCompletedMissions;
+        [SerializeField] private int minCompletedMissions;
+        [SerializeField] private int maxCompletedMissions;
         [SerializeField] private int rewardScore;
 
         public MissionDto(Mission mission)
@@ -22,7 +23,8 @@ namespace _Scripts.Missions
             pattern = mission.Pattern;
             flipPatternY = mission.MirrorPatternY;
             rewardCards = mission.Rewards.Select(reward => reward.ToDto()).ToList();
-            requiredCompletedMissions = mission.RequiredCompletedMissions;
+            minCompletedMissions = mission.MinCompletedMissions;
+            maxCompletedMissions = mission.MaxCompletedMissions;
             rewardScore = mission.RewardScore * 50;
         }
 
@@ -30,7 +32,8 @@ namespace _Scripts.Missions
         public List<MissionCell> Pattern => pattern;
         public bool FlipPatternY => flipPatternY;
         public List<RoomDto> RewardCards => rewardCards;
-        public int RequiredCompletedMissions => requiredCompletedMissions;
+        public int MinCompletedMissions => minCompletedMissions;
+        public int MaxCompletedMissions => maxCompletedMissions;
         public int RewardScore => rewardScore;
     }
 }

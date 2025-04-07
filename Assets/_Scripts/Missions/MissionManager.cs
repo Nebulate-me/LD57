@@ -98,8 +98,11 @@ namespace _Scripts.Missions
         
         private void RefillMissionHand()
         {
-            var unlockedMissions =
-                availableMissions.Where(mission => completedMissionCount >= mission.RequiredCompletedMissions && mission.MissionName != lastCompletedMissionName).ToList();
+            var unlockedMissions = availableMissions
+                .Where(mission => completedMissionCount >= mission.MinCompletedMissions &&
+                                  (mission.MaxCompletedMissions <= 0 || completedMissionCount < mission.MaxCompletedMissions) && 
+                                  mission.MissionName != lastCompletedMissionName)
+                .ToList();
             while (missionCards.Count < missionHandSize)
             {
                 var missionDto = randomService.Sample(unlockedMissions).ToDto();

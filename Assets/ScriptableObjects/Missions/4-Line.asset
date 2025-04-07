@@ -30,10 +30,12 @@ MonoBehaviour:
     position: {x: 2, y: 0}
     openDirections: 
     closedDirections: 
+  mirrorPatternY: 0
   rewards:
   - {fileID: 11400000, guid: 78e2d6f85cee67c4ebe2941c9139a283, type: 2}
   - {fileID: 11400000, guid: ca594d196e478954fa78777a1c887400, type: 2}
   - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
   - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
-  requiredCompletedMissions: 2
+  minCompletedMissions: 2
+  maxCompletedMissions: 15
   rewardScore: 2
