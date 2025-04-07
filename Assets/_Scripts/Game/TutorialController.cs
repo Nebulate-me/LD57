@@ -64,21 +64,30 @@ namespace _Scripts.Game
         {
             if (!GetCurrentTutorialStep().TryGetValue(out var currentStep)) return;
             if (currentStep.ShowTrigger == TutorialStepTrigger.OnRoomCardSelected)
+            {
+                HideShownTutorialStep();
                 ShowTutorialStep(currentStep);
+            }
         }
         
         private void OnRoomPlaced(RoomPlacedSignal obj)
         {
             if (!GetCurrentTutorialStep().TryGetValue(out var currentStep)) return;
             if (currentStep.ShowTrigger == TutorialStepTrigger.OnRoomCardPlaced)
+            {
+                HideShownTutorialStep();
                 ShowTutorialStep(currentStep);
+            }
         }
         
         private void OnMissionCompleted(MissionCompletedSignal obj)
         {
             if (!GetCurrentTutorialStep().TryGetValue(out var currentStep)) return;
             if (currentStep.ShowTrigger == TutorialStepTrigger.OnMissionCompleted)
+            {
+                HideShownTutorialStep();
                 ShowTutorialStep(currentStep);
+            }
         }
         
 
@@ -91,8 +100,6 @@ namespace _Scripts.Game
         
         private void ShowTutorialStep(TutorialStepConfig tutorialStep)
         {
-            HideShownTutorialStep();
-                
             tutorialStep.Content.SetActive(true);
             shownTutorialStep = Maybe.Of(tutorialStep);
             currentTutorialStepIndex++;
@@ -104,6 +111,11 @@ namespace _Scripts.Game
             {
                 step.Content.SetActive(false);
                 shownTutorialStep = Maybe.Empty<TutorialStepConfig>();
+
+                if (GetCurrentTutorialStep().TryGetValue(out var currentStep) && currentStep.ShowTrigger == TutorialStepTrigger.None)
+                {
+                    ShowTutorialStep(currentStep);
+                }
             }
         }
     }

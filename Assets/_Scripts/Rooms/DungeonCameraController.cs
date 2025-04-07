@@ -1,4 +1,3 @@
-using System;
 using _Scripts.Cards;
 using Signals;
 using UnityEngine;
@@ -12,18 +11,17 @@ namespace _Scripts.Rooms
         [SerializeField] private float zoomSpeed = 1f;
         [SerializeField] private float minZoom = 10f;
         [SerializeField] private float maxZoom = 100f;
-        [SerializeField] private float cameraMovementSpeed = 0.1f;
-        [SerializeField] private Vector2 noMovementRadius = new(2f, 1f);
         [SerializeField] private Vector2 positionClampOffset = new(0, 1f);
-        [SerializeField] private float minCameraMovementY = -5f;
-        [SerializeField] private float maxCameraMovementY = 5f;
+        [SerializeField] private float panSpeed = 1f;
+        [SerializeField] private float panZoomFactor = 5f;
         
         [Inject] private IHandManager handManager;
         [Inject] private IDungeonGridManager dungeonGridManager;
-        [Inject(Id = "uiCamera")] private Camera uiCamera;
-        
+
         private Bounds dungeonBounds;
         private Plane worldPlane;
+        private Vector3 lastMousePosition;
+        private bool isDragging;
         
         private void OnEnable()
         {
@@ -47,30 +45,37 @@ namespace _Scripts.Rooms
 
         private void LateUpdate()
         {
-            var mousePosition = uiCamera.ScreenToWorldPoint(Input.mousePosition);
-            // Debug.Log($"Move Camera > {mousePosition}");
-            var cameraDirection = (Mathf.Abs(mousePosition.x) > noMovementRadius.x ||
-                                   Mathf.Abs(mousePosition.y) > noMovementRadius.y) &&
-                                  mousePosition.y >= minCameraMovementY &&
-                                  mousePosition.y <= maxCameraMovementY
-                ? mousePosition.normalized * cameraMovementSpeed 
-                : Vector3.zero;
-            if (cameraDirection != Vector3.zero)
-            {
-                var targetCameraPosition = ClampCameraPosition(mainCamera.transform.position + cameraDirection);
-                var mainCameraTransform = mainCamera.transform;
-                var position = mainCameraTransform.position;
-                position = new Vector3(
-                    (targetCameraPosition.x + position.x) / 2f,
-                    (targetCameraPosition.y + position.y) / 2f,
-                    -10f);
-                mainCameraTransform.position = position;
-                
-            }
+            HandleMouseDrag();
 
             if (handManager.SelectedRoomCardView.IsNotPresent && Input.mouseScrollDelta.y != 0)
             {
                 mainCamera.fieldOfView = ClampCameraZoom(mainCamera.fieldOfView - Mathf.Sign(Input.mouseScrollDelta.y) * zoomSpeed);   
+            }
+        }
+        
+        private void HandleMouseDrag()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                isDragging = true;
+                lastMousePosition = Input.mousePosition;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                isDragging = false;
+            }
+
+            if (isDragging)
+            {
+                Vector3 delta = Input.mousePosition - lastMousePosition;
+                Vector3 move = -delta * panSpeed * Time.deltaTime;
+
+                move *= mainCamera.fieldOfView / panZoomFactor;
+
+                mainCamera.transform.position = ClampCameraPosition(mainCamera.transform.position + move);
+                
+                lastMousePosition = Input.mousePosition;
             }
         }
 
