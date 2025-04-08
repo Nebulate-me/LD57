@@ -14,10 +14,10 @@ namespace _Scripts.Game
     {
         [SerializeField] private GameObject helpPopover;
         [SerializeField] private List<TutorialStepConfig> tutorialSteps = new();
-        
-        private int currentTutorialStepIndex = 0;
-        private IMaybe<TutorialStepConfig> shownTutorialStep = Maybe.Empty<TutorialStepConfig>();
-        
+
+        private int nextTutorialStepIndex;
+        private IMaybe<TutorialStepConfig> maybeShownTutorialStep = Maybe.Empty<TutorialStepConfig>();
+
         private void OnEnable()
         {
             SignalsHub.AddListener<RoomCardSelectedSignal>(OnRoomCardSelected);
@@ -31,23 +31,18 @@ namespace _Scripts.Game
             SignalsHub.RemoveListener<RoomPlacedSignal>(OnRoomPlaced);
             SignalsHub.RemoveListener<MissionCompletedSignal>(OnMissionCompleted);
         }
-        
+
         private void Start()
         {
             helpPopover.SetActive(false);
-            foreach (var tutorialStepConfig in tutorialSteps)
-            {
-                tutorialStepConfig.Content.SetActive(false);
-            }
-            ShowTutorialStep(tutorialSteps.First());
+            foreach (var tutorialStepConfig in tutorialSteps) tutorialStepConfig.Content.SetActive(false);
+
+            OnTriggerEvent(TutorialStepTrigger.None);
         }
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
-            {
-                HideShownTutorialStep();
-            }
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) OnTriggerEvent(TutorialStepTrigger.OnClick);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -62,61 +57,57 @@ namespace _Scripts.Game
 
         private void OnRoomCardSelected(RoomCardSelectedSignal obj)
         {
-            if (!GetCurrentTutorialStep().TryGetValue(out var currentStep)) return;
-            if (currentStep.ShowTrigger == TutorialStepTrigger.OnRoomCardSelected)
-            {
-                HideShownTutorialStep();
-                ShowTutorialStep(currentStep);
-            }
+            OnTriggerEvent(TutorialStepTrigger.OnRoomCardSelected);
         }
-        
+
         private void OnRoomPlaced(RoomPlacedSignal obj)
         {
-            if (!GetCurrentTutorialStep().TryGetValue(out var currentStep)) return;
-            if (currentStep.ShowTrigger == TutorialStepTrigger.OnRoomCardPlaced)
-            {
-                HideShownTutorialStep();
-                ShowTutorialStep(currentStep);
-            }
+            OnTriggerEvent(TutorialStepTrigger.OnRoomCardPlaced);
         }
-        
+
         private void OnMissionCompleted(MissionCompletedSignal obj)
         {
-            if (!GetCurrentTutorialStep().TryGetValue(out var currentStep)) return;
-            if (currentStep.ShowTrigger == TutorialStepTrigger.OnMissionCompleted)
+            OnTriggerEvent(TutorialStepTrigger.OnMissionCompleted);
+        }
+
+        private void OnTriggerEvent(TutorialStepTrigger triggerType)
+        {
+            if (maybeShownTutorialStep.TryGetValue(out var shownTutorialStep) &&
+                shownTutorialStep.HideTrigger == triggerType)
             {
-                HideShownTutorialStep();
-                ShowTutorialStep(currentStep);
+                HideTutorialStep(shownTutorialStep);
+                maybeShownTutorialStep = Maybe.Empty<TutorialStepConfig>();
+            }
+
+            if (GetTutorialStep(nextTutorialStepIndex).TryGetValue(out var nextTutorialStep)
+                && nextTutorialStep.ShowTrigger == triggerType)
+            {
+                ShowTutorialStep(nextTutorialStep);
+                maybeShownTutorialStep = Maybe.Of(nextTutorialStep);
+                nextTutorialStepIndex++;
             }
         }
-        
 
-        private IMaybe<TutorialStepConfig> GetCurrentTutorialStep()
+        private IMaybe<TutorialStepConfig> GetTutorialStep(int tutorialStepIndex)
         {
-            return tutorialSteps.Count > currentTutorialStepIndex
-                ? Maybe.Of(tutorialSteps[currentTutorialStepIndex])
+            return IsValidStepIndex(tutorialStepIndex)
+                ? Maybe.Of(tutorialSteps[nextTutorialStepIndex])
                 : Maybe.Empty<TutorialStepConfig>();
         }
-        
+
         private void ShowTutorialStep(TutorialStepConfig tutorialStep)
         {
             tutorialStep.Content.SetActive(true);
-            shownTutorialStep = Maybe.Of(tutorialStep);
-            currentTutorialStepIndex++;
         }
 
-        private void HideShownTutorialStep()
+        private void HideTutorialStep(TutorialStepConfig tutorialStep)
         {
-            if (shownTutorialStep.TryGetValue(out var step))
-            {
-                step.Content.SetActive(false);
-                shownTutorialStep = Maybe.Empty<TutorialStepConfig>();
+            tutorialStep.Content.SetActive(false);
+        }
 
-                if (GetCurrentTutorialStep().TryGetValue(out var currentStep) && currentStep.ShowTrigger == TutorialStepTrigger.None)
-                {
-                    ShowTutorialStep(currentStep);
-                }
-            }
+        private bool IsValidStepIndex(int tutorialStepIndex)
+        {
+            return tutorialStepIndex >= 0 && tutorialStepIndex < tutorialSteps.Count;
         }
     }
 }

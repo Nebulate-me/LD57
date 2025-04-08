@@ -3630,14 +3630,19 @@ MonoBehaviour:
   tutorialSteps:
   - content: {fileID: 50318709}
     showTrigger: 0
+    hideTrigger: 1
   - content: {fileID: 1333580129}
     showTrigger: 1
+    hideTrigger: 2
   - content: {fileID: 1186911080}
     showTrigger: 2
+    hideTrigger: 3
   - content: {fileID: 932022549}
     showTrigger: 3
+    hideTrigger: 4
   - content: {fileID: 1504476688}
-    showTrigger: 0
+    showTrigger: 4
+    hideTrigger: 4
 --- !u!224 &4145232440993641901
 RectTransform:
   m_ObjectHideFlags: 0

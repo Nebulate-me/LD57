@@ -8,8 +8,10 @@ namespace _Scripts.Game
     {
         [SerializeField] private GameObject content;
         [SerializeField] private TutorialStepTrigger showTrigger;
+        [SerializeField] private TutorialStepTrigger hideTrigger;
         
         public GameObject Content => content;
         public TutorialStepTrigger ShowTrigger => showTrigger;
+        public TutorialStepTrigger HideTrigger => hideTrigger;
     }
 }

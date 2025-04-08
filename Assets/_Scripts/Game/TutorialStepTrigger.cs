@@ -5,6 +5,7 @@ namespace _Scripts.Game
         None = 0,
         OnRoomCardSelected = 1,
         OnRoomCardPlaced = 2,
-        OnMissionCompleted = 3
+        OnMissionCompleted = 3,
+        OnClick = 4,
     }
 }
