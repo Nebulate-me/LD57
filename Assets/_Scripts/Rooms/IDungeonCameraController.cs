@@ -4,6 +4,7 @@ namespace _Scripts.Rooms
 {
     public interface IDungeonCameraController
     {
-        Vector3 GetMousePosition();
+        Vector3 GetMouseWorldPosition();
+        Vector3 GetMouseUIPosition();
     }
 }

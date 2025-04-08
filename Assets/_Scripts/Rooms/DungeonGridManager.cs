@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
@@ -19,20 +20,25 @@ namespace _Scripts.Rooms
         [SerializeField] private GameObject dungeonRoomGhostPrefab;
         [SerializeField] private Room startingRoom;
         [SerializeField] private Vector2 mousePositionOffset;
+        [SerializeField] private List<RectTransform> unclickableScreenAreas;
 
         [Inject] private IHandManager handManager;
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IDungeonCameraController dungeonCameraController;
         [Inject] private ISoundManager soundManager;
+        [Inject(Id = "uiCamera")] private Camera uiCamera;
 
         private DungeonRoomGhostView roomGhostInstance;
         private List<DungeonRoomView> rooms = new();
         private RoomDirection currentDirection = RoomDirectionExtensions.Default;
+        private List<Bounds> unclickableBounds;
 
         private void Start()
         {
             currentDirection = RoomDirectionExtensions.Default;
             rooms = new List<DungeonRoomView>();
+            unclickableBounds = unclickableScreenAreas.Select(RectTransformUtility.CalculateRelativeRectTransformBounds)
+                .ToList();
             roomGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
                 .GetComponent<DungeonRoomGhostView>();
 
@@ -48,7 +54,6 @@ namespace _Scripts.Rooms
                 return;
             }
 
-            roomGhostInstance.gameObject.SetActive(true);
             if (Input.GetMouseButtonDown(1))
             {
                 roomGhostInstance.gameObject.SetActive(false);
@@ -56,7 +61,16 @@ namespace _Scripts.Rooms
                 return;
             }
 
-            Vector2 mouseWorld = dungeonCameraController.GetMousePosition();
+            var mouseUI = dungeonCameraController.GetMouseUIPosition();
+            if (unclickableScreenAreas.Any(area => RectTransformUtility.RectangleContainsScreenPoint(area, mouseUI, uiCamera)))
+            {
+                roomGhostInstance.gameObject.SetActive(false);
+                return;
+            }
+            
+            roomGhostInstance.gameObject.SetActive(true);
+
+            Vector2 mouseWorld = dungeonCameraController.GetMouseWorldPosition();
             var gridPosition = WorldToGrid(mouseWorld);
             var snappedPosition = GridToWorld(gridPosition);
             // Debug.Log($"Mouse Position {mouseWorld}, gridPosition {gridPosition}, snappedPosition {snappedPosition}");
@@ -78,29 +92,29 @@ namespace _Scripts.Rooms
             if (selectedRoomCardView.Dto.IsRotatable && Input.mouseScrollDelta.y != 0)
                 RotateGhostView(selectedRoomCardView, gridPosition, Input.mouseScrollDelta.y > 0);
 
-            if (Input.GetMouseButtonDown(0)) 
+            if (Input.GetMouseButtonDown(0))
                 PlaceRoom(selectedRoomCardView.Dto, gridPosition);
         }
 
-        private bool TryGetValidDirection(RoomCardView selectedRoomCardView, Vector2Int gridPosition, out RoomDirection validDirection)
+        private bool TryGetValidDirection(RoomCardView selectedRoomCardView, Vector2Int gridPosition,
+            out RoomDirection validDirection)
         {
             validDirection = currentDirection;
 
             if (!GetAdjacentDirections(gridPosition, out var adjacentOpenDirections, out var adjacentClosedDirections))
                 return false;
-            
-            if (IsValidDirection(currentDirection, selectedRoomCardView.Dto.OpenDirections, adjacentOpenDirections, adjacentClosedDirections))
+
+            if (IsValidDirection(currentDirection, selectedRoomCardView.Dto.OpenDirections, adjacentOpenDirections,
+                    adjacentClosedDirections))
                 return true;
 
             foreach (var roomDirection in EnumExtensions.GetAllItems<RoomDirection>())
-            {
                 if (IsValidDirection(roomDirection, selectedRoomCardView.Dto.OpenDirections,
                         adjacentOpenDirections, adjacentClosedDirections))
                 {
                     validDirection = roomDirection;
                     return true;
                 }
-            }
 
             return false;
         }
@@ -133,13 +147,15 @@ namespace _Scripts.Rooms
             IEnumerable<RoomDirection> adjacentOpenDirections,
             IEnumerable<RoomDirection> adjacentClosedDirections)
         {
-            var rotatedDtoOpenDirections = dtoOpenDirections.Select(direction => direction.Rotate(directionToCheck)).ToList();
+            var rotatedDtoOpenDirections =
+                dtoOpenDirections.Select(direction => direction.Rotate(directionToCheck)).ToList();
             var rotatedDtoClosedDirections = RoomDirectionExtensions.InvertList(rotatedDtoOpenDirections);
-            var allOpenDirectionsOpen = adjacentOpenDirections.All(openDirection => rotatedDtoOpenDirections.Contains(openDirection));
-            var allClosedDirectionsClosed = adjacentClosedDirections.All(closedDirection => rotatedDtoClosedDirections.Contains(closedDirection));
+            var allOpenDirectionsOpen =
+                adjacentOpenDirections.All(openDirection => rotatedDtoOpenDirections.Contains(openDirection));
+            var allClosedDirectionsClosed =
+                adjacentClosedDirections.All(closedDirection => rotatedDtoClosedDirections.Contains(closedDirection));
 
             return allOpenDirectionsOpen && allClosedDirectionsClosed;
-
         }
 
         private bool IsPositionEmptyAndAdjacent(Vector2Int gridPosition)
@@ -194,18 +210,20 @@ namespace _Scripts.Rooms
             var dungeonRoom = prefabPool.Spawn(dungeonRoomPrefab, roomContainer)
                 .GetComponent<DungeonRoomView>();
             dungeonRoom.transform.position = worldPosition;
-            dungeonRoom.SetUp(selectedRoomDto, gridPosition, selectedRoomDto.IsRotatable ? currentDirection : RoomDirectionExtensions.Default);
+            dungeonRoom.SetUp(selectedRoomDto, gridPosition,
+                selectedRoomDto.IsRotatable ? currentDirection : RoomDirectionExtensions.Default);
             rooms.Add(dungeonRoom);
 
             handManager.TryPlaySelectRoomCard();
             handManager.RefillHand();
             roomGhostInstance.gameObject.SetActive(false);
-            
+
             soundManager.PlaySound(SoundType.PlaceRoom);
             SignalsHub.DispatchAsync(new RoomPlacedSignal(dungeonRoom));
         }
 
         public IReadOnlyList<DungeonRoomView> Rooms => rooms;
+
         public Bounds GetRoomBounds()
         {
             var minX = rooms.Min(room => room.GridPosition.x);
@@ -215,7 +233,7 @@ namespace _Scripts.Rooms
 
             var center = new Vector3((minX + maxX) / 2f, (minY + maxY) / 2f);
             var size = new Vector3(maxX - minX, maxY - minY);
-            
+
             return new Bounds(center, size);
         }
     }

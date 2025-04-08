@@ -91,8 +91,13 @@ namespace _Scripts.Rooms
                 Mathf.Clamp(cameraPosition.y, dungeonBounds.min.y - positionClampOffset.y, dungeonBounds.max.y + positionClampOffset.y),
                 -10f);
         }
+
+        public Vector3 GetMouseUIPosition()
+        {
+            return Input.mousePosition;
+        }
         
-        public Vector3 GetMousePosition()
+        public Vector3 GetMouseWorldPosition()
         {
             var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (worldPlane.Raycast(ray, out var enter)) {
