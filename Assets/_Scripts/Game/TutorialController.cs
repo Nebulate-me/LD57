@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using _Scripts.Missions;
 using _Scripts.Rooms;
 using _Scripts.Utils;
@@ -17,6 +16,9 @@ namespace _Scripts.Game
 
         private int nextTutorialStepIndex;
         private IMaybe<TutorialStepConfig> maybeShownTutorialStep = Maybe.Empty<TutorialStepConfig>();
+        
+        private const string TutorialCompletedKey = "TutorialCompleted";
+        private const int TutorialCompletedValue = 1;
 
         private void OnEnable()
         {
@@ -37,7 +39,10 @@ namespace _Scripts.Game
             helpPopover.SetActive(false);
             foreach (var tutorialStepConfig in tutorialSteps) tutorialStepConfig.Content.SetActive(false);
 
-            OnTriggerEvent(TutorialStepTrigger.None);
+            if (!PlayerPrefs.HasKey(TutorialCompletedKey) || PlayerPrefs.GetInt(TutorialCompletedKey) != TutorialCompletedValue)
+            {
+                OnTriggerEvent(TutorialStepTrigger.None);   
+            }
         }
 
         private void Update()
@@ -85,6 +90,10 @@ namespace _Scripts.Game
                 ShowTutorialStep(nextTutorialStep);
                 maybeShownTutorialStep = Maybe.Of(nextTutorialStep);
                 nextTutorialStepIndex++;
+                if (!IsValidStepIndex(nextTutorialStepIndex))
+                {
+                    PlayerPrefs.SetInt(TutorialCompletedKey, TutorialCompletedValue);
+                }
             }
         }
 
