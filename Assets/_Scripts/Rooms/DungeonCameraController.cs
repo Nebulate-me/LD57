@@ -49,7 +49,7 @@ namespace _Scripts.Rooms
 
             if (handManager.SelectedRoomCardView.IsNotPresent && Input.mouseScrollDelta.y != 0)
             {
-                mainCamera.fieldOfView = ClampCameraZoom(mainCamera.fieldOfView - Mathf.Sign(Input.mouseScrollDelta.y) * zoomSpeed);   
+                mainCamera.orthographicSize = ClampCameraZoom(mainCamera.orthographicSize - Mathf.Sign(Input.mouseScrollDelta.y) * zoomSpeed);   
             }
         }
         
@@ -61,7 +61,7 @@ namespace _Scripts.Rooms
                 lastMousePosition = Input.mousePosition;
             }
 
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(0) || handManager.SelectedRoomCardView.IsPresent)
             {
                 isDragging = false;
             }
@@ -71,7 +71,7 @@ namespace _Scripts.Rooms
                 Vector3 delta = Input.mousePosition - lastMousePosition;
                 Vector3 move = -delta * panSpeed * Time.deltaTime;
 
-                move *= mainCamera.fieldOfView / panZoomFactor;
+                move *= mainCamera.orthographicSize / panZoomFactor;
 
                 mainCamera.transform.position = ClampCameraPosition(mainCamera.transform.position + move);
                 

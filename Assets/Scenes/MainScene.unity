@@ -194,9 +194,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1504476689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -233.93005, y: 196}
+  m_AnchorMin: {x: 0.5, y: 0.75}
+  m_AnchorMax: {x: 0.5, y: 0.75}
+  m_AnchoredPosition: {x: -233.93005, y: -44}
   m_SizeDelta: {x: 392.79004, y: 75}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &90093320
@@ -422,7 +422,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 30
-  orthographic: 0
+  orthographic: 1
   orthographic size: 2.8125
   m_Depth: -1
   m_CullingMask:
@@ -513,11 +513,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 330585545}
   zoomSpeed: 2
-  minZoom: 30
-  maxZoom: 120
-  positionClampOffset: {x: 0, y: 0.5}
+  minZoom: 2.8125
+  maxZoom: 10
+  positionClampOffset: {x: 0.1, y: 0.1}
   panSpeed: 0.1
-  panZoomFactor: 5
+  panZoomFactor: 1
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -887,9 +887,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1504476689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 241.29993, y: 196}
+  m_AnchorMin: {x: 0.5, y: 0.75}
+  m_AnchorMax: {x: 0.5, y: 0.75}
+  m_AnchoredPosition: {x: 241.29993, y: -44}
   m_SizeDelta: {x: 407.54, y: 75}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &537566527
@@ -1285,9 +1285,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1504476689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 114}
+  m_AnchorMin: {x: 0.5, y: 0.75}
+  m_AnchorMax: {x: 0.5, y: 0.75}
+  m_AnchoredPosition: {x: 0, y: -126}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &758906369
@@ -1496,9 +1496,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1504476689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 196}
+  m_AnchorMin: {x: 0.5, y: 0.75}
+  m_AnchorMax: {x: 0.5, y: 0.75}
+  m_AnchoredPosition: {x: 0, y: -44}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &775697603
@@ -1943,9 +1943,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1504476689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 152.33997, y: 114}
+  m_AnchorMin: {x: 0.5, y: 0.75}
+  m_AnchorMax: {x: 0.5, y: 0.75}
+  m_AnchoredPosition: {x: 152.33997, y: -126}
   m_SizeDelta: {x: 229.62, y: 75}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1571653581
@@ -2156,7 +2156,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -125, y: 302.13}
+  m_AnchoredPosition: {x: -125, y: 329.6}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1649605829
@@ -2179,7 +2179,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3801619b194c13e48aa5410f544100df, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d0aadbc730029bc45b3548d1c71934e9, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -3820,13 +3820,13 @@ MonoBehaviour:
   - room: {fileID: 11400000, guid: 78e2d6f85cee67c4ebe2941c9139a283, type: 2}
     amount: 3
   - room: {fileID: 11400000, guid: ca594d196e478954fa78777a1c887400, type: 2}
-    amount: 4
+    amount: 5
   - room: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    amount: 4
+    amount: 5
   - room: {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
     amount: 3
   - room: {fileID: 11400000, guid: c1183dd5890ba9449a48bc2ac61260fd, type: 2}
-    amount: 2
+    amount: 0
   cards: []
 --- !u!1001 &5897042573385978680
 PrefabInstance:
@@ -4893,7 +4893,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4003974922296095236}
   m_Layer: 5
-  m_Name: Help
+  m_Name: Tutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

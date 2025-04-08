@@ -213,7 +213,7 @@ namespace _Scripts.Rooms
             var maxX = rooms.Max(room => room.GridPosition.x);
             var maxY = rooms.Max(room => room.GridPosition.y);
 
-            var center = new Vector3((minX + maxX) / 2f, (minY + maxX) / 2f);
+            var center = new Vector3((minX + maxX) / 2f, (minY + maxY) / 2f);
             var size = new Vector3(maxX - minX, maxY - minY);
             
             return new Bounds(center, size);
