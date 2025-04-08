@@ -43,5 +43,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ca594d196e478954fa78777a1c887400, type: 2}
   - {fileID: 11400000, guid: b01aaed4d392196429e16164675738c1, type: 2}
   minCompletedMissions: 2
-  maxCompletedMissions: 0
+  maxCompletedMissions: 20
   rewardScore: 3

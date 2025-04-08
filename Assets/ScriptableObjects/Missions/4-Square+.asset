@@ -10,33 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b903d2cf5954fbe931e21dc856c44a9, type: 3}
-  m_Name: 4-Square
+  m_Name: 4-Square+
   m_EditorClassIdentifier: 
-  missionName: Barracks
+  missionName: Outpost
   pattern:
   - type: 1
     position: {x: -1, y: 0}
     openDirections: 0300000000000000
-    closedDirections: 
+    closedDirections: 02000000
   - type: 1
     position: {x: 0, y: 0}
     openDirections: 00000000
-    closedDirections: 
+    closedDirections: 02000000
   - type: 1
     position: {x: 0, y: 1}
     openDirections: 0200000001000000
-    closedDirections: 
+    closedDirections: 0300000000000000
   - type: 1
     position: {x: -1, y: 1}
     openDirections: 
-    closedDirections: 
+    closedDirections: 0000000001000000
   mirrorPatternY: 1
   rewards:
   - {fileID: 11400000, guid: c1183dd5890ba9449a48bc2ac61260fd, type: 2}
   - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
-  - {fileID: 11400000, guid: ca594d196e478954fa78777a1c887400, type: 2}
+  - {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
   - {fileID: 11400000, guid: ca594d196e478954fa78777a1c887400, type: 2}
   - {fileID: 11400000, guid: b01aaed4d392196429e16164675738c1, type: 2}
-  minCompletedMissions: 2
-  maxCompletedMissions: 20
-  rewardScore: 4
+  minCompletedMissions: 20
+  maxCompletedMissions: 0
+  rewardScore: 7

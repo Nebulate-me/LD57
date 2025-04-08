@@ -513,6 +513,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 330585545}
   zoomSpeed: 2
+  zoomSpeedButtonMultiplier: 0.1
   minZoom: 2.8125
   maxZoom: 10
   positionClampOffset: {x: 0.1, y: 0.1}
@@ -3452,6 +3453,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8661897915895699391, guid: 1b134855939bf5642b8b6be46ec593c2, type: 3}
+      propertyPath: m_text
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 8661897915895699391, guid: 1b134855939bf5642b8b6be46ec593c2, type: 3}
+      propertyPath: m_fontSize
+      value: 24
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3870,14 +3879,21 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 137462eca7289f5478410f5ad90d3233, type: 2}
   - {fileID: 11400000, guid: 12a6843916f0a5844a7bca5e7e3f280e, type: 2}
   - {fileID: 11400000, guid: 6d5ff557b975d24468866ccd193794ef, type: 2}
-  - {fileID: 11400000, guid: 6623af0544b76ff48836b1912ea2b2d1, type: 2}
   - {fileID: 11400000, guid: d760f98a3b5fcc545873012fc293a186, type: 2}
-  - {fileID: 11400000, guid: 9de2873706b4dd5428a2d51735552c88, type: 2}
+  - {fileID: 11400000, guid: 6623af0544b76ff48836b1912ea2b2d1, type: 2}
   - {fileID: 11400000, guid: db1a82e51b57fa243959ac8da6ea2688, type: 2}
+  - {fileID: 11400000, guid: 9de2873706b4dd5428a2d51735552c88, type: 2}
   - {fileID: 11400000, guid: 33ddb1fb4baa253468500588b5c4e0bc, type: 2}
+  - {fileID: 11400000, guid: cb9be27d82567c042914c5acd6d24b58, type: 2}
   - {fileID: 11400000, guid: 1479481e4da3de240b62527ba9bb1878, type: 2}
   - {fileID: 11400000, guid: c8e7231640a573d4f85916b6947d6ca3, type: 2}
   - {fileID: 11400000, guid: b7ccef7d58e06834590b4da33b08b9a0, type: 2}
+  - {fileID: 11400000, guid: ee8a79bc1a211c841bbbbfbf1ecfcf72, type: 2}
+  - {fileID: 11400000, guid: 4e324c9c4c3bfe34bb1aa0432f29f9d4, type: 2}
+  - {fileID: 11400000, guid: 941287b8438c5e848a1ac09622b2db97, type: 2}
+  - {fileID: 11400000, guid: 8ad75e8e600ab31499734f2f35dae1a3, type: 2}
+  - {fileID: 11400000, guid: 9eb883cbe7c1aa54f99fe44359b80b5e, type: 2}
+  - {fileID: 11400000, guid: d2853023a1f124c479886ef9ed2a8405, type: 2}
   initialMission: {fileID: 11400000, guid: 5f46bf533ef745f4b987a64f62daa41b, type: 2}
   missionHandSize: 1
   missionHandSizeIncreases: 02000000050000000a000000
