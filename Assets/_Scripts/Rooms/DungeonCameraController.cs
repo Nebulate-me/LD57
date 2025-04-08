@@ -9,6 +9,7 @@ namespace _Scripts.Rooms
     {
         [SerializeField] private Camera mainCamera;
         [SerializeField] private float zoomSpeed = 1f;
+        [SerializeField] private float zoomSpeedButtonMultiplier = 0.1f;
         [SerializeField] private float minZoom = 10f;
         [SerializeField] private float maxZoom = 100f;
         [SerializeField] private Vector2 positionClampOffset = new(0, 1f);
@@ -22,7 +23,7 @@ namespace _Scripts.Rooms
         private Plane worldPlane;
         private Vector3 lastMousePosition;
         private bool isDragging;
-        
+
         private void OnEnable()
         {
             SignalsHub.AddListener<RoomPlacedSignal>(OnRoomPlaced);
@@ -45,15 +46,12 @@ namespace _Scripts.Rooms
 
         private void LateUpdate()
         {
-            HandleMouseDrag();
+            HandleCameraDrag();
 
-            if (handManager.SelectedRoomCardView.IsNotPresent && Input.mouseScrollDelta.y != 0)
-            {
-                mainCamera.orthographicSize = ClampCameraZoom(mainCamera.orthographicSize - Mathf.Sign(Input.mouseScrollDelta.y) * zoomSpeed);   
-            }
+            HandleCameraZoom();
         }
-        
-        private void HandleMouseDrag()
+
+        private void HandleCameraDrag()
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -76,6 +74,26 @@ namespace _Scripts.Rooms
                 mainCamera.transform.position = ClampCameraPosition(mainCamera.transform.position + move);
                 
                 lastMousePosition = Input.mousePosition;
+            }
+        }
+        
+        private void HandleCameraZoom()
+        {
+            if (handManager.SelectedRoomCardView.IsNotPresent)
+            {
+                if (Input.mouseScrollDelta.y != 0)
+                {
+                    mainCamera.orthographicSize = ClampCameraZoom(mainCamera.orthographicSize - Mathf.Sign(Input.mouseScrollDelta.y) * zoomSpeed);    
+                }
+
+                if (Input.GetKey(KeyCode.Q))
+                {
+                    mainCamera.orthographicSize = ClampCameraZoom(mainCamera.orthographicSize - zoomSpeed * zoomSpeedButtonMultiplier);
+                } else if (Input.GetKey(KeyCode.E))
+                {
+                    mainCamera.orthographicSize = ClampCameraZoom(mainCamera.orthographicSize + zoomSpeed * zoomSpeedButtonMultiplier);
+                }
+                   
             }
         }
 
