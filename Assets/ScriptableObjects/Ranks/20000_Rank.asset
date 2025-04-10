@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6ae35b113a6486286907ddd8ee943f3, type: 3}
-  m_Name: 50_Rank
+  m_Name: 20000_Rank
   m_EditorClassIdentifier: 
-  rank: Granite Chipper
-  minScore: 50
+  rank: Forgemaster
+  minScore: 20000

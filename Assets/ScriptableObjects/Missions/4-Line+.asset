@@ -35,6 +35,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 78e2d6f85cee67c4ebe2941c9139a283, type: 2}
   - {fileID: 11400000, guid: ca594d196e478954fa78777a1c887400, type: 2}
   - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
+  - {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
   - {fileID: 11400000, guid: c1183dd5890ba9449a48bc2ac61260fd, type: 2}
   minCompletedMissions: 15
   maxCompletedMissions: 0

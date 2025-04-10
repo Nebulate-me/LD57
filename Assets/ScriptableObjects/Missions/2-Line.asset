@@ -25,6 +25,7 @@ MonoBehaviour:
   mirrorPatternY: 0
   rewards:
   - {fileID: 11400000, guid: c1183dd5890ba9449a48bc2ac61260fd, type: 2}
+  - {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
   - {fileID: 11400000, guid: c1183dd5890ba9449a48bc2ac61260fd, type: 2}
   minCompletedMissions: 0
   maxCompletedMissions: 1
