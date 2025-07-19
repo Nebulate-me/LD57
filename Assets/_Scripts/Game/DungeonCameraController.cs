@@ -1,4 +1,5 @@
 using _Scripts.Cards;
+using _Scripts.RoomTiles;
 using Signals;
 using UnityEngine;
 using Zenject;
@@ -26,15 +27,15 @@ namespace _Scripts.Rooms
 
         private void OnEnable()
         {
-            SignalsHub.AddListener<RoomPlacedSignal>(OnRoomPlaced);
+            SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomPlaced);
         }
         
         private void OnDisable()
         {
-            SignalsHub.RemoveListener<RoomPlacedSignal>(OnRoomPlaced);
+            SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomPlaced);
         }
 
-        private void OnRoomPlaced(RoomPlacedSignal signal)
+        private void OnRoomPlaced(RoomTilePlacedSignal signal)
         {
             dungeonBounds = dungeonGridManager.GetRoomBounds();
         }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
 using _Scripts.Game;
+using _Scripts.RoomTiles;
 using _Scripts.Utils;
 using ModestTree;
 using Signals;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utilities;
 using Utilities.Prefabs;
 using Zenject;
@@ -18,7 +20,7 @@ namespace _Scripts.Rooms
         [SerializeField] private Transform roomContainer;
         [SerializeField] private GameObject dungeonRoomPrefab;
         [SerializeField] private GameObject dungeonRoomGhostPrefab;
-        [SerializeField] private Room startingRoom;
+        [FormerlySerializedAs("startingRoom")] [SerializeField] private RoomTile startingRoomTile;
         [SerializeField] private Vector2 mousePositionOffset;
         [SerializeField] private List<RectTransform> unclickableScreenAreas;
 
@@ -43,7 +45,7 @@ namespace _Scripts.Rooms
                 .GetComponent<DungeonRoomGhostView>();
 
             var startingRoomPosition = new Vector2Int(); // 0, 0
-            PlaceRoom(startingRoom.ToDto(), startingRoomPosition);
+            PlaceRoom(startingRoomTile.ToDto(), startingRoomPosition);
         }
 
         private void Update()
@@ -81,19 +83,19 @@ namespace _Scripts.Rooms
                 !TryGetValidDirection(selectedRoomCardView, gridPosition, out var validDirection))
             {
                 roomGhostInstance.transform.rotation = currentDirection.ToRotation();
-                roomGhostInstance.SetUpInvalid(selectedRoomCardView.Dto);
+                roomGhostInstance.SetUpInvalid(selectedRoomCardView.TileDto);
                 return;
             }
 
             currentDirection = validDirection;
             roomGhostInstance.transform.rotation = validDirection.ToRotation();
-            roomGhostInstance.SetUpValid(selectedRoomCardView.Dto);
+            roomGhostInstance.SetUpValid(selectedRoomCardView.TileDto);
 
-            if (selectedRoomCardView.Dto.IsRotatable && Input.mouseScrollDelta.y != 0)
+            if (selectedRoomCardView.TileDto.IsRotatable && Input.mouseScrollDelta.y != 0)
                 RotateGhostView(selectedRoomCardView, gridPosition, Input.mouseScrollDelta.y > 0);
 
             if (Input.GetMouseButtonDown(0))
-                PlaceRoom(selectedRoomCardView.Dto, gridPosition);
+                PlaceRoom(selectedRoomCardView.TileDto, gridPosition);
         }
 
         private bool TryGetValidDirection(RoomCardView selectedRoomCardView, Vector2Int gridPosition,
@@ -104,12 +106,12 @@ namespace _Scripts.Rooms
             if (!GetAdjacentDirections(gridPosition, out var adjacentOpenDirections, out var adjacentClosedDirections))
                 return false;
 
-            if (IsValidDirection(currentDirection, selectedRoomCardView.Dto.OpenDirections, adjacentOpenDirections,
+            if (IsValidDirection(currentDirection, selectedRoomCardView.TileDto.OpenDirections, adjacentOpenDirections,
                     adjacentClosedDirections))
                 return true;
 
             foreach (var roomDirection in EnumExtensions.GetAllItems<RoomDirection>())
-                if (IsValidDirection(roomDirection, selectedRoomCardView.Dto.OpenDirections,
+                if (IsValidDirection(roomDirection, selectedRoomCardView.TileDto.OpenDirections,
                         adjacentOpenDirections, adjacentClosedDirections))
                 {
                     validDirection = roomDirection;
@@ -184,7 +186,7 @@ namespace _Scripts.Rooms
             var rotation = clockwise ? RoomDirection.West : RoomDirection.East;
             var rotatedDirection = currentDirection.Rotate(rotation);
 
-            if (IsValidDirection(rotatedDirection, selectedRoomCardView.Dto.OpenDirections, adjacentOpenDirections,
+            if (IsValidDirection(rotatedDirection, selectedRoomCardView.TileDto.OpenDirections, adjacentOpenDirections,
                     adjacentClosedDirections))
             {
                 currentDirection = rotatedDirection;
@@ -192,7 +194,7 @@ namespace _Scripts.Rooms
             }
 
             var invertedDirection = currentDirection.Invert();
-            if (IsValidDirection(invertedDirection, selectedRoomCardView.Dto.OpenDirections, adjacentOpenDirections,
+            if (IsValidDirection(invertedDirection, selectedRoomCardView.TileDto.OpenDirections, adjacentOpenDirections,
                     adjacentClosedDirections))
             {
                 currentDirection = invertedDirection;
@@ -200,18 +202,18 @@ namespace _Scripts.Rooms
             }
 
             var invertedRotatedDirection = currentDirection.Rotate(rotation.Invert());
-            if (IsValidDirection(invertedRotatedDirection, selectedRoomCardView.Dto.OpenDirections,
+            if (IsValidDirection(invertedRotatedDirection, selectedRoomCardView.TileDto.OpenDirections,
                     adjacentOpenDirections, adjacentClosedDirections)) currentDirection = invertedRotatedDirection;
         }
 
-        private void PlaceRoom(RoomDto selectedRoomDto, Vector2Int gridPosition)
+        private void PlaceRoom(RoomTileDto selectedRoomTileDto, Vector2Int gridPosition)
         {
             var worldPosition = GridToWorld(gridPosition);
             var dungeonRoom = prefabPool.Spawn(dungeonRoomPrefab, roomContainer)
                 .GetComponent<DungeonRoomView>();
             dungeonRoom.transform.position = worldPosition;
-            dungeonRoom.SetUp(selectedRoomDto, gridPosition,
-                selectedRoomDto.IsRotatable ? currentDirection : RoomDirectionExtensions.Default);
+            dungeonRoom.SetUp(selectedRoomTileDto, gridPosition,
+                selectedRoomTileDto.IsRotatable ? currentDirection : RoomDirectionExtensions.Default);
             rooms.Add(dungeonRoom);
 
             handManager.TryPlaySelectRoomCard();
@@ -219,7 +221,7 @@ namespace _Scripts.Rooms
             roomGhostInstance.gameObject.SetActive(false);
 
             soundManager.PlaySound(SoundType.PlaceRoom);
-            SignalsHub.DispatchAsync(new RoomPlacedSignal(dungeonRoom));
+            SignalsHub.DispatchAsync(new RoomTilePlacedSignal(dungeonRoom));
         }
 
         public IReadOnlyList<DungeonRoomView> Rooms => rooms;

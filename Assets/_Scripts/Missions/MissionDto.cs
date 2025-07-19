@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Rooms;
+using _Scripts.RoomTiles;
 using UnityEngine;
 
 namespace _Scripts.Missions
@@ -12,7 +13,7 @@ namespace _Scripts.Missions
         [SerializeField] private string name;
         [SerializeField] private List<MissionCell> pattern;
         [SerializeField] private bool flipPatternY;
-        [SerializeField] private List<RoomDto> rewardCards;
+        [SerializeField] private List<RoomTileDto> rewardCards;
         [SerializeField] private int minCompletedMissions;
         [SerializeField] private int maxCompletedMissions;
         [SerializeField] private int rewardScore;
@@ -31,7 +32,7 @@ namespace _Scripts.Missions
         public string Name => name;
         public List<MissionCell> Pattern => pattern;
         public bool FlipPatternY => flipPatternY;
-        public List<RoomDto> RewardCards => rewardCards;
+        public List<RoomTileDto> RewardCards => rewardCards;
         public int MinCompletedMissions => minCompletedMissions;
         public int MaxCompletedMissions => maxCompletedMissions;
         public int RewardScore => rewardScore;

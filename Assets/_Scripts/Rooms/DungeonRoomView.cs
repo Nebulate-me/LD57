@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using _Scripts.RoomTiles;
 using UnityEngine;
 using Utilities.Prefabs;
 
@@ -15,7 +16,7 @@ namespace _Scripts.Rooms
         [SerializeField] private List<RoomDirection> openDirections = new();
         [SerializeField] private bool isUsed = false;
         
-        private RoomDto dto;
+        private RoomTileDto _tileDto;
 
         public Vector2Int GridPosition => gridPosition;
         public List<RoomDirection> OpenDirections => openDirections;
@@ -26,19 +27,19 @@ namespace _Scripts.Rooms
             set
             {
                 isUsed = value;
-                spriteRenderer.sprite = isUsed ? dto.UsedSprite : dto.UnusedSprite;
+                spriteRenderer.sprite = isUsed ? _tileDto.UsedSprite : _tileDto.UnusedSprite;
             }
         }
 
-        public void SetUp(RoomDto roomDto, Vector2Int initialGridPosition, RoomDirection initialDirection)
+        public void SetUp(RoomTileDto roomTileDto, Vector2Int initialGridPosition, RoomDirection initialDirection)
         {
-            dto = roomDto;
+            _tileDto = roomTileDto;
             gridPosition = initialGridPosition;
-            spriteRenderer.sprite = dto.UnusedSprite;
+            spriteRenderer.sprite = _tileDto.UnusedSprite;
             direction = initialDirection;
             transform.rotation = direction.ToRotation();
 
-            openDirections = dto.OpenDirections.Select(openDirection => openDirection.Rotate(direction)).ToList();
+            openDirections = _tileDto.OpenDirections.Select(openDirection => openDirection.Rotate(direction)).ToList();
         }
         
         public void OnSpawn()

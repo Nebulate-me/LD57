@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Scripts.Rooms;
 using ModestTree;
 using UnityEngine;
 using Utilities;
 
-namespace _Scripts.Rooms
+namespace _Scripts.RoomTiles
 {
     [Serializable]
-    public class RoomDto
+    public class RoomTileDto
     {
         [SerializeField] private string name;
         [SerializeField] private Sprite usedSprite;
@@ -16,14 +17,14 @@ namespace _Scripts.Rooms
         [SerializeField] private List<RoomDirection> openDirections;
         private bool isRotatable;
 
-        public RoomDto(Room room)
+        public RoomTileDto(RoomTile roomTile)
         {
-            name = room.RoomName;
-            usedSprite = room.UsedSprite;
-            unusedSprite = room.UnusedSprite;
-            openDirections = room.OpenDirections;
-            isRotatable = !room.OpenDirections.IsEmpty() &&
-                          room.OpenDirections.Count != EnumExtensions.GetAllItems<RoomDirection>().Count();
+            name = roomTile.TileName;
+            usedSprite = roomTile.UsedSprite;
+            unusedSprite = roomTile.UnusedSprite;
+            openDirections = roomTile.OpenDirections;
+            isRotatable = !roomTile.OpenDirections.IsEmpty() &&
+                          roomTile.OpenDirections.Count != EnumExtensions.GetAllItems<RoomDirection>().Count();
         }
         
         public string Name => name;

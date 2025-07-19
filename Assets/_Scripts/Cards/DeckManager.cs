@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Rooms;
+using _Scripts.RoomTiles;
 using Signals;
 using TMPro;
 using UnityEngine;
@@ -15,19 +16,19 @@ namespace _Scripts.Cards
         [SerializeField] private List<RoomAmountDto> initialRooms = new();
 
         [Header("Do Not Edit")]
-        [SerializeField] private List<RoomDto> cards = new();
+        [SerializeField] private List<RoomTileDto> cards = new();
 
         [Inject] private IRandomService randomService;
         public int CardAmount => cards.Count;
 
         private void Start()
         {
-            cards = new List<RoomDto>();
+            cards = new List<RoomTileDto>();
             foreach (var initialRoom in initialRooms)
             {
                 for (var i = 0; i < initialRoom.Amount; i++)
                 {
-                    cards.Add(initialRoom.Room.ToDto());   
+                    cards.Add(initialRoom.RoomTile.ToDto());   
                 }
             }
             randomService.ShuffleInPlace(cards);
@@ -42,18 +43,18 @@ namespace _Scripts.Cards
         }
         
 
-        public bool TryDraw(out RoomDto dto)
+        public bool TryDraw(out RoomTileDto tileDto)
         {
-            dto = null;
+            tileDto = null;
             if (CardAmount <= 0) return false;
 
-            dto = cards.First();
+            tileDto = cards.First();
             cards.RemoveAt(0);
             UpdateRemainingCardsText();
             return true;
         }
 
-        public void Bury(List<RoomDto> cardsToBury)
+        public void Bury(List<RoomTileDto> cardsToBury)
         {
             cards.AddRange(cardsToBury);
             UpdateRemainingCardsText();

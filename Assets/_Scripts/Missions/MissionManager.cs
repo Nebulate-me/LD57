@@ -4,6 +4,7 @@ using System.Linq;
 using _Scripts.Cards;
 using _Scripts.Game;
 using _Scripts.Rooms;
+using _Scripts.RoomTiles;
 using _Scripts.Utils;
 using Signals;
 using UnityEngine;
@@ -36,15 +37,15 @@ namespace _Scripts.Missions
 
         private void OnEnable()
         {
-            SignalsHub.AddListener<RoomPlacedSignal>(OnRoomPlaced);
+            SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomPlaced);
         }
         
         private void OnDisable()
         {
-            SignalsHub.RemoveListener<RoomPlacedSignal>(OnRoomPlaced);
+            SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomPlaced);
         }
 
-        private void OnRoomPlaced(RoomPlacedSignal roomPlacedSignal)
+        private void OnRoomPlaced(RoomTilePlacedSignal roomTilePlacedSignal)
         {
             UpdateMissions();
         }

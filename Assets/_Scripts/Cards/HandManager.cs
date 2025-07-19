@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Scripts.Rooms;
+using _Scripts.RoomTiles;
 using _Scripts.Utils;
 using Signals;
 using UnityEngine;
@@ -76,11 +77,11 @@ namespace _Scripts.Cards
             return false;
         }
 
-        public bool SelectRoomCard(RoomDto dto)
+        public bool SelectRoomCard(RoomTileDto tileDto)
         {
             SelectedRoomCardView = Maybe.Empty<RoomCardView>();
             foreach (var cardView in cardViews)
-                if (cardView.Dto == dto)
+                if (cardView.TileDto == tileDto)
                 {
                     cardView.Select();
                     SelectedRoomCardView = Maybe.Of(cardView);

@@ -1,4 +1,5 @@
 using _Scripts.Rooms;
+using _Scripts.RoomTiles;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -20,20 +21,20 @@ namespace _Scripts.Cards
 
         [Inject] private IHandManager handManager;
         
-        private RoomDto dto;
-        public RoomDto Dto => dto;
+        private RoomTileDto _tileDto;
+        public RoomTileDto TileDto => _tileDto;
 
 
-        public void SetUp(RoomDto roomDto)
+        public void SetUp(RoomTileDto roomTileDto)
         {
-            dto = roomDto;
-            roomName.text = roomDto.Name;
-            roomImage.sprite = roomDto.UnusedSprite;
+            _tileDto = roomTileDto;
+            roomName.text = roomTileDto.Name;
+            roomImage.sprite = roomTileDto.UnusedSprite;
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            handManager.SelectRoomCard(dto);
+            handManager.SelectRoomCard(_tileDto);
         }
 
         public void Select()

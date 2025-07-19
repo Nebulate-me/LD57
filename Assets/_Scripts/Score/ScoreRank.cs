@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace _Scripts.Missions
+namespace _Scripts.Score
 {
-    [CreateAssetMenu(menuName = "LD57/Create ScoreRankConfiguration", fileName = "ScoreRank", order = 0)]
+    [CreateAssetMenu(menuName = "LD57/Create ScoreRankConfiguration", fileName = "ScoreRank", order = 4)]
     public class ScoreRank : ScriptableObject
     {
         [SerializeField] private string rank;

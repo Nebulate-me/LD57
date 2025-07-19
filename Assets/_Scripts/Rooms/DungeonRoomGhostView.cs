@@ -1,4 +1,5 @@
 using _Scripts.Cards;
+using _Scripts.RoomTiles;
 using UnityEngine;
 
 namespace _Scripts.Rooms
@@ -9,15 +10,15 @@ namespace _Scripts.Rooms
         [SerializeField] private Color validPlacementColor;
         [SerializeField] private Color invalidPlacementColor;
         
-        public void SetUpValid(RoomDto room)
+        public void SetUpValid(RoomTileDto roomTile)
         {
-            spriteRenderer.sprite = room.UnusedSprite;
+            spriteRenderer.sprite = roomTile.UnusedSprite;
             spriteRenderer.color = validPlacementColor;
         }
 
-        public void SetUpInvalid(RoomDto room)
+        public void SetUpInvalid(RoomTileDto roomTile)
         {
-            spriteRenderer.sprite = room.UnusedSprite;
+            spriteRenderer.sprite = roomTile.UnusedSprite;
             spriteRenderer.color = invalidPlacementColor;
         }
     }
