@@ -6,8 +6,10 @@ namespace _Scripts.Cards
 {
     public interface IDeckManager
     {
-        int CardAmount { get; }
-        bool TryDraw(out RoomTileDto tileDto);
-        void Bury(List<RoomTileDto> cardsToBury);
+        int RoomTileCardAmount { get; }
+        bool TryDrawRoomTile(out RoomTileDto tileDto);
+        void BuryRoomTile(List<RoomTileDto> cardsToBury);
+        bool TryDrawRoom(out RoomDto roomDto);
+        void BuryRoom(List<RoomDto> cardsToBury);
     }
 }

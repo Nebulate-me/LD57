@@ -1710,7 +1710,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomContainer: {fileID: 870619730}
   dungeonRoomPrefab: {fileID: 8651394372544261446, guid: ff0f4c226b3a3644e9da2492e0923455, type: 3}
-  dungeonRoomGhostPrefab: {fileID: 8651394372544261446, guid: 61b3776979716db42a914a51b9e04143, type: 3}
+  dungeonRoomGhostPrefab: {fileID: 8651394372544261446, guid: 340a06f2db93dcf46937a47a546780e4, type: 3}
+  dungeonRoomTileGhostPrefab: {fileID: 8651394372544261446, guid: 61b3776979716db42a914a51b9e04143, type: 3}
   startingRoomTile: {fileID: 11400000, guid: b01aaed4d392196429e16164675738c1, type: 2}
   mousePositionOffset: {x: 0, y: 0}
   unclickableScreenAreas:
@@ -3842,7 +3843,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b01b36def947482387b6159052b861d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomCardPrefab: {fileID: 6793132900055356975, guid: e52306e566beaac42add1daffad225ea, type: 3}
+  roomTileCardPrefab: {fileID: 6793132900055356975, guid: e52306e566beaac42add1daffad225ea, type: 3}
+  roomCardPrefab: {fileID: 6793132900055356975, guid: 65f7930f1d1785f439285641d9580a7d, type: 3}
   roomCardContainer: {fileID: 8717882246682775926}
   handSize: 5
 --- !u!1 &4217630661644000465
@@ -4132,7 +4134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   remainingCardsText: {fileID: 6519991216603289360}
-  initialRooms:
+  initialRoomTiles:
   - roomTile: {fileID: 11400000, guid: b01aaed4d392196429e16164675738c1, type: 2}
     amount: 2
   - roomTile: {fileID: 11400000, guid: 78e2d6f85cee67c4ebe2941c9139a283, type: 2}
@@ -4145,7 +4147,13 @@ MonoBehaviour:
     amount: 3
   - roomTile: {fileID: 11400000, guid: c1183dd5890ba9449a48bc2ac61260fd, type: 2}
     amount: 0
-  cards: []
+  initialRooms:
+  - room: {fileID: 11400000, guid: 410ba308f0f4a7d4cad3825490e4c23e, type: 2}
+    amount: 3
+  - room: {fileID: 11400000, guid: 1a57416dddc35b74c8a01dbe802cb300, type: 2}
+    amount: 3
+  - room: {fileID: 11400000, guid: 0bf08c4aa28010043be1aed7092fd0b4, type: 2}
+    amount: 4
 --- !u!1001 &5897042573385978680
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -7,10 +7,26 @@ namespace _Scripts.Cards
     public interface IHandManager
     {
         int CardAmount { get; }
-        IMaybe<RoomCardView> SelectedRoomCardView { get; }
-        bool SelectRoomCard(RoomTileDto tileDto);
+
+        #region Room Tile Cards
+
+        IMaybe<RoomTileCardView> SelectedRoomTileCardView { get; }
+        bool SelectRoomTileCard(RoomTileDto tileDto);
+        bool DeselectRoomTileCard();
+        bool TryPlaySelectRoomTileCard();
+        void RefillRoomTileHand();
+        
+        #endregion
+        
+        #region Room Cards
+        
+        IMaybe<RoomCardView> SelectedRoomCardView { get;  }
+        
+        void SelectRoomCard(RoomDto roomDto);
         bool DeselectRoomCard();
         bool TryPlaySelectRoomCard();
-        void RefillHand();
+        void RefillRoomHand();
+        
+        #endregion
     }
 }

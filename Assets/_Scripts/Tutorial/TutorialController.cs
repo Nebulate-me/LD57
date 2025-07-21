@@ -24,14 +24,14 @@ namespace _Scripts.Game
         private void OnEnable()
         {
             SignalsHub.AddListener<RoomCardSelectedSignal>(OnRoomCardSelected);
-            SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomPlaced);
+            SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
             SignalsHub.AddListener<MissionCompletedSignal>(OnMissionCompleted);
         }
 
         private void OnDisable()
         {
             SignalsHub.RemoveListener<RoomCardSelectedSignal>(OnRoomCardSelected);
-            SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomPlaced);
+            SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
             SignalsHub.RemoveListener<MissionCompletedSignal>(OnMissionCompleted);
         }
 
@@ -66,7 +66,7 @@ namespace _Scripts.Game
             OnTriggerEvent(TutorialStepTrigger.OnRoomCardSelected);
         }
 
-        private void OnRoomPlaced(RoomTilePlacedSignal obj)
+        private void OnRoomTilePlaced(RoomTilePlacedSignal obj)
         {
             OnTriggerEvent(TutorialStepTrigger.OnRoomCardPlaced);
         }

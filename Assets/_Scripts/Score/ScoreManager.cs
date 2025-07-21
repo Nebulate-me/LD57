@@ -58,7 +58,7 @@ namespace _Scripts.Score
         private void CheckDefeat()
         {
             // TODO: Improve this check to test whether there is no way to place any of the hand cards on the map
-            if (deckManager.CardAmount <= 0 && handManager.CardAmount <= 0 && missionManager.CompletableMissionsCount <= 0)
+            if (deckManager.RoomTileCardAmount <= 0 && handManager.CardAmount <= 0 && missionManager.CompletableMissionsCount <= 0)
             {
                 soundManager.PlaySound(SoundType.Defeat);
                 ShowRestartButton();

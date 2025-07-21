@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1732442775895766723}
   - component: {fileID: 2132223424606329153}
-  - component: {fileID: -2729510933177607267}
+  - component: {fileID: -8434221031486479489}
   m_Layer: 0
-  m_Name: DungeonRoomGhost
+  m_Name: DungeonRoomTileGhost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,7 +40,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8651394372544261446}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -88,7 +88,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-2729510933177607267
+--- !u!114 &-8434221031486479489
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,10 +97,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8651394372544261446}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75f8b2a9b92e424dba7fe6f3b0eaf86a, type: 3}
+  m_Script: {fileID: 11500000, guid: ac635c3dc0a8421ab2908262d65deb27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 2132223424606329153}
   validPlacementColor: {r: 1, g: 1, b: 1, a: 0.5019608}
   invalidPlacementColor: {r: 1, g: 0.5, b: 0.5, a: 0.5019608}
-  ghostTileContainer: {fileID: 1732442775895766723}
-  ghostTileSprite: {fileID: 8651394372544261446, guid: 61b3776979716db42a914a51b9e04143, type: 3}

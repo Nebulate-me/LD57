@@ -1,18 +1,15 @@
 using System;
-using _Scripts.Rooms;
-using _Scripts.RoomTiles;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace _Scripts.Cards
+namespace _Scripts.Rooms
 {
     [Serializable]
     public class RoomAmountDto
     {
-        [FormerlySerializedAs("room")] [SerializeField] private RoomTile roomTile;
+        [SerializeField] private Room room;
         [SerializeField] private int amount;
 
-        public RoomTile RoomTile => roomTile;
+        public Room Room => room;
         public int Amount => amount;
     }
 }

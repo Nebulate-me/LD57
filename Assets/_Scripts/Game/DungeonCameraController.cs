@@ -1,6 +1,7 @@
 using _Scripts.Cards;
 using _Scripts.RoomTiles;
 using Signals;
+using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
@@ -27,21 +28,24 @@ namespace _Scripts.Rooms
 
         private void OnEnable()
         {
-            SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomPlaced);
-        }
-        
-        private void OnDisable()
-        {
-            SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomPlaced);
+            SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
         }
 
-        private void OnRoomPlaced(RoomTilePlacedSignal signal)
+        private void OnDisable()
+        {
+            SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
+        }
+
+        private void OnRoomTilePlaced(RoomTilePlacedSignal signal)
         {
             dungeonBounds = dungeonGridManager.GetRoomBounds();
         }
 
         private void Start()
         {
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = 60;
+            
             worldPlane = new Plane(Vector3.back, Vector3.zero);
         }
 
@@ -60,7 +64,7 @@ namespace _Scripts.Rooms
                 lastMousePosition = Input.mousePosition;
             }
 
-            if (Input.GetMouseButtonUp(0) || handManager.SelectedRoomCardView.IsPresent)
+            if (Input.GetMouseButtonUp(0) || handManager.SelectedRoomTileCardView.IsPresent)
             {
                 isDragging = false;
             }
@@ -80,7 +84,7 @@ namespace _Scripts.Rooms
         
         private void HandleCameraZoom()
         {
-            if (handManager.SelectedRoomCardView.IsNotPresent)
+            if (handManager.SelectedRoomTileCardView.IsNotPresent)
             {
                 if (Input.mouseScrollDelta.y != 0)
                 {

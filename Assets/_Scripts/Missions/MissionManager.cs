@@ -71,7 +71,7 @@ namespace _Scripts.Missions
                 dungeonRoomView.IsUsed = true;
             
             var shuffledMissionRewards = randomService.Shuffle(missionCard.Dto.RewardCards).ToList(); 
-            deckManager.Bury(shuffledMissionRewards);
+            deckManager.BuryRoomTile(shuffledMissionRewards);
             prefabPool.Despawn(missionCard.gameObject);
             missionCards.Remove(missionCard);
             

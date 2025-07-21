@@ -14,5 +14,10 @@ namespace _Scripts.Rooms
         public string RoomName => roomName;
         public RoomType RoomType => roomType;
         public List<RoomTileCell> Tiles => tiles;
+
+        public RoomDto ToDto()
+        {
+            return new RoomDto(this);
+        }
     }
 }

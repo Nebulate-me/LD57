@@ -4,6 +4,7 @@ using _Scripts.RoomTiles;
 using _Scripts.Utils;
 using Signals;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utilities;
 using Utilities.Monads;
 using Utilities.Prefabs;
@@ -13,14 +14,16 @@ namespace _Scripts.Cards
 {
     public class HandManager : MonoBehaviour, IHandManager
     {
+        [FormerlySerializedAs("roomCardPrefab")] [SerializeField] private GameObject roomTileCardPrefab;
         [SerializeField] private GameObject roomCardPrefab;
         [SerializeField] private RectTransform roomCardContainer;
         [SerializeField] private int handSize = 5;
 
-        private readonly List<RoomCardView> cardViews = new();
+        private readonly List<RoomTileCardView> _roomTileCardViews = new();
+        private readonly List<RoomCardView> _roomCardViews = new();
 
-        [Inject] private IDeckManager deckManager;
-        [Inject] private IPrefabPool prefabPool;
+        [Inject] private IDeckManager _deckManager;
+        [Inject] private IPrefabPool _prefabPool;
 
         private void OnEnable()
         {
@@ -34,42 +37,49 @@ namespace _Scripts.Cards
 
         private void OnDeckUpdated(DeckUpdatedSignal signal)
         {
-            RefillHand();
+            // RefillRoomTileHand();
+            RefillRoomHand();
         }
 
         private void Start()
         {
             roomCardContainer.DestroyChildren();
 
-            RefillHand();
+            // RefillRoomTileHand();
+            RefillRoomHand();
         }
 
-        public void RefillHand()
+        public void RefillRoomTileHand()
         {
-            while (cardViews.Count < handSize)
-                if (deckManager.TryDraw(out var card))
+            while (_roomTileCardViews.Count < handSize)
+            {
+                if (_deckManager.TryDrawRoomTile(out var card))
                 {
-                    var cardView = prefabPool.Spawn(roomCardPrefab, roomCardContainer).GetComponent<RoomCardView>();
+                    var cardView = _prefabPool.Spawn(roomTileCardPrefab, roomCardContainer).GetComponent<RoomTileCardView>();
                     cardView.SetUp(card);
-                    cardViews.Add(cardView);
+                    _roomTileCardViews.Add(cardView);
                 }
                 else
                 {
                     // Debug.Log("No cards left in the deck, not drawing!");
                     break;
                 }
+            }
         }
 
-        public int CardAmount => cardViews.Count;
-        public IMaybe<RoomCardView> SelectedRoomCardView { get; private set; } = Maybe.Empty<RoomCardView>();
+        public int CardAmount => _roomTileCardViews.Count;
 
-        public bool TryPlaySelectRoomCard()
+        #region Room Tiles
+
+        public IMaybe<RoomTileCardView> SelectedRoomTileCardView { get; private set; } = Maybe.Empty<RoomTileCardView>();
+
+        public bool TryPlaySelectRoomTileCard()
         {
-            if (SelectedRoomCardView.TryGetValue(out var cardView))
+            if (SelectedRoomTileCardView.TryGetValue(out var cardView))
             {
-                cardViews.Remove(cardView);
-                prefabPool.Despawn(cardView.gameObject);
-                SelectedRoomCardView = Maybe.Empty<RoomCardView>();
+                _roomTileCardViews.Remove(cardView);
+                _prefabPool.Despawn(cardView.gameObject);
+                SelectedRoomTileCardView = Maybe.Empty<RoomTileCardView>();
 
                 return true;
             }
@@ -77,14 +87,14 @@ namespace _Scripts.Cards
             return false;
         }
 
-        public bool SelectRoomCard(RoomTileDto tileDto)
+        public bool SelectRoomTileCard(RoomTileDto tileDto)
         {
-            SelectedRoomCardView = Maybe.Empty<RoomCardView>();
-            foreach (var cardView in cardViews)
+            SelectedRoomTileCardView = Maybe.Empty<RoomTileCardView>();
+            foreach (var cardView in _roomTileCardViews)
                 if (cardView.TileDto == tileDto)
                 {
                     cardView.Select();
-                    SelectedRoomCardView = Maybe.Of(cardView);
+                    SelectedRoomTileCardView = Maybe.Of(cardView);
                 }
                 else
                 {
@@ -95,6 +105,40 @@ namespace _Scripts.Cards
             return true;
         }
 
+        public bool DeselectRoomTileCard()
+        {
+            if (SelectedRoomTileCardView.TryGetValue(out var cardView))
+            {
+                SelectedRoomTileCardView = Maybe.Empty<RoomTileCardView>();
+                cardView.Deselect();
+                return true;
+            }
+
+            return false;
+        }
+
+        #endregion
+
+        #region Rooms
+
+        public IMaybe<RoomCardView> SelectedRoomCardView { get; private set; } = Maybe.Empty<RoomCardView>();
+
+        public void SelectRoomCard(RoomDto roomDto)
+        {
+            SelectedRoomCardView = Maybe.Empty<RoomCardView>();
+            foreach (var cardView in _roomCardViews)
+                if (cardView.RoomDto == roomDto)
+                {
+                    cardView.Select();
+                    SelectedRoomCardView = Maybe.Of(cardView);
+                }
+                else
+                {
+                    cardView.Deselect();
+                }
+            SignalsHub.DispatchAsync(new RoomCardSelectedSignal());
+        }
+        
         public bool DeselectRoomCard()
         {
             if (SelectedRoomCardView.TryGetValue(out var cardView))
@@ -106,5 +150,39 @@ namespace _Scripts.Cards
 
             return false;
         }
+        
+        public bool TryPlaySelectRoomCard()
+        {
+            if (SelectedRoomCardView.TryGetValue(out var cardView))
+            {
+                _roomCardViews.Remove(cardView);
+                _prefabPool.Despawn(cardView.gameObject);
+                SelectedRoomCardView = Maybe.Empty<RoomCardView>();
+
+                return true;
+            }
+
+            return false;
+        }
+        
+        public void RefillRoomHand()
+        {
+            while (_roomCardViews.Count < handSize)
+            {
+                if (_deckManager.TryDrawRoom(out var card))
+                {
+                    var cardView = _prefabPool.Spawn(roomCardPrefab, roomCardContainer).GetComponent<RoomCardView>();
+                    cardView.SetUp(card);
+                    _roomCardViews.Add(cardView);
+                }
+                else
+                {
+                    // Debug.Log("No cards left in the deck, not drawing!");
+                    break;
+                }
+            }
+        }
+
+        #endregion
     }
 }
