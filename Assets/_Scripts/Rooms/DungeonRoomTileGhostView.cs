@@ -6,19 +6,32 @@ namespace _Scripts.Rooms
     public class DungeonRoomTileGhostView : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private Color validPlacementColor;
-        [SerializeField] private Color invalidPlacementColor;
-        
-        public void SetUpValid(RoomTileDto roomTile)
+        [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects;
+
+        public Color Color
         {
-            spriteRenderer.sprite = roomTile.UnusedSprite;
-            spriteRenderer.color = validPlacementColor;
+            set => spriteRenderer.color = value;
         }
 
-        public void SetUpInvalid(RoomTileDto roomTile)
+        public Sprite Sprite
         {
-            spriteRenderer.sprite = roomTile.UnusedSprite;
-            spriteRenderer.color = invalidPlacementColor;
+            set => spriteRenderer.sprite = value;
+        }
+
+        public void SetUp(RoomTileCell roomTileCell)
+        {
+            Sprite = roomTileCell.Tile.UnusedSprite;
+            transform.rotation = roomTileCell.Direction.ToRotation();
+            
+            foreach (var doorObject in doorObjects.Values)
+            {
+                doorObject.SetActive(false);            
+            }
+            
+            foreach (var doorDirection in roomTileCell.Tile.DoorDirections)
+            {
+                doorObjects[doorDirection].SetActive(true);
+            }
         }
     }
 }

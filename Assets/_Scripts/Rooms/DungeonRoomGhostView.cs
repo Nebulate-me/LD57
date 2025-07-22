@@ -16,7 +16,7 @@ namespace _Scripts.Rooms
         [Inject] private IPrefabPool _prefabPool;
 
         private RoomDto _currentRoomDto;
-        private List<SpriteRenderer> _roomTileRenderers = new();
+        private List<DungeonRoomTileGhostView> _roomTileGhostViews = new();
         
         public void SetUpValid(RoomDto roomDto)
         {
@@ -26,9 +26,9 @@ namespace _Scripts.Rooms
                 ResetCurrentRoomDto(roomDto);
             }
             
-            foreach (var roomTileRenderer in _roomTileRenderers)
+            foreach (var tileGhostView in _roomTileGhostViews)
             {
-                roomTileRenderer.color = validPlacementColor;
+                tileGhostView.Color = validPlacementColor;
             }
         }
 
@@ -40,9 +40,9 @@ namespace _Scripts.Rooms
                 ResetCurrentRoomDto(roomDto);
             }
             
-            foreach (var roomTileRenderer in _roomTileRenderers)
+            foreach (var tileGhostView in _roomTileGhostViews)
             {
-                roomTileRenderer.color = invalidPlacementColor;
+                tileGhostView.Color = invalidPlacementColor;
             }
         }
         
@@ -50,11 +50,11 @@ namespace _Scripts.Rooms
         {
             if (_currentRoomDto != null)
             {
-                foreach (var roomTileRenderer in _roomTileRenderers)
+                foreach (var roomTileRenderer in _roomTileGhostViews)
                 {
                     _prefabPool.Despawn(roomTileRenderer.gameObject);
                 }
-                _roomTileRenderers = new List<SpriteRenderer>();
+                _roomTileGhostViews = new List<DungeonRoomTileGhostView>();
                 _currentRoomDto = null;
             }
 
@@ -63,13 +63,12 @@ namespace _Scripts.Rooms
             var roomTileStartingPosition = roomDto.StartingPosition; 
             foreach (var roomTileCell in _currentRoomDto.Tiles)
             {
-                var tileRenderer = _prefabPool.Spawn(ghostTileSprite, ghostTileContainer).GetComponent<SpriteRenderer>();
-                tileRenderer.transform.localPosition = (roomTileCell.Position - roomTileStartingPosition).ToVector3();
-                tileRenderer.sprite = roomTileCell.Tile.UnusedSprite;
-                tileRenderer.transform.rotation = roomTileCell.Direction.ToRotation();
+                var tileGhostVew = _prefabPool.Spawn(ghostTileSprite, ghostTileContainer).GetComponent<DungeonRoomTileGhostView>();
+                tileGhostVew.transform.localPosition = (roomTileCell.Position - roomTileStartingPosition).ToVector3();
+                tileGhostVew.SetUp(roomTileCell);
                 // TODO: consider rotation of the whole ghost room, with positions and rotations shifted
 
-                _roomTileRenderers.Add(tileRenderer);
+                _roomTileGhostViews.Add(tileGhostVew);
             }
         }
     }

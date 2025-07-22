@@ -101,4 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 2132223424606329153}
-  OpenDirections: 
+  gridPosition: {x: 0, y: 0}
+  direction: 0
+  openDirections: 
+  isUsed: 0
