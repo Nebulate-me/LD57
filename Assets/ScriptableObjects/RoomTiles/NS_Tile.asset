@@ -10,10 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 444c8c6c84a541d7916edbfea60eceab, type: 3}
-  m_Name: N_RoomTile_S
+  m_Name: NS_Tile
   m_EditorClassIdentifier: 
-  tileName: Alcove
-  usedSprite: {fileID: 667951688, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
-  unusedSprite: {fileID: -1911756444, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
-  openDirections: 00000000
-  doorDirections: 02000000
+  roomName: Corridor
+  usedSprite: {fileID: -1990259583, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
+  unusedSprite: {fileID: -71258625, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
+  openDirections: 0000000002000000
