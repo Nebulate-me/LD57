@@ -7,8 +7,10 @@ using _Scripts.Utils;
 using ModestTree;
 using Signals;
 using UnityEngine;
+using UnityEngine.Localization.SmartFormat.Utilities;
 using UnityEngine.Serialization;
 using Utilities;
+using Utilities.Monads;
 using Utilities.Prefabs;
 using Zenject;
 
@@ -212,10 +214,15 @@ namespace _Scripts.Game
             var roomStartingPosition = roomDto.StartingPosition;
             var roomPositions = roomDto.Tiles
                 .Select(tile => tile.Position - roomStartingPosition + gridPosition).ToList();
+            
+            if (!roomPositions.All(IsPositionEmpty)) return false;
+            
+            var adjacentPositions = roomPositions.Where(IsPositionAdjacent).ToList();
+            if (adjacentPositions.IsEmpty()) return false;
 
-            return roomPositions.All(IsPositionEmpty) && roomPositions.Any(IsPositionAdjacent);
+            return AreAllAdjacentPositionsValid(gridPosition, roomDto, adjacentPositions);
         }
-        
+
         private bool IsPositionEmpty(Vector2Int gridPosition)
         {
             return rooms.All(room => room.GridPosition != gridPosition);
@@ -224,6 +231,24 @@ namespace _Scripts.Game
         private bool IsPositionAdjacent(Vector2Int gridPosition)
         {
             return rooms.Any(room => room.GridPosition.ManhattanDistance(gridPosition) == 1);
+        }
+        
+        private bool AreAllAdjacentPositionsValid(Vector2Int gridPosition, RoomDto roomDto, List<Vector2Int> adjacentPositions)
+        {
+            foreach (var adjacentPosition in adjacentPositions)
+            {
+                if (!GetAdjacentDirections(adjacentPosition, out var adjacentOpenDirections, out var adjacentClosedDirections))
+                    continue;
+
+                var roomPosition = adjacentPosition - gridPosition + roomDto.StartingPosition;
+                var roomTileCell = roomDto.Tiles.First(tile => tile.Position == roomPosition);
+
+                var rotatedTileOpenDirections = roomTileCell.Tile.OpenDirections.Select(direction => direction.Rotate(roomTileCell.Direction)).ToList();
+                if (!IsValidDirection(currentDirection, rotatedTileOpenDirections, adjacentOpenDirections, adjacentClosedDirections))
+                    return false;
+            }
+
+            return true;
         }
 
         private Vector2Int WorldToGrid(Vector2 worldPos)
