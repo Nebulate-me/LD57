@@ -15,7 +15,8 @@ namespace _Scripts.RoomTiles
         [SerializeField] private Sprite usedSprite;
         [SerializeField] private Sprite unusedSprite;
         [SerializeField] private List<RoomDirection> openDirections;
-        private bool isRotatable;
+        [SerializeField] private List<RoomDirection> doorDirections;
+        [SerializeField] private bool isRotatable;
 
         public RoomTileDto(RoomTile roomTile)
         {
@@ -23,6 +24,7 @@ namespace _Scripts.RoomTiles
             usedSprite = roomTile.UsedSprite;
             unusedSprite = roomTile.UnusedSprite;
             openDirections = roomTile.OpenDirections;
+            doorDirections = roomTile.DoorDirections;
             isRotatable = !roomTile.OpenDirections.IsEmpty() &&
                           roomTile.OpenDirections.Count != EnumExtensions.GetAllItems<RoomDirection>().Count();
         }
@@ -31,6 +33,7 @@ namespace _Scripts.RoomTiles
         public Sprite UsedSprite => usedSprite;
         public Sprite UnusedSprite => unusedSprite;
         public IReadOnlyList<RoomDirection> OpenDirections => openDirections;
+        public IReadOnlyList<RoomDirection> DoorDirections => doorDirections;
         public bool IsRotatable => isRotatable;
     }
 }

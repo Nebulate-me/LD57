@@ -84,10 +84,15 @@ namespace _Scripts.Rooms
             throw new ArgumentOutOfRangeException(nameof(vector), vector, $"Invalid Vector to convert: {vector}");
         }
 
-        public static List<RoomDirection> InvertList(IEnumerable<RoomDirection> directions)
+        public static List<RoomDirection> InvertList(this IEnumerable<RoomDirection> directions)
         {
             return EnumExtensions.GetAllItems<RoomDirection>().Where(direction => !directions.Contains(direction))
                 .ToList();
+        }
+        
+        public static List<RoomDirection> Rotate(this IEnumerable<RoomDirection> directions, RoomDirection rotation)
+        {
+            return directions.Select(direction => direction.Rotate(rotation)).ToList();
         }
 
         public static RoomDirection Default => RoomDirection.North;

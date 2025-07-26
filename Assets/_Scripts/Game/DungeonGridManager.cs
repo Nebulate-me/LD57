@@ -186,6 +186,39 @@ namespace _Scripts.Game
 
             return true;
         }
+        
+        /// <summary>
+        /// Finds the lists of open/door/closed directions of rooms adjacent to the provided room position
+        /// Returns true if there are any adjacent rooms at all
+        /// </summary>
+        private bool GetAdjacentDirections(Vector2Int roomPosition, 
+            out List<RoomDirection> adjacentOpenDirections, 
+            out List<RoomDirection> adjacentAnyDirections, 
+            out List<RoomDirection> adjacentClosedDirections)
+        {
+            adjacentOpenDirections = new List<RoomDirection>();
+            adjacentAnyDirections = new List<RoomDirection>();
+            adjacentClosedDirections = new List<RoomDirection>();
+
+            var adjacentRooms = rooms.Where(room => room.GridPosition.ManhattanDistance(roomPosition) == 1).ToList();
+
+            if (adjacentRooms.IsEmpty())
+                return false;
+
+            foreach (var adjacentRoom in adjacentRooms)
+            {
+                var adjacentRoomDirection = (adjacentRoom.GridPosition - roomPosition).FromVector2Int();
+                var invertedAdjacentRoomDirection = adjacentRoomDirection.Invert();
+                if (adjacentRoom.OpenDirections.Contains(invertedAdjacentRoomDirection))
+                    adjacentOpenDirections.Add(adjacentRoomDirection);
+                else if (adjacentRoom.DoorDirections.Contains(invertedAdjacentRoomDirection))
+                    adjacentAnyDirections.Add(adjacentRoomDirection);
+                else
+                    adjacentClosedDirections.Add(adjacentRoomDirection);
+            }
+
+            return true;
+        }
 
         private bool IsValidDirection(RoomDirection directionToCheck,
             IEnumerable<RoomDirection> dtoOpenDirections,
@@ -194,11 +227,27 @@ namespace _Scripts.Game
         {
             var rotatedDtoOpenDirections =
                 dtoOpenDirections.Select(direction => direction.Rotate(directionToCheck)).ToList();
-            var rotatedDtoClosedDirections = RoomDirectionExtensions.InvertList(rotatedDtoOpenDirections);
+            var rotatedDtoClosedDirections = rotatedDtoOpenDirections.InvertList();
             var allOpenDirectionsOpen =
                 adjacentOpenDirections.All(openDirection => rotatedDtoOpenDirections.Contains(openDirection));
             var allClosedDirectionsClosed =
                 adjacentClosedDirections.All(closedDirection => rotatedDtoClosedDirections.Contains(closedDirection));
+
+            return allOpenDirectionsOpen && allClosedDirectionsClosed;
+        }
+        
+        private bool IsValidDirection(RoomDirection directionToCheck,
+            TileDirectionConfiguration dtoConfiguration,
+            TileDirectionConfiguration adjacentConfiguration)
+        {
+            var rotatedDtoOpenDirections = dtoConfiguration.OpenDirections.Rotate(directionToCheck);
+            var rotatedDtoClosedDirections = dtoConfiguration.ClosedDirections.Rotate(directionToCheck);
+            var rotatedDtoAnyDirections = dtoConfiguration.AnyDirections.Rotate(directionToCheck);
+            
+            var allOpenDirectionsOpen =
+                adjacentConfiguration.OpenDirections.All(openDirection => rotatedDtoOpenDirections.Contains(openDirection) || rotatedDtoAnyDirections.Contains(openDirection) );
+            var allClosedDirectionsClosed =
+                adjacentConfiguration.ClosedDirections.All(closedDirection => rotatedDtoClosedDirections.Contains(closedDirection)  || rotatedDtoAnyDirections.Contains(closedDirection) );
 
             return allOpenDirectionsOpen && allClosedDirectionsClosed;
         }
@@ -237,14 +286,17 @@ namespace _Scripts.Game
         {
             foreach (var adjacentPosition in adjacentPositions)
             {
-                if (!GetAdjacentDirections(adjacentPosition, out var adjacentOpenDirections, out var adjacentClosedDirections))
+                if (!GetAdjacentDirections(adjacentPosition, out var adjacentOpenDirections, out var adjacentAnyDirections, out var adjacentClosedDirections))
                     continue;
 
                 var roomPosition = adjacentPosition - gridPosition + roomDto.StartingPosition;
                 var roomTileCell = roomDto.Tiles.First(tile => tile.Position == roomPosition);
 
-                var rotatedTileOpenDirections = roomTileCell.Tile.OpenDirections.Select(direction => direction.Rotate(roomTileCell.Direction)).ToList();
-                if (!IsValidDirection(currentDirection, rotatedTileOpenDirections, adjacentOpenDirections, adjacentClosedDirections))
+                var roomDtoConfig = new TileDirectionConfiguration(roomTileCell);
+                var adjacentDirectionsConfig = new TileDirectionConfiguration(adjacentOpenDirections,
+                    adjacentAnyDirections, adjacentClosedDirections);
+                
+                if (!IsValidDirection(currentDirection, roomDtoConfig, adjacentDirectionsConfig))
                     return false;
             }
 

@@ -14,12 +14,14 @@ namespace _Scripts.Rooms
         [SerializeField] private Vector2Int gridPosition;
         [SerializeField] private RoomDirection direction;
         [SerializeField] private List<RoomDirection> openDirections = new();
+        [SerializeField] private List<RoomDirection> doorDirections = new();
         [SerializeField] private bool isUsed = false;
         
         private RoomTileDto _tileDto;
 
         public Vector2Int GridPosition => gridPosition;
         public List<RoomDirection> OpenDirections => openDirections;
+        public List<RoomDirection> DoorDirections => doorDirections;
 
         public bool IsUsed
         {
@@ -39,7 +41,8 @@ namespace _Scripts.Rooms
             direction = initialDirection;
             transform.rotation = direction.ToRotation();
 
-            openDirections = _tileDto.OpenDirections.Select(openDirection => openDirection.Rotate(direction)).ToList();
+            openDirections = _tileDto.OpenDirections.Rotate(direction).ToList();
+            doorDirections = _tileDto.DoorDirections.Rotate(direction).ToList();
         }
         
         public void OnSpawn()
