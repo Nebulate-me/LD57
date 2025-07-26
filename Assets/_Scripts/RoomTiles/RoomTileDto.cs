@@ -25,15 +25,46 @@ namespace _Scripts.RoomTiles
             unusedSprite = roomTile.UnusedSprite;
             openDirections = roomTile.OpenDirections;
             doorDirections = roomTile.DoorDirections;
-            isRotatable = !roomTile.OpenDirections.IsEmpty() &&
-                          roomTile.OpenDirections.Count != EnumExtensions.GetAllItems<RoomDirection>().Count();
+            isRotatable = GetIsRotatable();
         }
-        
+
+        private RoomTileDto(
+            string dtoName, 
+            Sprite dtoUsedSprite,
+            Sprite dtoUnusedSprite,
+            List<RoomDirection> dtoOpenDirections, 
+            List<RoomDirection> dtoDoorDirections)
+        {
+            name = dtoName;
+            usedSprite = dtoUsedSprite;
+            unusedSprite = dtoUnusedSprite;
+            openDirections = dtoOpenDirections;
+            doorDirections = dtoDoorDirections;
+            isRotatable = GetIsRotatable();
+        }
+
+        private bool GetIsRotatable()
+        {
+            return !openDirections.IsEmpty() &&
+                   openDirections.Count != EnumExtensions.GetAllItems<RoomDirection>().Count();
+        }
+
         public string Name => name;
         public Sprite UsedSprite => usedSprite;
         public Sprite UnusedSprite => unusedSprite;
         public IReadOnlyList<RoomDirection> OpenDirections => openDirections;
         public IReadOnlyList<RoomDirection> DoorDirections => doorDirections;
         public bool IsRotatable => isRotatable;
+
+        public RoomTileDto Rotate(RoomDirection direction)
+        {
+            return new RoomTileDto(
+                name,
+                usedSprite,
+                unusedSprite,
+                openDirections.Rotate(direction),
+                doorDirections.Rotate(direction)
+            );
+        }
     }
 }

@@ -14,5 +14,10 @@ namespace _Scripts.RoomTiles
         public Vector2Int Position => position;
         public RoomDirection Direction => direction;
         public RoomTile Tile => tile;
+
+        public RoomTileCellDto ToDto()
+        {
+            return new RoomTileCellDto(this);
+        }
     }
 }

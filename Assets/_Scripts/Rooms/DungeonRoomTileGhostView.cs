@@ -18,7 +18,7 @@ namespace _Scripts.Rooms
             set => spriteRenderer.sprite = value;
         }
 
-        public void SetUp(RoomTileCell roomTileCell)
+        public void SetUp(RoomTileCellDto roomTileCell)
         {
             Sprite = roomTileCell.Tile.UnusedSprite;
             transform.rotation = roomTileCell.Direction.ToRotation();

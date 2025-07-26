@@ -57,19 +57,15 @@ namespace _Scripts.Game
 
         private void Update()
         {
-            // if (!handManager.SelectedRoomTileCardView.TryGetValue(out var selectedRoomTileCardView))
             if (!handManager.SelectedRoomCardView.TryGetValue(out var selectedRoomCardView))
             {
-                // _roomTileGhostInstance.gameObject.SetActive(false);
                 _roomGhostInstance.gameObject.SetActive(false);
                 return;
             }
 
             if (Input.GetMouseButtonDown(1))
             {
-                // _roomTileGhostInstance.gameObject.SetActive(false);
                 _roomGhostInstance.gameObject.SetActive(false);
-                // handManager.DeselectRoomTileCard();
                 handManager.DeselectRoomCard();
                 return;
             }
@@ -77,12 +73,10 @@ namespace _Scripts.Game
             var mouseUI = dungeonCameraController.GetMouseUIPosition();
             if (unclickableScreenAreas.Any(area => RectTransformUtility.RectangleContainsScreenPoint(area, mouseUI, uiCamera)))
             {
-                // _roomTileGhostInstance.gameObject.SetActive(false);
                 _roomGhostInstance.gameObject.SetActive(false);
                 return;
             }
             
-            // _roomTileGhostInstance.gameObject.SetActive(true);
             _roomGhostInstance.gameObject.SetActive(true);
 
             Vector2 mouseWorld = dungeonCameraController.GetMouseWorldPosition();
@@ -90,28 +84,18 @@ namespace _Scripts.Game
             var snappedPosition = GridToWorld(gridPosition);
             // Debug.Log($"Mouse Position {mouseWorld}, gridPosition {gridPosition}, snappedPosition {snappedPosition}");
 
-            // _roomTileGhostInstance.transform.position = snappedPosition;
             _roomGhostInstance.transform.position = snappedPosition;
-
-            // if (!IsPositionEmptyAndAdjacent(gridPosition) ||
-            //     !TryGetValidDirection(selectedRoomCardView, gridPosition, out var validDirection))
+            
             if (!AreRoomPositionsEmptyAndAdjacent(gridPosition, selectedRoomCardView.RoomDto))
             {
-                // _roomTileGhostInstance.transform.rotation = currentDirection.ToRotation();
-                // _roomTileGhostInstance.SetUpInvalid(selectedRoomCardView.RoomDto);
-                _roomGhostInstance.transform.rotation = currentDirection.ToRotation();
-                _roomGhostInstance.SetUpInvalid(selectedRoomCardView.RoomDto);
+                _roomGhostInstance.SetUpInvalid(selectedRoomCardView.RoomDto, currentDirection);
                 return;
             }
+            
+            _roomGhostInstance.SetUpValid(selectedRoomCardView.RoomDto, currentDirection);
 
-            // currentDirection = validDirection; // TODO: Determine the direction correctly
-            // _roomTileGhostInstance.transform.rotation = validDirection.ToRotation();
-            // _roomTileGhostInstance.SetUpValid(selectedRoomCardView.RoomDto);
-            _roomGhostInstance.SetUpValid(selectedRoomCardView.RoomDto);
-
-            // if (selectedRoomCardView.RoomDto.IsRotatable && Input.mouseScrollDelta.y != 0)
-            //     RotateGhostView(selectedRoomCardView, gridPosition, Input.mouseScrollDelta.y > 0);
-            // TODO: Rotate Ghost Room
+            if (Input.mouseScrollDelta.y != 0)
+                RotateGhostView(Input.mouseScrollDelta.y > 0);
 
             if (Input.GetMouseButtonDown(0))
                 PlaceRoom(selectedRoomCardView.RoomDto, gridPosition);
@@ -252,12 +236,6 @@ namespace _Scripts.Game
             return allOpenDirectionsOpen && allClosedDirectionsClosed;
         }
 
-        private bool IsPositionEmptyAndAdjacent(Vector2Int gridPosition)
-        {
-            return rooms.All(room => room.GridPosition != gridPosition) &&
-                   rooms.Any(room => room.GridPosition.ManhattanDistance(gridPosition) == 1);
-        }
-
         private bool AreRoomPositionsEmptyAndAdjacent(Vector2Int gridPosition, RoomDto roomDto)
         {
             var roomStartingPosition = roomDto.StartingPosition;
@@ -315,7 +293,7 @@ namespace _Scripts.Game
             return new Vector3(gridPos.x, gridPos.y, 0);
         }
 
-        private void RotateGhostView(RoomTileCardView selectedRoomTileCardView, Vector2Int gridPosition, bool clockwise)
+        private void RotateGhostTileView(RoomTileCardView selectedRoomTileCardView, Vector2Int gridPosition, bool clockwise)
         {
             if (!GetAdjacentDirections(gridPosition, out var adjacentOpenDirections, out var adjacentClosedDirections))
                 return;
@@ -339,8 +317,14 @@ namespace _Scripts.Game
             }
 
             var invertedRotatedDirection = currentDirection.Rotate(rotation.Invert());
-            if (IsValidDirection(invertedRotatedDirection, selectedRoomTileCardView.TileDto.OpenDirections,
-                    adjacentOpenDirections, adjacentClosedDirections)) currentDirection = invertedRotatedDirection;
+            if (IsValidDirection(invertedRotatedDirection, selectedRoomTileCardView.TileDto.OpenDirections, adjacentOpenDirections, adjacentClosedDirections)) 
+                currentDirection = invertedRotatedDirection;
+        }
+
+        private void RotateGhostView(bool clockwise)
+        {
+            var rotation = clockwise ? RoomDirection.West : RoomDirection.East;
+            currentDirection =  currentDirection.Rotate(rotation);
         }
 
         private void PlaceRoom(RoomDto selectedRoomDto, Vector2Int gridPosition)
@@ -352,7 +336,7 @@ namespace _Scripts.Game
                     .GetComponent<DungeonRoomView>();
                 var tileGridPosition = gridPosition + roomTileCell.Position - startingTilePosition;
                 dungeonRoom.transform.position = GridToWorld(tileGridPosition);
-                dungeonRoom.SetUp(roomTileCell.Tile.ToDto(), tileGridPosition, roomTileCell.Direction);
+                dungeonRoom.SetUp(roomTileCell.Tile, tileGridPosition, roomTileCell.Direction.Rotate(currentDirection));
                 rooms.Add(dungeonRoom);
                 
                 SignalsHub.DispatchAsync(new RoomTilePlacedSignal(dungeonRoom));

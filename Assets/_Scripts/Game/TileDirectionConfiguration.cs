@@ -11,7 +11,7 @@ namespace _Scripts.Game
         public List<RoomDirection> ClosedDirections { get; }
         public List<RoomDirection> AnyDirections { get; }
         
-        public TileDirectionConfiguration(RoomTileCell cell)
+        public TileDirectionConfiguration(RoomTileCellDto cell)
         {
             OpenDirections = cell.Tile.OpenDirections.Rotate(cell.Direction);
             AnyDirections =  cell.Tile.DoorDirections.Rotate(cell.Direction);
