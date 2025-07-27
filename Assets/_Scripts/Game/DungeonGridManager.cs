@@ -8,7 +8,6 @@ using ModestTree;
 using Signals;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Utilities;
 using Utilities.Prefabs;
 using Zenject;
 
@@ -99,52 +98,6 @@ namespace _Scripts.Game
                 PlaceRoom(selectedRoomCardView.RoomDto, gridPosition);
         }
 
-        private bool TryGetValidDirection(RoomTileCardView selectedRoomTileCardView, Vector2Int gridPosition,
-            out RoomDirection validDirection)
-        {
-            validDirection = _currentDirection;
-
-            if (!GetAdjacentDirections(gridPosition, out var adjacentOpenDirections, out var adjacentClosedDirections))
-                return false;
-
-            if (IsValidDirection(_currentDirection, selectedRoomTileCardView.TileDto.OpenDirections, adjacentOpenDirections,
-                    adjacentClosedDirections))
-                return true;
-
-            foreach (var roomDirection in EnumExtensions.GetAllItems<RoomDirection>())
-                if (IsValidDirection(roomDirection, selectedRoomTileCardView.TileDto.OpenDirections,
-                        adjacentOpenDirections, adjacentClosedDirections))
-                {
-                    validDirection = roomDirection;
-                    return true;
-                }
-
-            return false;
-        }
-
-        private bool GetAdjacentDirections(Vector2Int roomPosition, out List<RoomDirection> adjacentOpenDirections,
-            out List<RoomDirection> adjacentClosedDirections)
-        {
-            adjacentOpenDirections = new List<RoomDirection>();
-            adjacentClosedDirections = new List<RoomDirection>();
-
-            var adjacentRooms = _rooms.Where(room => room.GridPosition.ManhattanDistance(roomPosition) == 1).ToList();
-
-            if (adjacentRooms.IsEmpty())
-                return false;
-
-            foreach (var adjacentRoom in adjacentRooms)
-            {
-                var adjacentRoomDirection = (adjacentRoom.GridPosition - roomPosition).FromVector2Int();
-                if (adjacentRoom.OpenDirections.Contains(adjacentRoomDirection.Invert()))
-                    adjacentOpenDirections.Add(adjacentRoomDirection);
-                else
-                    adjacentClosedDirections.Add(adjacentRoomDirection);
-            }
-
-            return true;
-        }
-        
         /// <summary>
         /// Finds the lists of open/door/closed directions of rooms adjacent to the provided room position
         /// Returns true if there are any adjacent rooms at all
@@ -178,22 +131,6 @@ namespace _Scripts.Game
             return true;
         }
 
-        private bool IsValidDirection(RoomDirection directionToCheck,
-            IEnumerable<RoomDirection> dtoOpenDirections,
-            IEnumerable<RoomDirection> adjacentOpenDirections,
-            IEnumerable<RoomDirection> adjacentClosedDirections)
-        {
-            var rotatedDtoOpenDirections =
-                dtoOpenDirections.Select(direction => direction.Rotate(directionToCheck)).ToList();
-            var rotatedDtoClosedDirections = rotatedDtoOpenDirections.InvertList();
-            var allOpenDirectionsOpen =
-                adjacentOpenDirections.All(openDirection => rotatedDtoOpenDirections.Contains(openDirection));
-            var allClosedDirectionsClosed =
-                adjacentClosedDirections.All(closedDirection => rotatedDtoClosedDirections.Contains(closedDirection));
-
-            return allOpenDirectionsOpen && allClosedDirectionsClosed;
-        }
-        
         private bool IsValidAdjacency(TileDirectionConfiguration dtoConfiguration,
             TileDirectionConfiguration adjacentConfiguration)
         {
@@ -261,34 +198,6 @@ namespace _Scripts.Game
         private Vector3 GridToWorld(Vector2Int gridPos)
         {
             return new Vector3(gridPos.x, gridPos.y, 0);
-        }
-
-        private void RotateGhostTileView(RoomTileCardView selectedRoomTileCardView, Vector2Int gridPosition, bool clockwise)
-        {
-            if (!GetAdjacentDirections(gridPosition, out var adjacentOpenDirections, out var adjacentClosedDirections))
-                return;
-
-            var rotation = clockwise ? RoomDirection.West : RoomDirection.East;
-            var rotatedDirection = _currentDirection.Rotate(rotation);
-
-            if (IsValidDirection(rotatedDirection, selectedRoomTileCardView.TileDto.OpenDirections, adjacentOpenDirections,
-                    adjacentClosedDirections))
-            {
-                _currentDirection = rotatedDirection;
-                return;
-            }
-
-            var invertedDirection = _currentDirection.Invert();
-            if (IsValidDirection(invertedDirection, selectedRoomTileCardView.TileDto.OpenDirections, adjacentOpenDirections,
-                    adjacentClosedDirections))
-            {
-                _currentDirection = invertedDirection;
-                return;
-            }
-
-            var invertedRotatedDirection = _currentDirection.Rotate(rotation.Invert());
-            if (IsValidDirection(invertedRotatedDirection, selectedRoomTileCardView.TileDto.OpenDirections, adjacentOpenDirections, adjacentClosedDirections)) 
-                _currentDirection = invertedRotatedDirection;
         }
 
         private void RotateGhostView(bool clockwise)

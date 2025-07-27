@@ -43,8 +43,8 @@ namespace _Scripts.Rooms
             spriteTransform.rotation = direction.ToRotation();
             spriteRenderer.sprite = _tileDto.UnusedSprite;
 
-            openDirections = _tileDto.OpenDirections.Rotate(direction).ToList();
-            doorDirections = _tileDto.DoorDirections.ToList();
+            openDirections = _tileDto.OpenDirections;
+            doorDirections = _tileDto.DoorDirections;
             
             foreach (var doorObject in doorObjects.Values)
             {
