@@ -52,8 +52,8 @@ namespace _Scripts.RoomTiles
         public string Name => name;
         public Sprite UsedSprite => usedSprite;
         public Sprite UnusedSprite => unusedSprite;
-        public IReadOnlyList<RoomDirection> OpenDirections => openDirections;
-        public IReadOnlyList<RoomDirection> DoorDirections => doorDirections;
+        public List<RoomDirection> OpenDirections => openDirections;
+        public List<RoomDirection> DoorDirections => doorDirections;
         public bool IsRotatable => isRotatable;
 
         public RoomTileDto Rotate(RoomDirection direction)

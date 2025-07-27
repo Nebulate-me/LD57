@@ -13,8 +13,8 @@ namespace _Scripts.Game
         
         public TileDirectionConfiguration(RoomTileCellDto cell)
         {
-            OpenDirections = cell.Tile.OpenDirections.Rotate(cell.Direction);
-            AnyDirections =  cell.Tile.DoorDirections.Rotate(cell.Direction);
+            OpenDirections = cell.Tile.OpenDirections;
+            AnyDirections =  cell.Tile.DoorDirections;
             ClosedDirections = OpenDirections.Concat(AnyDirections).InvertList();
         }
 
