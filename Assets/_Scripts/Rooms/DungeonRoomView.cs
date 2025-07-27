@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.RoomTiles;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Utilities.Prefabs;
 
@@ -8,14 +9,15 @@ namespace _Scripts.Rooms
 {
     public class DungeonRoomView : MonoBehaviour, IPoolableResource
     {
+        [SerializeField] private Transform spriteTransform;
         [SerializeField] private SpriteRenderer spriteRenderer;
-
-        [Header("Do Not Edit")] 
-        [SerializeField] private Vector2Int gridPosition;
-        [SerializeField] private RoomDirection direction;
-        [SerializeField] private List<RoomDirection> openDirections = new();
-        [SerializeField] private List<RoomDirection> doorDirections = new();
-        [SerializeField] private bool isUsed = false;
+        [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects = new();
+        
+        [ShowInInspector, ReadOnly] private Vector2Int gridPosition;
+        [ShowInInspector, ReadOnly] private RoomDirection direction;
+        [ShowInInspector, ReadOnly] private List<RoomDirection> openDirections = new();
+        [ShowInInspector, ReadOnly] private List<RoomDirection> doorDirections = new();
+        [ShowInInspector, ReadOnly] private bool isUsed = false;
         
         private RoomTileDto _tileDto;
 
@@ -37,12 +39,22 @@ namespace _Scripts.Rooms
         {
             _tileDto = roomTileDto;
             gridPosition = initialGridPosition;
-            spriteRenderer.sprite = _tileDto.UnusedSprite;
             direction = initialDirection;
-            transform.rotation = direction.ToRotation();
+            spriteTransform.rotation = direction.ToRotation();
+            spriteRenderer.sprite = _tileDto.UnusedSprite;
 
             openDirections = _tileDto.OpenDirections.Rotate(direction).ToList();
-            doorDirections = _tileDto.DoorDirections.Rotate(direction).ToList();
+            doorDirections = _tileDto.DoorDirections.ToList();
+            
+            foreach (var doorObject in doorObjects.Values)
+            {
+                doorObject.SetActive(false);            
+            }
+            
+            foreach (var doorDirection in doorDirections)
+            {
+                doorObjects[doorDirection].SetActive(true);
+            }
         }
         
         public void OnSpawn()

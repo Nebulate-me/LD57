@@ -299,14 +299,15 @@ namespace _Scripts.Game
 
         private void PlaceRoom(RoomDto selectedRoomDto, Vector2Int gridPosition)
         {
-            var startingTilePosition = selectedRoomDto.StartingPosition;
-            foreach (var roomTileCell in selectedRoomDto.Tiles)
+            var rotatedRoomDto = selectedRoomDto.Rotate(_currentDirection);
+            var startingTilePosition = rotatedRoomDto.StartingPosition;
+            foreach (var roomTileCell in rotatedRoomDto.Tiles)
             {
                 var dungeonRoom = prefabPool.Spawn(dungeonRoomPrefab, roomContainer)
                     .GetComponent<DungeonRoomView>();
                 var tileGridPosition = gridPosition + roomTileCell.Position - startingTilePosition;
                 dungeonRoom.transform.position = GridToWorld(tileGridPosition);
-                dungeonRoom.SetUp(roomTileCell.Tile, tileGridPosition, roomTileCell.Direction.Rotate(_currentDirection));
+                dungeonRoom.SetUp(roomTileCell.Tile, tileGridPosition, roomTileCell.Direction);
                 _rooms.Add(dungeonRoom);
                 
                 SignalsHub.DispatchAsync(new RoomTilePlacedSignal(dungeonRoom));
