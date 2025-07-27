@@ -19,7 +19,9 @@ namespace _Scripts.RoomTiles
             {
                 doorObject.SetActive(false);
             }
-            foreach (var tileDoorDirection in roomTileCell.Tile.DoorDirections)
+
+            var rotatedDoorDirections = roomTileCell.Tile.DoorDirections.Rotate(roomTileCell.Direction);
+            foreach (var tileDoorDirection in rotatedDoorDirections)
             {
                 doorObjects[tileDoorDirection].SetActive(true);
             }

@@ -62,10 +62,10 @@ namespace _Scripts.Rooms
             _currentRoomDto = roomDto;
             _currentRoomDirection = roomDirection;
 
-            var rotatedRoomTiles = _currentRoomDto.RotateTiles(roomDirection); 
+            var rotatedRoomDto = _currentRoomDto.Rotate(roomDirection); 
 
-            var roomTileStartingPosition = roomDto.StartingPosition; 
-            foreach (var roomTileCell in rotatedRoomTiles)
+            var roomTileStartingPosition = rotatedRoomDto.StartingPosition; 
+            foreach (var roomTileCell in rotatedRoomDto.Tiles)
             {
                 var tileGhostVew = _prefabPool.Spawn(ghostTileSprite, ghostTileContainer).GetComponent<DungeonRoomTileGhostView>();
                 tileGhostVew.transform.localPosition = (roomTileCell.Position - roomTileStartingPosition).ToVector3();

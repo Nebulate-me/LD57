@@ -18,13 +18,13 @@ namespace _Scripts.RoomTiles
         [SerializeField] private List<RoomDirection> doorDirections;
         [SerializeField] private bool isRotatable;
 
-        public RoomTileDto(RoomTile roomTile)
+        public RoomTileDto(RoomTile roomTile, RoomDirection roomDirection = RoomDirection.North)
         {
             name = roomTile.TileName;
             usedSprite = roomTile.UsedSprite;
             unusedSprite = roomTile.UnusedSprite;
-            openDirections = roomTile.OpenDirections;
-            doorDirections = roomTile.DoorDirections;
+            openDirections = roomTile.OpenDirections.Rotate(roomDirection);
+            doorDirections = roomTile.DoorDirections.Rotate(roomDirection);
             isRotatable = GetIsRotatable();
         }
 

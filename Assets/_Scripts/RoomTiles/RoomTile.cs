@@ -20,9 +20,9 @@ namespace _Scripts.RoomTiles
         public List<RoomDirection> OpenDirections => openDirections;
         public List<RoomDirection> DoorDirections => doorDirections;
 
-        public RoomTileDto ToDto()
+        public RoomTileDto ToDto(RoomDirection direction = RoomDirection.North)
         {
-            return new RoomTileDto(this);
+            return new RoomTileDto(this, direction);
         }
     }
 }

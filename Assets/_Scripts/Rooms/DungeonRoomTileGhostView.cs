@@ -5,6 +5,7 @@ namespace _Scripts.Rooms
 {
     public class DungeonRoomTileGhostView : MonoBehaviour
     {
+        [SerializeField] private Transform spriteTransform;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects;
 
@@ -21,7 +22,7 @@ namespace _Scripts.Rooms
         public void SetUp(RoomTileCellDto roomTileCell)
         {
             Sprite = roomTileCell.Tile.UnusedSprite;
-            transform.rotation = roomTileCell.Direction.ToRotation();
+            spriteTransform.rotation = roomTileCell.Direction.ToRotation();
             
             foreach (var doorObject in doorObjects.Values)
             {

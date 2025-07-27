@@ -15,7 +15,7 @@ namespace _Scripts.RoomTiles
         {
             position = tileCell.Position;
             direction = tileCell.Direction;
-            tile = tileCell.Tile.ToDto();
+            tile = tileCell.Tile.ToDto(direction);
         }
 
         public RoomTileCellDto(Vector2Int newPosition, RoomDirection newDirection, RoomTileDto newTile)

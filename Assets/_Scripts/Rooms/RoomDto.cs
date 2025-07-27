@@ -22,7 +22,14 @@ namespace _Scripts.Rooms
             roomType = room.RoomType;
             tiles = room.Tiles.Select(tile => tile.ToDto()).ToList();
         }
-        
+
+        private RoomDto(string name, RoomType roomType, List<RoomTileCellDto> tiles)
+        {
+            this.name = name;
+            this.roomType = roomType;
+            this.tiles = tiles;
+        }
+
         public string Name => name;
         public RoomType RoomType => roomType;
         public List<RoomTileCellDto> Tiles => tiles;
@@ -31,28 +38,19 @@ namespace _Scripts.Rooms
             ? Vector2Int.zero
             : new Vector2Int(tiles.Min(tile => tile.Position.x), tiles.Min(tile => tile.Position.y));
 
-        public List<RoomTileCellDto> RotateTiles(RoomDirection direction)
+        public RoomDto Rotate(RoomDirection direction)
         {
-            if (direction == RoomDirection.North) return tiles;
+            if (direction == RoomDirection.North) return this;
+            
             var rotation = direction.ToRotation();
-            return tiles.Select(tile =>
+            var rotatedTiles = tiles.Select(tile =>
                 new RoomTileCellDto(
                         (rotation * tile.Position.ToVector3()).ToVector2Int(),
                         tile.Direction.Rotate(direction),
                         tile.Tile.Rotate(direction)
                 )).ToList();
-        }
-        
-        private List<MissionCell> RotatePattern(IEnumerable<MissionCell> pattern, RoomDirection direction)
-        {
-            var rotation = direction.ToRotation();
-            return pattern.Select(cell => 
-                new MissionCell(
-                    cell.Type,
-                    (rotation * cell.Position.ToVector3()).ToVector2Int(),
-                    cell.OpenDirections.Select(openDirection => openDirection.Rotate(direction)).ToList(),
-                    cell.ClosedDirections.Select(closedDirection => closedDirection.Rotate(direction)).ToList()
-                )).ToList();
+            
+            return new RoomDto(name, roomType, rotatedTiles);
         }
     }
 }
