@@ -1,13 +1,12 @@
 using System.Collections.Generic;
-using _Scripts.Rooms;
 using _Scripts.RoomTiles;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace _Scripts.Missions
+namespace _Scripts.Missions.Pattern
 {
-    [CreateAssetMenu(menuName = "LD57/Create Mission", fileName = "Mission", order = 0)]
-    public class Mission : ScriptableObject
+    [CreateAssetMenu(menuName = "LD57/Missions/Create PatternMission", fileName = "PatternMission", order = 0)]
+    public class PatternMission : ScriptableObject
     {
         [SerializeField] private string missionName;
         [SerializeField] private List<MissionCell> pattern = new();
@@ -25,9 +24,9 @@ namespace _Scripts.Missions
         public int MaxCompletedMissions => maxCompletedMissions;
         public int RewardScore => rewardScore;
 
-        public MissionDto ToDto()
+        public PatternMissionDto ToDto()
         {
-            return new MissionDto(this);
+            return new PatternMissionDto(this);
         }
     }
 }

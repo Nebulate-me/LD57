@@ -7,7 +7,6 @@ using _Scripts.Utils;
 using ModestTree;
 using Signals;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utilities.Prefabs;
 using Zenject;
 
@@ -18,8 +17,11 @@ namespace _Scripts.Game
         [SerializeField] private Transform roomContainer;
         [SerializeField] private GameObject dungeonRoomPrefab;
         [SerializeField] private GameObject dungeonRoomGhostPrefab;
-        [SerializeField] private GameObject dungeonRoomTileGhostPrefab;
-        [FormerlySerializedAs("startingRoom")] [SerializeField] private RoomTile startingRoomTile;
+        // TODO: Replace with the Level Setup - starting room and position
+        [Space]
+        [SerializeField] private Room startingRoom;
+        [SerializeField] private Vector2Int startingRoomPosition;
+        [Space]
         [SerializeField] private Vector2 mousePositionOffset;
         [SerializeField] private List<RectTransform> unclickableScreenAreas;
 
@@ -42,14 +44,10 @@ namespace _Scripts.Game
             unclickableBounds = unclickableScreenAreas.Select(RectTransformUtility.CalculateRelativeRectTransformBounds)
                 .ToList();
             
-            _roomTileGhostInstance = prefabPool.Spawn(dungeonRoomTileGhostPrefab, roomContainer)
-                .GetComponent<DungeonRoomTileGhostView>();
             _roomGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
                 .GetComponent<DungeonRoomGhostView>();
-
-            // TODO: Replace with the Elevator? Or the Level setup starting room hall/foyer?
-            var startingRoomPosition = new Vector2Int(); // 0, 0
-            PlaceRoomTile(startingRoomTile.ToDto(), startingRoomPosition);
+            
+            PlaceRoom(startingRoom.ToDto(), startingRoomPosition);
         }
 
         private void Update()
@@ -226,24 +224,6 @@ namespace _Scripts.Game
 
             soundManager.PlaySound(SoundType.PlaceRoom);
             _roomGhostInstance.gameObject.SetActive(false);
-        }
-        
-        private void PlaceRoomTile(RoomTileDto selectedRoomTileDto, Vector2Int gridPosition)
-        {
-            var worldPosition = GridToWorld(gridPosition);
-            var dungeonRoom = prefabPool.Spawn(dungeonRoomPrefab, roomContainer)
-                .GetComponent<DungeonRoomView>();
-            dungeonRoom.transform.position = worldPosition;
-            dungeonRoom.SetUp(selectedRoomTileDto, gridPosition,
-                selectedRoomTileDto.IsRotatable ? _currentDirection : RoomDirectionExtensions.Default);
-            _rooms.Add(dungeonRoom);
-
-            // handManager.TryPlaySelectRoomTileCard();
-            // handManager.RefillRoomTileHand();
-            _roomTileGhostInstance.gameObject.SetActive(false);
-
-            soundManager.PlaySound(SoundType.PlaceRoom);
-            SignalsHub.DispatchAsync(new RoomTilePlacedSignal(dungeonRoom));
         }
 
         public IReadOnlyList<DungeonRoomView> Rooms => _rooms;

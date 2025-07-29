@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Missions.Pattern;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,7 +10,7 @@ using Zenject;
 
 namespace _Scripts.Missions
 {
-    public class MissionCardView : MonoBehaviour, IPoolableResource, IPointerClickHandler
+    public class PatternMissionCardView : MonoBehaviour, IPoolableResource, IPointerClickHandler
     {
         [SerializeField] private TextMeshProUGUI missionName;
         [SerializeField] private TextMeshProUGUI rewardCountText;
@@ -25,20 +26,20 @@ namespace _Scripts.Missions
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IMissionManager missionManager;
         
-        private MissionDto dto;
+        private PatternMissionDto dto;
         private readonly List<MissionPatternCellView> patternCellViews = new();
         private bool isCompletable;
 
-        public MissionDto Dto => dto;
-        public void SetUp(MissionDto missionDto)
+        public PatternMissionDto Dto => dto;
+        public void SetUp(PatternMissionDto patternMissionDto)
         {
-            dto = missionDto;
-            missionName.text = missionDto.Name;
-            rewardCountText.text = missionDto.RewardCards.Count.ToString();
-            rewardScoreText.text = missionDto.RewardScore.ToString();
+            dto = patternMissionDto;
+            missionName.text = patternMissionDto.Name;
+            rewardCountText.text = patternMissionDto.RewardCards.Count.ToString();
+            rewardScoreText.text = patternMissionDto.RewardScore.ToString();
 
             missionPatternContainer.DestroyChildren();
-            foreach (var patternCell in missionDto.Pattern)
+            foreach (var patternCell in patternMissionDto.Pattern)
             {
                 if (patternCell.Type == MissionCellType.Any) continue;
                 var patternCellView = prefabPool.Spawn(missionPatternCellPrefab, missionPatternContainer).GetComponent<MissionPatternCellView>();

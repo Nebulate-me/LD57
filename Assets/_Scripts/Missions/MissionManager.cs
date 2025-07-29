@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
 using _Scripts.Game;
+using _Scripts.Missions.Apartment;
+using _Scripts.Missions.Pattern;
 using _Scripts.Rooms;
 using _Scripts.RoomTiles;
 using _Scripts.Utils;
@@ -19,21 +21,22 @@ namespace _Scripts.Missions
     public class MissionManager : MonoBehaviour, IMissionManager
     {
         [SerializeField] private RectTransform missionContainer;
-        [SerializeField] private GameObject missionPrefab;
-        [SerializeField] private List<Mission> availableMissions = new();
-        [SerializeField] private Mission initialMission;
+        [SerializeField] private GameObject apartmentMissionCardPrefab;
+        [SerializeField] private List<ApartmentMission> availableMissions = new();
+        [SerializeField] private ApartmentMission initialMission;
         [SerializeField] private int missionHandSize = 1;
         [SerializeField] private List<int> missionHandSizeIncreases = new() {2, 5, 10};
 
-        [Inject] private IPrefabPool prefabPool;
-        [Inject] private IRandomService randomService;
-        [Inject] private IDungeonGridManager dungeonGridManager;
-        [Inject] private IDeckManager deckManager;
-        [Inject] private ISoundManager soundManager;
+        [Inject] private IPrefabPool _prefabPool;
+        [Inject] private IRandomService _randomService;
+        [Inject] private IDungeonGridManager _dungeonGridManager;
+        [Inject] private IDeckManager _deckManager;
+        [Inject] private ISoundManager _soundManager;
 
-        private readonly List<MissionCardView> missionCards = new();
-        private int completedMissionCount;
-        private string lastCompletedMissionName;
+        private readonly List<PatternMissionCardView> _patternMissionCardViews = new();
+        private readonly List<ApartmentMissionCardView> _apartmentMissionCardViews = new();
+        private int _completedMissionCount;
+        private string _lastCompletedMissionName;
 
         private void OnEnable()
         {
@@ -55,42 +58,65 @@ namespace _Scripts.Missions
             missionContainer.DestroyChildren();
             
             var missionDto = initialMission.ToDto();
-            var missionCardView = prefabPool.Spawn(missionPrefab, missionContainer).GetComponent<MissionCardView>();
+            var missionCardView = _prefabPool.Spawn(apartmentMissionCardPrefab, missionContainer).GetComponent<ApartmentMissionCardView>();
             missionCardView.SetUp(missionDto);
             missionCardView.Completable = false;
-            missionCards.Add(missionCardView);
+            _apartmentMissionCardViews.Add(missionCardView);
         }
 
-        public int CompletableMissionsCount => missionCards.Count(mission => mission.Completable);
+        public int CompletableMissionsCount => _patternMissionCardViews.Count(mission => mission.Completable);
 
-        public void CompleteMission(MissionCardView missionCard)
+        public void CompleteMission(PatternMissionCardView patternMissionCard)
         {
-            if (!IsMissionCompletable(missionCard.Dto, dungeonGridManager.Rooms, out var roomsToUse)) return;
+            if (!IsPatternMissionCompletable(patternMissionCard.Dto, _dungeonGridManager.Rooms, out var roomsToUse)) return;
 
             foreach (var dungeonRoomView in roomsToUse) 
                 dungeonRoomView.IsUsed = true;
             
-            var shuffledMissionRewards = randomService.Shuffle(missionCard.Dto.RewardCards).ToList(); 
-            deckManager.BuryRoomTile(shuffledMissionRewards);
-            prefabPool.Despawn(missionCard.gameObject);
-            missionCards.Remove(missionCard);
+            var shuffledMissionRewards = _randomService.Shuffle(patternMissionCard.Dto.RewardCards).ToList(); 
+            _deckManager.BuryRoomTile(shuffledMissionRewards);
+            _prefabPool.Despawn(patternMissionCard.gameObject);
+            _patternMissionCardViews.Remove(patternMissionCard);
             
-            completedMissionCount++;
-            if (missionHandSizeIncreases.Contains(completedMissionCount)) 
+            _completedMissionCount++;
+            if (missionHandSizeIncreases.Contains(_completedMissionCount)) 
                 missionHandSize++;
             
-            soundManager.PlaySound(SoundType.CompleteMission);
-            SignalsHub.DispatchAsync(new MissionCompletedSignal(missionCard.Dto));
-            lastCompletedMissionName = missionCard.Dto.Name;
+            _soundManager.PlaySound(SoundType.CompleteMission);
+            SignalsHub.DispatchAsync(new PatternMissionCompletedSignal(patternMissionCard.Dto));
+            _lastCompletedMissionName = patternMissionCard.Dto.Name;
             
             UpdateMissions();
         }
-        
+
+        public void CompleteMission(ApartmentMissionCardView apartmentMissionCard)
+        {
+            if (!IsApartmentMissionCompletable(apartmentMissionCard.Dto, _dungeonGridManager.Rooms, out var roomsToUse)) return;
+
+            foreach (var dungeonRoomView in roomsToUse) 
+                dungeonRoomView.IsUsed = true;
+            
+            var shuffledMissionRewards = _randomService.Shuffle(apartmentMissionCard.Dto.RewardRooms).ToList(); 
+            _deckManager.BuryRoom(shuffledMissionRewards);
+            _prefabPool.Despawn(apartmentMissionCard.gameObject);
+            _apartmentMissionCardViews.Remove(apartmentMissionCard);
+            
+            _completedMissionCount++;
+            if (missionHandSizeIncreases.Contains(_completedMissionCount)) 
+                missionHandSize++;
+            
+            _soundManager.PlaySound(SoundType.CompleteMission);
+            SignalsHub.DispatchAsync(new ApartmentMissionCompletedSignal(apartmentMissionCard.Dto));
+            _lastCompletedMissionName = apartmentMissionCard.Dto.Name;
+            
+            UpdateMissions();
+        }
+
         private void UpdateMissions()
         {
-            foreach (var missionCardView in missionCards)
+            foreach (var missionCardView in _patternMissionCardViews)
             {
-                missionCardView.Completable = IsMissionCompletable(missionCardView.Dto, dungeonGridManager.Rooms, out var _);
+                missionCardView.Completable = IsPatternMissionCompletable(missionCardView.Dto, _dungeonGridManager.Rooms, out var _);
             }
 
             RefillMissionHand();
@@ -100,33 +126,39 @@ namespace _Scripts.Missions
         private void RefillMissionHand()
         {
             var unlockedMissions = availableMissions
-                .Where(mission => completedMissionCount >= mission.MinCompletedMissions &&
-                                  (mission.MaxCompletedMissions <= 0 || completedMissionCount < mission.MaxCompletedMissions) && 
-                                  mission.MissionName != lastCompletedMissionName)
+                .Where(mission => _completedMissionCount >= mission.MinCompletedMissions &&
+                                  (mission.MaxCompletedMissions <= 0 || _completedMissionCount < mission.MaxCompletedMissions) && 
+                                  mission.MissionName != _lastCompletedMissionName)
                 .ToList();
-            while (missionCards.Count < missionHandSize)
+            while (_apartmentMissionCardViews.Count < missionHandSize)
             {
-                var missionDto = randomService.Sample(unlockedMissions).ToDto();
-                if (missionCards.Any(card => card.Dto.Name == missionDto.Name)) continue;
-                var missionCardView = prefabPool.Spawn(missionPrefab, missionContainer).GetComponent<MissionCardView>();
+                var missionDto = _randomService.Sample(unlockedMissions).ToDto();
+                if (_apartmentMissionCardViews.Any(card => card.Dto.Name == missionDto.Name)) continue;
+                var missionCardView = _prefabPool.Spawn(apartmentMissionCardPrefab, missionContainer).GetComponent<ApartmentMissionCardView>();
                 missionCardView.SetUp(missionDto);
-                missionCardView.Completable = IsMissionCompletable(missionCardView.Dto, dungeonGridManager.Rooms, out var _);
-                missionCards.Add(missionCardView);
+                missionCardView.Completable = IsApartmentMissionCompletable(missionCardView.Dto, _dungeonGridManager.Rooms, out var _);
+                _apartmentMissionCardViews.Add(missionCardView);
             }
         }
 
-        private bool IsMissionCompletable(MissionDto missionDto, IReadOnlyList<DungeonRoomView> rooms, out List<DungeonRoomView> roomsToUse)
+        private bool IsApartmentMissionCompletable(object dto, IReadOnlyList<DungeonRoomView> rooms, out List<DungeonRoomView> roomsToUse)
+        {
+            roomsToUse = null;
+            return true; // TODO: implement
+        }
+
+        private bool IsPatternMissionCompletable(PatternMissionDto patternMissionDto, IReadOnlyList<DungeonRoomView> rooms, out List<DungeonRoomView> roomsToUse)
         {
             roomsToUse = new List<DungeonRoomView>();
             var unusedRooms = rooms.Where(room => !room.IsUsed).ToList();
             var allDirections = EnumExtensions.GetAllItems<RoomDirection>().ToList();
-            var normalizedPattern = NormalizePattern(missionDto.Pattern);
+            var normalizedPattern = NormalizePattern(patternMissionDto.Pattern);
             if (IsAnyPatternDirectionMatching(ref roomsToUse, allDirections, normalizedPattern, unusedRooms))
                 return true;
 
-            if (missionDto.FlipPatternY)
+            if (patternMissionDto.FlipPatternY)
             {
-                var normalizedFlippedYPattern = NormalizePattern(FlipYPattern(missionDto.Pattern));
+                var normalizedFlippedYPattern = NormalizePattern(FlipYPattern(patternMissionDto.Pattern));
                 if (IsAnyPatternDirectionMatching(ref roomsToUse, allDirections, normalizedFlippedYPattern, unusedRooms)) 
                     return true;
             }

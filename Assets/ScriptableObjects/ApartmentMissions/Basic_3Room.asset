@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7e34455138f4488803d4bb341ad27fe, type: 3}
+  m_Name: Basic_3Room
+  m_EditorClassIdentifier: 
+  missionName: "\u0422\u0440\u0435\u0445\u043A\u043E\u043C\u043D\u0430\u0442\u043D\u0430\u044F
+    \u043A\u0432\u0430\u0440\u0442\u0438\u0440\u0430"
+  requirements:
+  - roomType: 1
+  - roomType: 2
+  - roomType: 3
+  - roomType: 5
+  - roomType: 3
+  - roomType: 4
+  rewards:
+  - {fileID: 11400000, guid: 0bf08c4aa28010043be1aed7092fd0b4, type: 2}
+  - {fileID: 11400000, guid: 6d99150bdd486e7469b65fcff52195c2, type: 2}
+  - {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
+  - {fileID: 11400000, guid: 410ba308f0f4a7d4cad3825490e4c23e, type: 2}
+  minCompletedMissions: 1
+  maxCompletedMissions: 0
+  rewardScore: 1

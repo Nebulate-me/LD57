@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Scripts.Rooms;
 using _Scripts.RoomTiles;
 using UnityEngine;
 
-namespace _Scripts.Missions
+namespace _Scripts.Missions.Pattern
 {
     [Serializable]
-    public class MissionDto
+    public class PatternMissionDto
     {
         [SerializeField] private string name;
         [SerializeField] private List<MissionCell> pattern;
@@ -18,15 +17,15 @@ namespace _Scripts.Missions
         [SerializeField] private int maxCompletedMissions;
         [SerializeField] private int rewardScore;
 
-        public MissionDto(Mission mission)
+        public PatternMissionDto(PatternMission patternMission)
         {
-            name = mission.MissionName;
-            pattern = mission.Pattern;
-            flipPatternY = mission.MirrorPatternY;
-            rewardCards = mission.Rewards.Select(reward => reward.ToDto()).ToList();
-            minCompletedMissions = mission.MinCompletedMissions;
-            maxCompletedMissions = mission.MaxCompletedMissions;
-            rewardScore = mission.RewardScore * 50;
+            name = patternMission.MissionName;
+            pattern = patternMission.Pattern;
+            flipPatternY = patternMission.MirrorPatternY;
+            rewardCards = patternMission.Rewards.Select(reward => reward.ToDto()).ToList();
+            minCompletedMissions = patternMission.MinCompletedMissions;
+            maxCompletedMissions = patternMission.MaxCompletedMissions;
+            rewardScore = patternMission.RewardScore * 50;
         }
 
         public string Name => name;

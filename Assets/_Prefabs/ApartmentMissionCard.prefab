@@ -181,10 +181,11 @@ GameObject:
   m_Component:
   - component: {fileID: 602197601085267882}
   - component: {fileID: 5208738341302938842}
+  - component: {fileID: 7877179481821718437}
   - component: {fileID: 8225200337979613953}
   - component: {fileID: 6829015442281912610}
   m_Layer: 5
-  m_Name: MissionCard
+  m_Name: ApartmentMissionCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -232,6 +233,24 @@ MonoBehaviour:
   missionPatternContainer: {fileID: 8287122439674710909}
   missionPatternCellPrefab: {fileID: 1656063877687298406, guid: 38e0fbae1b235ef45a79c95fd026d6eb, type: 3}
   patternCellSize: 0.2
+  uncompletableMissionBackgroundSprite: {fileID: 21300000, guid: c9cb3c69527753b44844b6b224a025fe, type: 3}
+  completableMissionBackgroundSprite: {fileID: 21300000, guid: 1511cda4adaf68142a020db597152139, type: 3}
+--- !u!114 &7877179481821718437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 503265729348047692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6782b9a098ae4a50903c08aa2a6baaab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  missionNameText: {fileID: 5904878859181114060}
+  rewardCountText: {fileID: 2443414948986981710}
+  rewardScoreText: {fileID: 8661897915895699391}
+  missionBackgroundImage: {fileID: 6829015442281912610}
   uncompletableMissionBackgroundSprite: {fileID: 21300000, guid: c9cb3c69527753b44844b6b224a025fe, type: 3}
   completableMissionBackgroundSprite: {fileID: 21300000, guid: 1511cda4adaf68142a020db597152139, type: 3}
 --- !u!222 &8225200337979613953

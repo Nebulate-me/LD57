@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Scripts.Missions;
+using _Scripts.Missions.Pattern;
 using _Scripts.Rooms;
 using _Scripts.RoomTiles;
 using _Scripts.Utils;
@@ -25,14 +26,14 @@ namespace _Scripts.Game
         {
             SignalsHub.AddListener<RoomCardSelectedSignal>(OnRoomCardSelected);
             SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
-            SignalsHub.AddListener<MissionCompletedSignal>(OnMissionCompleted);
+            SignalsHub.AddListener<PatternMissionCompletedSignal>(OnMissionCompleted);
         }
 
         private void OnDisable()
         {
             SignalsHub.RemoveListener<RoomCardSelectedSignal>(OnRoomCardSelected);
             SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
-            SignalsHub.RemoveListener<MissionCompletedSignal>(OnMissionCompleted);
+            SignalsHub.RemoveListener<PatternMissionCompletedSignal>(OnMissionCompleted);
         }
 
         private void Start()
@@ -71,7 +72,7 @@ namespace _Scripts.Game
             OnTriggerEvent(TutorialStepTrigger.OnRoomCardPlaced);
         }
 
-        private void OnMissionCompleted(MissionCompletedSignal obj)
+        private void OnMissionCompleted(PatternMissionCompletedSignal obj)
         {
             OnTriggerEvent(TutorialStepTrigger.OnMissionCompleted);
         }

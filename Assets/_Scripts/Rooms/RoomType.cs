@@ -10,6 +10,7 @@ namespace _Scripts.Rooms
         Kitchen = 5,
         StorageRoom = 6,
         Hallway = 7,
-        Balcony = 8
+        Balcony = 8,
+        Elevator = 20,
     }
 }

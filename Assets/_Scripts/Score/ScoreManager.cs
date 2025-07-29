@@ -3,6 +3,7 @@ using System.Linq;
 using _Scripts.Cards;
 using _Scripts.Game;
 using _Scripts.Missions;
+using _Scripts.Missions.Pattern;
 using Signals;
 using TMPro;
 using UnityEngine;
@@ -27,19 +28,19 @@ namespace _Scripts.Score
 
         private void OnEnable()
         {
-            SignalsHub.AddListener<MissionCompletedSignal>(OnMissionCompleted);
+            SignalsHub.AddListener<PatternMissionCompletedSignal>(OnMissionCompleted);
             SignalsHub.AddListener<DeckUpdatedSignal>(OnDeckUpdated);
             SignalsHub.AddListener<MissionsUpdatedSignal>(OnMissionsUpdated);
         }
         
         private void OnDisable()
         {
-            SignalsHub.RemoveListener<MissionCompletedSignal>(OnMissionCompleted);
+            SignalsHub.RemoveListener<PatternMissionCompletedSignal>(OnMissionCompleted);
             SignalsHub.RemoveListener<DeckUpdatedSignal>(OnDeckUpdated);
             SignalsHub.RemoveListener<MissionsUpdatedSignal>(OnMissionsUpdated);
         }
 
-        private void OnMissionCompleted(MissionCompletedSignal signal)
+        private void OnMissionCompleted(PatternMissionCompletedSignal signal)
         {
             currentScore += signal.Dto.RewardScore;
             UpdateScoreText();
