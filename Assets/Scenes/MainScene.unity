@@ -1910,8 +1910,7 @@ MonoBehaviour:
   roomContainer: {fileID: 870619730}
   dungeonRoomPrefab: {fileID: 8651394372544261446, guid: ff0f4c226b3a3644e9da2492e0923455, type: 3}
   dungeonRoomGhostPrefab: {fileID: 8651394372544261446, guid: 340a06f2db93dcf46937a47a546780e4, type: 3}
-  startingRoom: {fileID: 11400000, guid: ee4fc318792d22543816bd7c73a49abc, type: 2}
-  startingRoomPosition: {x: -1, y: -1}
+  startingLevel: {fileID: 11400000, guid: 1484bfd7c793de241be2fbccf5b604b9, type: 2}
   mousePositionOffset: {x: 0, y: 0}
   unclickableScreenAreas:
   - {fileID: 1886525086}
@@ -4525,7 +4524,9 @@ MonoBehaviour:
   - room: {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
     amount: 2
   - room: {fileID: 11400000, guid: 6d99150bdd486e7469b65fcff52195c2, type: 2}
-    amount: 3
+    amount: 2
+  - room: {fileID: 11400000, guid: 6358b267919d8224db6cc7ba2e75cfc8, type: 2}
+    amount: 2
 --- !u!1 &5946277857184027333
 GameObject:
   m_ObjectHideFlags: 0

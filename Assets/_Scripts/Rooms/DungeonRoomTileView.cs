@@ -7,7 +7,7 @@ using Utilities.Prefabs;
 
 namespace _Scripts.Rooms
 {
-    public class DungeonRoomView : MonoBehaviour, IPoolableResource
+    public class DungeonRoomTileView : MonoBehaviour, IPoolableResource
     {
         [SerializeField] private Transform spriteTransform;
         [SerializeField] private SpriteRenderer spriteRenderer;

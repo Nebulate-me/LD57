@@ -10,7 +10,7 @@ namespace _Scripts.Utils
 {
     public static class Vector2IntExtensions
     {
-        public static object ManhattanDistance(this Vector2Int vector)
+        public static int ManhattanDistance(this Vector2Int vector)
         {
             return Math.Abs(vector.x) + Math.Abs(vector.y);
         }

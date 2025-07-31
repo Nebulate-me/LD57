@@ -74,7 +74,8 @@ namespace _Scripts.Missions
                 dungeonRoomView.IsUsed = true;
             
             var shuffledMissionRewards = _randomService.Shuffle(patternMissionCard.Dto.RewardCards).ToList(); 
-            _deckManager.BuryRoomTile(shuffledMissionRewards);
+            // _deckManager.BuryRoomTile(shuffledMissionRewards);
+            // TODO: Give Rooms instead
             _prefabPool.Despawn(patternMissionCard.gameObject);
             _patternMissionCardViews.Remove(patternMissionCard);
             
@@ -141,15 +142,15 @@ namespace _Scripts.Missions
             }
         }
 
-        private bool IsApartmentMissionCompletable(object dto, IReadOnlyList<DungeonRoomView> rooms, out List<DungeonRoomView> roomsToUse)
+        private bool IsApartmentMissionCompletable(object dto, IReadOnlyList<DungeonRoomTileView> rooms, out List<DungeonRoomTileView> roomsToUse)
         {
             roomsToUse = null;
             return true; // TODO: implement
         }
 
-        private bool IsPatternMissionCompletable(PatternMissionDto patternMissionDto, IReadOnlyList<DungeonRoomView> rooms, out List<DungeonRoomView> roomsToUse)
+        private bool IsPatternMissionCompletable(PatternMissionDto patternMissionDto, IReadOnlyList<DungeonRoomTileView> rooms, out List<DungeonRoomTileView> roomsToUse)
         {
-            roomsToUse = new List<DungeonRoomView>();
+            roomsToUse = new List<DungeonRoomTileView>();
             var unusedRooms = rooms.Where(room => !room.IsUsed).ToList();
             var allDirections = EnumExtensions.GetAllItems<RoomDirection>().ToList();
             var normalizedPattern = NormalizePattern(patternMissionDto.Pattern);
@@ -166,8 +167,8 @@ namespace _Scripts.Missions
             return false;
         }
 
-        private bool IsAnyPatternDirectionMatching(ref List<DungeonRoomView> roomsToUse, List<RoomDirection> allDirections, IReadOnlyCollection<MissionCell> normalizedFlippedYPattern,
-            List<DungeonRoomView> unusedRooms)
+        private bool IsAnyPatternDirectionMatching(ref List<DungeonRoomTileView> roomsToUse, List<RoomDirection> allDirections, IReadOnlyCollection<MissionCell> normalizedFlippedYPattern,
+            List<DungeonRoomTileView> unusedRooms)
         {
             foreach (var direction in allDirections)
             {
@@ -182,10 +183,10 @@ namespace _Scripts.Missions
             return false;
         }
 
-        private bool IsPatternMatching(List<MissionCell> rotatedPattern, DungeonRoomView startingRoom,
-            List<DungeonRoomView> rooms, out List<DungeonRoomView> roomsToUse)
+        private bool IsPatternMatching(List<MissionCell> rotatedPattern, DungeonRoomTileView startingRoom,
+            List<DungeonRoomTileView> rooms, out List<DungeonRoomTileView> roomsToUse)
         {
-            roomsToUse = new List<DungeonRoomView>();
+            roomsToUse = new List<DungeonRoomTileView>();
             var startingPosition = startingRoom.GridPosition;
             foreach (var missionCell in rotatedPattern)
             {

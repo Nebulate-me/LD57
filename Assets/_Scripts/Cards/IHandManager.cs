@@ -14,8 +14,7 @@ namespace _Scripts.Cards
         bool SelectRoomTileCard(RoomTileDto tileDto);
         bool DeselectRoomTileCard();
         bool TryPlaySelectRoomTileCard();
-        void RefillRoomTileHand();
-        
+
         #endregion
         
         #region Room Cards

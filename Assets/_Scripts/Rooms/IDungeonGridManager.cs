@@ -5,7 +5,7 @@ namespace _Scripts.Rooms
 {
     public interface IDungeonGridManager
     {
-        IReadOnlyList<DungeonRoomView> Rooms { get; }
+        IReadOnlyList<DungeonRoomTileView> Rooms { get; }
         Bounds GetRoomBounds();
     }
 }

@@ -4,13 +4,13 @@ namespace _Scripts.RoomTiles
 {
     public readonly struct RoomTilePlacedSignal
     {
-        private readonly DungeonRoomView room;
+        private readonly DungeonRoomTileView room;
 
-        public RoomTilePlacedSignal(DungeonRoomView dungeonRoom)
+        public RoomTilePlacedSignal(DungeonRoomTileView dungeonRoom)
         {
             room = dungeonRoom;
         }
 
-        public DungeonRoomView Room => room;
+        public DungeonRoomTileView Room => room;
     }
 }

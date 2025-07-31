@@ -45,26 +45,7 @@ namespace _Scripts.Cards
         {
             roomCardContainer.DestroyChildren();
 
-            // RefillRoomTileHand();
             RefillRoomHand();
-        }
-
-        public void RefillRoomTileHand()
-        {
-            while (_roomTileCardViews.Count < handSize)
-            {
-                if (_deckManager.TryDrawRoomTile(out var card))
-                {
-                    var cardView = _prefabPool.Spawn(roomTileCardPrefab, roomCardContainer).GetComponent<RoomTileCardView>();
-                    cardView.SetUp(card);
-                    _roomTileCardViews.Add(cardView);
-                }
-                else
-                {
-                    // Debug.Log("No cards left in the deck, not drawing!");
-                    break;
-                }
-            }
         }
 
         public int CardAmount => _roomTileCardViews.Count;

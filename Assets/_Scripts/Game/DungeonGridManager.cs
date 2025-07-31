@@ -6,7 +6,9 @@ using _Scripts.RoomTiles;
 using _Scripts.Utils;
 using ModestTree;
 using Signals;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utilities.Prefabs;
 using Zenject;
 
@@ -15,12 +17,10 @@ namespace _Scripts.Game
     public class DungeonGridManager : MonoBehaviour, IDungeonGridManager
     {
         [SerializeField] private Transform roomContainer;
-        [SerializeField] private GameObject dungeonRoomPrefab;
+        [FormerlySerializedAs("dungeonRoomPrefab")] [SerializeField] private GameObject dungeonRoomTilePrefab;
         [SerializeField] private GameObject dungeonRoomGhostPrefab;
-        // TODO: Replace with the Level Setup - starting room and position
-        [Space]
-        [SerializeField] private Room startingRoom;
-        [SerializeField] private Vector2Int startingRoomPosition;
+        [Space] 
+        [SerializeField] private Level startingLevel; // TODO: Pass the Level on SetUp
         [Space]
         [SerializeField] private Vector2 mousePositionOffset;
         [SerializeField] private List<RectTransform> unclickableScreenAreas;
@@ -33,21 +33,23 @@ namespace _Scripts.Game
 
         private DungeonRoomTileGhostView _roomTileGhostInstance;
         private DungeonRoomGhostView _roomGhostInstance;
-        private List<DungeonRoomView> _rooms = new();
+        private List<DungeonRoomTileView> _roomTiles = new();
+        [ShowInInspector, ReadOnly] private List<DungeonRoomModel> _rooms = new();
         private RoomDirection _currentDirection = RoomDirectionExtensions.Default;
-        private List<Bounds> unclickableBounds;
+        
+        private List<Bounds> _unclickableBounds;
 
         private void Start()
         {
             _currentDirection = RoomDirectionExtensions.Default;
-            _rooms = new List<DungeonRoomView>();
-            unclickableBounds = unclickableScreenAreas.Select(RectTransformUtility.CalculateRelativeRectTransformBounds)
+            _roomTiles = new List<DungeonRoomTileView>();
+            _unclickableBounds = unclickableScreenAreas.Select(RectTransformUtility.CalculateRelativeRectTransformBounds)
                 .ToList();
             
             _roomGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
                 .GetComponent<DungeonRoomGhostView>();
             
-            PlaceRoom(startingRoom.ToDto(), startingRoomPosition);
+            PlaceRoom(startingLevel.StartingRoom.ToDto(), startingLevel.StartingPosition);
         }
 
         private void Update()
@@ -109,7 +111,7 @@ namespace _Scripts.Game
             adjacentAnyDirections = new List<RoomDirection>();
             adjacentClosedDirections = new List<RoomDirection>();
 
-            var adjacentRooms = _rooms.Where(room => room.GridPosition.ManhattanDistance(roomPosition) == 1).ToList();
+            var adjacentRooms = _roomTiles.Where(room => room.GridPosition.ManhattanDistance(roomPosition) == 1).ToList();
 
             if (adjacentRooms.IsEmpty())
                 return false;
@@ -157,12 +159,12 @@ namespace _Scripts.Game
 
         private bool IsPositionEmpty(Vector2Int gridPosition)
         {
-            return _rooms.All(room => room.GridPosition != gridPosition);
+            return _roomTiles.All(room => room.GridPosition != gridPosition);
         }
 
         private bool IsPositionAdjacent(Vector2Int gridPosition)
         {
-            return _rooms.Any(room => room.GridPosition.ManhattanDistance(gridPosition) == 1);
+            return _roomTiles.Any(room => room.GridPosition.ManhattanDistance(gridPosition) == 1);
         }
         
         private bool AreAllAdjacentPositionsValid(Vector2Int gridPosition, RoomDto roomDto, List<Vector2Int> adjacentPositions)
@@ -208,17 +210,26 @@ namespace _Scripts.Game
         {
             var rotatedRoomDto = selectedRoomDto.Rotate(_currentDirection);
             var startingTilePosition = rotatedRoomDto.StartingPosition;
+            var selectedRoomTiles = new List<DungeonRoomTileView>();
             foreach (var roomTileCell in rotatedRoomDto.Tiles)
             {
-                var dungeonRoom = prefabPool.Spawn(dungeonRoomPrefab, roomContainer)
-                    .GetComponent<DungeonRoomView>();
+                var dungeonRoomTile = prefabPool.Spawn(dungeonRoomTilePrefab, roomContainer)
+                    .GetComponent<DungeonRoomTileView>();
                 var tileGridPosition = gridPosition + roomTileCell.Position - startingTilePosition;
-                dungeonRoom.transform.position = GridToWorld(tileGridPosition);
-                dungeonRoom.SetUp(roomTileCell.Tile, tileGridPosition, roomTileCell.Direction);
-                _rooms.Add(dungeonRoom);
-                
-                SignalsHub.DispatchAsync(new RoomTilePlacedSignal(dungeonRoom));
+                dungeonRoomTile.transform.position = GridToWorld(tileGridPosition);
+                dungeonRoomTile.SetUp(roomTileCell.Tile, tileGridPosition, roomTileCell.Direction);
+                _roomTiles.Add(dungeonRoomTile);
+                selectedRoomTiles.Add(dungeonRoomTile);
+                SignalsHub.DispatchAsync(new RoomTilePlacedSignal(dungeonRoomTile));
             }
+
+            var adjacentRooms = _rooms.Where(room => room.IsAdjacent(selectedRoomTiles)).ToList();
+            var roomModel = new DungeonRoomModel(selectedRoomDto, selectedRoomTiles, adjacentRooms);
+            foreach (var adjacentRoom in adjacentRooms)
+            {
+                adjacentRoom.AddAdjacentRoom(roomModel);
+            }
+            _rooms.Add(roomModel);
             handManager.TryPlaySelectRoomCard();
             handManager.RefillRoomHand();
 
@@ -226,14 +237,14 @@ namespace _Scripts.Game
             _roomGhostInstance.gameObject.SetActive(false);
         }
 
-        public IReadOnlyList<DungeonRoomView> Rooms => _rooms;
+        public IReadOnlyList<DungeonRoomTileView> Rooms => _roomTiles;
 
         public Bounds GetRoomBounds()
         {
-            var minX = _rooms.Min(room => room.GridPosition.x);
-            var minY = _rooms.Min(room => room.GridPosition.y);
-            var maxX = _rooms.Max(room => room.GridPosition.x);
-            var maxY = _rooms.Max(room => room.GridPosition.y);
+            var minX = _roomTiles.Min(room => room.GridPosition.x);
+            var minY = _roomTiles.Min(room => room.GridPosition.y);
+            var maxX = _roomTiles.Max(room => room.GridPosition.x);
+            var maxY = _roomTiles.Max(room => room.GridPosition.y);
 
             var center = new Vector3((minX + maxX) / 2f, (minY + maxY) / 2f);
             var size = new Vector3(maxX - minX, maxY - minY);
