@@ -11,6 +11,6 @@ namespace _Scripts.Rooms
         StorageRoom = 6,
         Hallway = 7,
         Balcony = 8,
-        Elevator = 20,
+        Shared = 20,
     }
 }

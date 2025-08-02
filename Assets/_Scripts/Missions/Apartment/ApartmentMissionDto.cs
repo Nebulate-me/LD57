@@ -32,5 +32,10 @@ namespace _Scripts.Missions.Apartment
             maxCompletedMissions = apartmentMission.MaxCompletedMissions;
             rewardScore = apartmentMission.RewardScore;
         }
+
+        public List<RoomRequirement> GetRequirementsCopy()
+        {
+            return Requirements.Select(requirement => new RoomRequirement(requirement)).ToList();
+        }
     }
 }

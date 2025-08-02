@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Utilities.Monads;
 
 namespace _Scripts.Utils
 {
@@ -13,6 +16,12 @@ namespace _Scripts.Utils
                 ts[i] = ts[r];
                 ts[r] = tmp;
             }
+        }
+
+        public static bool TryGetFirst<T>(this IList<T> list, Func<T, bool> predicate, out T match)
+        {
+            var first = list.FirstOrEmpty(predicate);
+            return first.TryGetValue(out match);
         }
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NWE_Tile
   m_EditorClassIdentifier: 
   tileName: Fork
-  usedSprite: {fileID: -815332830, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
+  usedSprite: {fileID: 621438480, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
   unusedSprite: {fileID: -43359106, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
   openDirections: 000000000100000003000000
   doorDirections: 

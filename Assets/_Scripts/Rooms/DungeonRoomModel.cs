@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using _Scripts.Missions.Apartment;
 using _Scripts.Utils;
 using Sirenix.OdinInspector;
 
@@ -12,12 +12,27 @@ namespace _Scripts.Rooms
         private readonly RoomDto _roomDto;
         private readonly List<DungeonRoomTileView> _roomTiles;
         private List<DungeonRoomModel> _adjacentRooms;
+        private bool _isUsed;
 
         public DungeonRoomModel(RoomDto roomDto, List<DungeonRoomTileView> roomTiles, List<DungeonRoomModel> adjacentRooms)
         {
             _roomDto = roomDto;
             _roomTiles = roomTiles;
             _adjacentRooms = adjacentRooms;
+            _isUsed = false;
+        }
+        
+        public bool IsUsed
+        {
+            get => _isUsed;
+            set
+            {
+                _isUsed = value;
+                foreach (var roomTile in _roomTiles)
+                {
+                    roomTile.IsUsed = _isUsed;
+                }
+            }
         }
 
         [ShowInInspector, ReadOnly] public string RoomName => _roomDto.Name;
@@ -45,6 +60,11 @@ namespace _Scripts.Rooms
         public void AddAdjacentRoom(DungeonRoomModel room)
         {
             _adjacentRooms.Add(room);
+        }
+
+        public bool IsFulfilling(RoomRequirement requirement)
+        {
+            return requirement.RoomType == RoomType;
         }
     }
 }

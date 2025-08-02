@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NS_Tile
   m_EditorClassIdentifier: 
   tileName: Corridor
-  usedSprite: {fileID: -1990259583, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
+  usedSprite: {fileID: -367009183, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
   unusedSprite: {fileID: 636883872, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
   openDirections: 0000000002000000
   doorDirections: 

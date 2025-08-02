@@ -1908,7 +1908,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomContainer: {fileID: 870619730}
-  dungeonRoomPrefab: {fileID: 8651394372544261446, guid: ff0f4c226b3a3644e9da2492e0923455, type: 3}
+  dungeonRoomTilePrefab: {fileID: 8651394372544261446, guid: ff0f4c226b3a3644e9da2492e0923455, type: 3}
   dungeonRoomGhostPrefab: {fileID: 8651394372544261446, guid: 340a06f2db93dcf46937a47a546780e4, type: 3}
   startingLevel: {fileID: 11400000, guid: 1484bfd7c793de241be2fbccf5b604b9, type: 2}
   mousePositionOffset: {x: 0, y: 0}
@@ -4501,19 +4501,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   remainingCardsText: {fileID: 6519991216603289360}
-  initialRoomTiles:
-  - roomTile: {fileID: 11400000, guid: b01aaed4d392196429e16164675738c1, type: 2}
-    amount: 2
-  - roomTile: {fileID: 11400000, guid: 78e2d6f85cee67c4ebe2941c9139a283, type: 2}
-    amount: 3
-  - roomTile: {fileID: 11400000, guid: ca594d196e478954fa78777a1c887400, type: 2}
-    amount: 5
-  - roomTile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    amount: 5
-  - roomTile: {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
-    amount: 3
-  - roomTile: {fileID: 11400000, guid: c1183dd5890ba9449a48bc2ac61260fd, type: 2}
-    amount: 0
   initialRooms:
   - room: {fileID: 11400000, guid: 410ba308f0f4a7d4cad3825490e4c23e, type: 2}
     amount: 3

@@ -230,6 +230,7 @@ namespace _Scripts.Game
                 adjacentRoom.AddAdjacentRoom(roomModel);
             }
             _rooms.Add(roomModel);
+            SignalsHub.DispatchAsync(new RoomPlacedSignal(roomModel));
             handManager.TryPlaySelectRoomCard();
             handManager.RefillRoomHand();
 
@@ -237,7 +238,8 @@ namespace _Scripts.Game
             _roomGhostInstance.gameObject.SetActive(false);
         }
 
-        public IReadOnlyList<DungeonRoomTileView> Rooms => _roomTiles;
+        public IReadOnlyList<DungeonRoomTileView> RoomTiles => _roomTiles;
+        public IReadOnlyList<DungeonRoomModel> Rooms => _rooms;
 
         public Bounds GetRoomBounds()
         {

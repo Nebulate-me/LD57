@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NE_Tile_S
   m_EditorClassIdentifier: 
   tileName: Runebend
-  usedSprite: {fileID: 1635575430, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
+  usedSprite: {fileID: -409027092, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
   unusedSprite: {fileID: -1913180632, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
   openDirections: 0000000003000000
   doorDirections: 02000000

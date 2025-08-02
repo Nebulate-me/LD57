@@ -8,8 +8,10 @@ using _Scripts.Missions.Pattern;
 using _Scripts.Rooms;
 using _Scripts.RoomTiles;
 using _Scripts.Utils;
+using ModestTree;
 using Signals;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using Utilities;
 using Utilities.Monads;
 using Utilities.Prefabs;
@@ -40,15 +42,22 @@ namespace _Scripts.Missions
 
         private void OnEnable()
         {
-            SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomPlaced);
-        }
-        
-        private void OnDisable()
-        {
-            SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomPlaced);
+            SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
+            SignalsHub.AddListener<RoomPlacedSignal>(OnRoomPlaced);
         }
 
-        private void OnRoomPlaced(RoomTilePlacedSignal roomTilePlacedSignal)
+        private void OnDisable()
+        {
+            SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
+            SignalsHub.RemoveListener<RoomPlacedSignal>(OnRoomPlaced);
+        }
+
+        private void OnRoomTilePlaced(RoomTilePlacedSignal signal)
+        {
+            // UpdateMissions();
+        }
+        
+        private void OnRoomPlaced(RoomPlacedSignal signal)
         {
             UpdateMissions();
         }
@@ -56,9 +65,10 @@ namespace _Scripts.Missions
         private void Start()
         {
             missionContainer.DestroyChildren();
-            
+
             var missionDto = initialMission.ToDto();
-            var missionCardView = _prefabPool.Spawn(apartmentMissionCardPrefab, missionContainer).GetComponent<ApartmentMissionCardView>();
+            var missionCardView = _prefabPool.Spawn(apartmentMissionCardPrefab, missionContainer)
+                .GetComponent<ApartmentMissionCardView>();
             missionCardView.SetUp(missionDto);
             missionCardView.Completable = false;
             _apartmentMissionCardViews.Add(missionCardView);
@@ -68,87 +78,145 @@ namespace _Scripts.Missions
 
         public void CompleteMission(PatternMissionCardView patternMissionCard)
         {
-            if (!IsPatternMissionCompletable(patternMissionCard.Dto, _dungeonGridManager.Rooms, out var roomsToUse)) return;
+            if (!IsPatternMissionCompletable(patternMissionCard.Dto, _dungeonGridManager.RoomTiles,
+                    out var roomsToUse)) return;
 
-            foreach (var dungeonRoomView in roomsToUse) 
+            foreach (var dungeonRoomView in roomsToUse)
                 dungeonRoomView.IsUsed = true;
-            
-            var shuffledMissionRewards = _randomService.Shuffle(patternMissionCard.Dto.RewardCards).ToList(); 
+
+            var shuffledMissionRewards = _randomService.Shuffle(patternMissionCard.Dto.RewardCards).ToList();
             // _deckManager.BuryRoomTile(shuffledMissionRewards);
             // TODO: Give Rooms instead
             _prefabPool.Despawn(patternMissionCard.gameObject);
             _patternMissionCardViews.Remove(patternMissionCard);
-            
+
             _completedMissionCount++;
-            if (missionHandSizeIncreases.Contains(_completedMissionCount)) 
+            if (missionHandSizeIncreases.Contains(_completedMissionCount))
                 missionHandSize++;
-            
+
             _soundManager.PlaySound(SoundType.CompleteMission);
             SignalsHub.DispatchAsync(new PatternMissionCompletedSignal(patternMissionCard.Dto));
             _lastCompletedMissionName = patternMissionCard.Dto.Name;
-            
+
             UpdateMissions();
         }
 
         public void CompleteMission(ApartmentMissionCardView apartmentMissionCard)
         {
-            if (!IsApartmentMissionCompletable(apartmentMissionCard.Dto, _dungeonGridManager.Rooms, out var roomsToUse)) return;
+            if (!IsApartmentMissionCompletable(apartmentMissionCard.Dto, out var roomsToUse)) return;
 
-            foreach (var dungeonRoomView in roomsToUse) 
-                dungeonRoomView.IsUsed = true;
-            
-            var shuffledMissionRewards = _randomService.Shuffle(apartmentMissionCard.Dto.RewardRooms).ToList(); 
+            foreach (var dungeonRoomModel in roomsToUse)
+                dungeonRoomModel.IsUsed = true;
+
+            var shuffledMissionRewards = _randomService.Shuffle(apartmentMissionCard.Dto.RewardRooms).ToList();
             _deckManager.BuryRoom(shuffledMissionRewards);
             _prefabPool.Despawn(apartmentMissionCard.gameObject);
             _apartmentMissionCardViews.Remove(apartmentMissionCard);
-            
+
             _completedMissionCount++;
-            if (missionHandSizeIncreases.Contains(_completedMissionCount)) 
+            if (missionHandSizeIncreases.Contains(_completedMissionCount))
                 missionHandSize++;
-            
+
             _soundManager.PlaySound(SoundType.CompleteMission);
             SignalsHub.DispatchAsync(new ApartmentMissionCompletedSignal(apartmentMissionCard.Dto));
             _lastCompletedMissionName = apartmentMissionCard.Dto.Name;
-            
+
             UpdateMissions();
         }
 
         private void UpdateMissions()
         {
-            foreach (var missionCardView in _patternMissionCardViews)
-            {
-                missionCardView.Completable = IsPatternMissionCompletable(missionCardView.Dto, _dungeonGridManager.Rooms, out var _);
-            }
+            foreach (var missionCardView in _apartmentMissionCardViews)
+                missionCardView.Completable = IsApartmentMissionCompletable(missionCardView.Dto, out _);
 
             RefillMissionHand();
             SignalsHub.DispatchAsync(new MissionsUpdatedSignal());
         }
-        
+
         private void RefillMissionHand()
         {
             var unlockedMissions = availableMissions
                 .Where(mission => _completedMissionCount >= mission.MinCompletedMissions &&
-                                  (mission.MaxCompletedMissions <= 0 || _completedMissionCount < mission.MaxCompletedMissions) && 
+                                  (mission.MaxCompletedMissions <= 0 ||
+                                   _completedMissionCount < mission.MaxCompletedMissions) &&
                                   mission.MissionName != _lastCompletedMissionName)
                 .ToList();
             while (_apartmentMissionCardViews.Count < missionHandSize)
             {
                 var missionDto = _randomService.Sample(unlockedMissions).ToDto();
                 if (_apartmentMissionCardViews.Any(card => card.Dto.Name == missionDto.Name)) continue;
-                var missionCardView = _prefabPool.Spawn(apartmentMissionCardPrefab, missionContainer).GetComponent<ApartmentMissionCardView>();
+                var missionCardView = _prefabPool.Spawn(apartmentMissionCardPrefab, missionContainer)
+                    .GetComponent<ApartmentMissionCardView>();
                 missionCardView.SetUp(missionDto);
-                missionCardView.Completable = IsApartmentMissionCompletable(missionCardView.Dto, _dungeonGridManager.Rooms, out var _);
+                missionCardView.Completable = IsApartmentMissionCompletable(missionCardView.Dto, out _);
                 _apartmentMissionCardViews.Add(missionCardView);
             }
         }
 
-        private bool IsApartmentMissionCompletable(object dto, IReadOnlyList<DungeonRoomTileView> rooms, out List<DungeonRoomTileView> roomsToUse)
+        private bool IsApartmentMissionCompletable(ApartmentMissionDto missionDto, out List<DungeonRoomModel> roomsToUse)
         {
-            roomsToUse = null;
-            return true; // TODO: implement
+            roomsToUse = new List<DungeonRoomModel>();
+
+            var sharedRooms = _dungeonGridManager.Rooms.Where(room => room.RoomType == RoomType.Shared);
+            var startingRooms = sharedRooms.SelectMany(sharedRoom =>
+                    sharedRoom.AdjacentRooms.Where(room =>
+                        !room.IsUsed &&
+                        missionDto.Requirements.Any(room.IsFulfilling)))
+                .Distinct();
+            foreach (var startingRoom in startingRooms)
+            {
+                var fulfilledRequirementIndex = missionDto.Requirements.FindIndex(startingRoom.IsFulfilling);
+                var startingRequirements = missionDto.Requirements.Where((t, i) => i != fulfilledRequirementIndex).ToList();
+                var inputSearch = new ApartmentMissionSearchDto(startingRequirements, new List<DungeonRoomModel>{ startingRoom });
+                if (TrySearchApartmentMission(inputSearch, out roomsToUse))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        private bool IsPatternMissionCompletable(PatternMissionDto patternMissionDto, IReadOnlyList<DungeonRoomTileView> rooms, out List<DungeonRoomTileView> roomsToUse)
+        private bool TrySearchApartmentMission(ApartmentMissionSearchDto inputSearch, out List<DungeonRoomModel> roomsToUse)
+        {
+            if (inputSearch.IsCompleted)
+            {
+                roomsToUse = inputSearch.UsedRooms;
+                return true;
+            }
+            
+            if (GetApartmentRoomOptions(inputSearch, out var outputSearchOptions))
+            {
+                foreach (var searchOption in outputSearchOptions)
+                {
+                    if (TrySearchApartmentMission(searchOption, out roomsToUse))
+                    {
+                        return true;
+                    }  
+                }
+            }
+
+            roomsToUse = new List<DungeonRoomModel>();
+            return false;
+        }
+
+        private bool GetApartmentRoomOptions(ApartmentMissionSearchDto inputSearch,
+            out List<ApartmentMissionSearchDto> outputSearchOptions)
+        {
+            outputSearchOptions = inputSearch.AdjacentRoomOptions.Select(roomOption =>
+            {
+                var fulfilledRequirementIndex = inputSearch.Requirements.FindIndex(roomOption.IsFulfilling);
+                var requirements = inputSearch.Requirements.Where((t, i) => i != fulfilledRequirementIndex).ToList();
+                var usedRooms = new List<DungeonRoomModel> { roomOption };
+                usedRooms.AddRange(inputSearch.UsedRooms);
+                
+                return new ApartmentMissionSearchDto(requirements, usedRooms);
+            }).ToList();
+            return !outputSearchOptions.IsEmpty();
+        }
+
+        private bool IsPatternMissionCompletable(PatternMissionDto patternMissionDto,
+            IReadOnlyList<DungeonRoomTileView> rooms, out List<DungeonRoomTileView> roomsToUse)
         {
             roomsToUse = new List<DungeonRoomTileView>();
             var unusedRooms = rooms.Where(room => !room.IsUsed).ToList();
@@ -160,24 +228,24 @@ namespace _Scripts.Missions
             if (patternMissionDto.FlipPatternY)
             {
                 var normalizedFlippedYPattern = NormalizePattern(FlipYPattern(patternMissionDto.Pattern));
-                if (IsAnyPatternDirectionMatching(ref roomsToUse, allDirections, normalizedFlippedYPattern, unusedRooms)) 
+                if (IsAnyPatternDirectionMatching(ref roomsToUse, allDirections, normalizedFlippedYPattern,
+                        unusedRooms))
                     return true;
             }
-            
+
             return false;
         }
 
-        private bool IsAnyPatternDirectionMatching(ref List<DungeonRoomTileView> roomsToUse, List<RoomDirection> allDirections, IReadOnlyCollection<MissionCell> normalizedFlippedYPattern,
+        private bool IsAnyPatternDirectionMatching(ref List<DungeonRoomTileView> roomsToUse,
+            List<RoomDirection> allDirections, IReadOnlyCollection<MissionCell> normalizedFlippedYPattern,
             List<DungeonRoomTileView> unusedRooms)
         {
             foreach (var direction in allDirections)
             {
                 var rotatedPattern = RotatePattern(normalizedFlippedYPattern, direction);
                 foreach (var dungeonRoomView in unusedRooms)
-                {
                     if (IsPatternMatching(rotatedPattern, dungeonRoomView, unusedRooms, out roomsToUse))
                         return true;
-                }
             }
 
             return false;
@@ -190,7 +258,8 @@ namespace _Scripts.Missions
             var startingPosition = startingRoom.GridPosition;
             foreach (var missionCell in rotatedPattern)
             {
-                var maybeMatchingRoom = rooms.FirstOrEmpty(room => room.GridPosition == startingPosition + missionCell.Position);
+                var maybeMatchingRoom =
+                    rooms.FirstOrEmpty(room => room.GridPosition == startingPosition + missionCell.Position);
                 var matchingRoomExists = maybeMatchingRoom.TryGetValue(out var matchingRoom);
                 switch (missionCell.Type)
                 {
@@ -198,8 +267,10 @@ namespace _Scripts.Missions
                         break;
                     case MissionCellType.Room:
                         if (!matchingRoomExists) return false;
-                        if (!missionCell.OpenDirections.All(openDirection => matchingRoom.OpenDirections.Contains(openDirection))) return false;
-                        if (missionCell.ClosedDirections.Any(closedDirection => matchingRoom.OpenDirections.Contains(closedDirection))) return false;
+                        if (!missionCell.OpenDirections.All(openDirection =>
+                                matchingRoom.OpenDirections.Contains(openDirection))) return false;
+                        if (missionCell.ClosedDirections.Any(closedDirection =>
+                                matchingRoom.OpenDirections.Contains(closedDirection))) return false;
                         roomsToUse.Add(matchingRoom);
                         break;
                     case MissionCellType.Empty:
@@ -225,11 +296,11 @@ namespace _Scripts.Missions
                     cell.ClosedDirections))
                 .ToList();
         }
-        
+
         private List<MissionCell> RotatePattern(IEnumerable<MissionCell> pattern, RoomDirection direction)
         {
             var rotation = direction.ToRotation();
-            return pattern.Select(cell => 
+            return pattern.Select(cell =>
                 new MissionCell(
                     cell.Type,
                     (rotation * cell.Position.ToVector3()).ToVector2Int(),
@@ -249,5 +320,26 @@ namespace _Scripts.Missions
                 )
             ).ToList();
         }
+    }
+
+    internal class ApartmentMissionSearchDto
+    {
+        public readonly List<RoomRequirement> Requirements;
+        public readonly List<DungeonRoomModel> UsedRooms;
+
+        public ApartmentMissionSearchDto(List<RoomRequirement> requirements, List<DungeonRoomModel> usedRooms)
+        {
+            Requirements = requirements;
+            UsedRooms = usedRooms;
+        }
+
+        public List<DungeonRoomModel> AdjacentRoomOptions => UsedRooms.SelectMany(usedRoom =>
+                usedRoom.AdjacentRooms.Where(
+                    room => !room.IsUsed &&
+                            !UsedRooms.Contains(room) &&
+                            Requirements.Any(room.IsFulfilling)))
+            .ToList();
+
+        public bool IsCompleted => Requirements.IsEmpty();
     }
 }

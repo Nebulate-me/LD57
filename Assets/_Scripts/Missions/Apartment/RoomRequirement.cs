@@ -8,6 +8,13 @@ namespace _Scripts.Missions.Apartment
     public class RoomRequirement
     {
         [SerializeField] private RoomType roomType;
+
+        public RoomRequirement(RoomRequirement requirement)
+        {
+            roomType = requirement.RoomType;
+        }
+
         // TODO: other conditions, like room's size, luxurity, etc.
+        public RoomType RoomType => roomType;
     }
 }

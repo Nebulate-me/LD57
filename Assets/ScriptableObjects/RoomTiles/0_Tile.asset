@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 0_Tile
   m_EditorClassIdentifier: 
   tileName: Reliquary
-  usedSprite: {fileID: -1938796046, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
+  usedSprite: {fileID: -85964116, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
   unusedSprite: {fileID: 694358247, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
   openDirections: 
   doorDirections: 
