@@ -24,6 +24,7 @@ namespace _Scripts.Game
         [Space]
         [SerializeField] private Vector2 mousePositionOffset;
         [SerializeField] private List<RectTransform> unclickableScreenAreas;
+        [SerializeField] private SpriteRenderer levelBuildingBackground;
 
         [Inject] private IHandManager handManager;
         [Inject] private IPrefabPool prefabPool;
@@ -38,9 +39,11 @@ namespace _Scripts.Game
         private RoomDirection _currentDirection = RoomDirectionExtensions.Default;
         
         private List<Bounds> _unclickableBounds;
+        private Level _currentLevel;
 
         private void Start()
         {
+            _currentLevel = startingLevel;
             _currentDirection = RoomDirectionExtensions.Default;
             _roomTiles = new List<DungeonRoomTileView>();
             _unclickableBounds = unclickableScreenAreas.Select(RectTransformUtility.CalculateRelativeRectTransformBounds)
@@ -50,6 +53,7 @@ namespace _Scripts.Game
                 .GetComponent<DungeonRoomGhostView>();
             
             PlaceRoom(startingLevel.StartingRoom.ToDto(), startingLevel.StartingPosition);
+            levelBuildingBackground.size = startingLevel.LevelSize;
         }
 
         private void Update()
@@ -85,8 +89,8 @@ namespace _Scripts.Game
             // Debug.Log($"Mouse Position {mouseWorld}, gridPosition {gridPosition}, snappedPosition {snappedPosition}");
 
             _roomGhostInstance.transform.position = snappedPosition;
-            
-            if (!AreRoomPositionsEmptyAndAdjacent(gridPosition, selectedRoomCardView.RoomDto, _currentDirection))
+
+            if (!IsRoomPositionValid(gridPosition, selectedRoomCardView.RoomDto, _currentDirection))
             {
                 _roomGhostInstance.SetUpInvalid(selectedRoomCardView.RoomDto, _currentDirection);
                 return;
@@ -142,14 +146,14 @@ namespace _Scripts.Game
             return allOpenDirectionsOpen && allClosedDirectionsClosed;
         }
 
-        private bool AreRoomPositionsEmptyAndAdjacent(Vector2Int gridPosition, RoomDto roomDto, RoomDirection roomDirection)
+        private bool IsRoomPositionValid(Vector2Int gridPosition, RoomDto roomDto, RoomDirection roomDirection)
         {
             var rotatedRoomDto = roomDto.Rotate(roomDirection);
             var roomStartingPosition = rotatedRoomDto.StartingPosition;
             var roomPositions = rotatedRoomDto.Tiles
                 .Select(tile => tile.Position - roomStartingPosition + gridPosition).ToList();
             
-            if (!roomPositions.All(IsPositionEmpty)) return false;
+            if (!roomPositions.All(IsPositionEmpty) || !roomPositions.All(IsPositionInsideLevelBounds)) return false;
             
             var adjacentPositions = roomPositions.Where(IsPositionAdjacent).ToList();
             if (adjacentPositions.IsEmpty()) return false;
@@ -160,6 +164,11 @@ namespace _Scripts.Game
         private bool IsPositionEmpty(Vector2Int gridPosition)
         {
             return _roomTiles.All(room => room.GridPosition != gridPosition);
+        }
+
+        private bool IsPositionInsideLevelBounds(Vector2Int gridPosition)
+        {
+            return _currentLevel.Contains(gridPosition);
         }
 
         private bool IsPositionAdjacent(Vector2Int gridPosition)

@@ -517,7 +517,7 @@ GameObject:
   - component: {fileID: 1732442775895766723}
   - component: {fileID: 4956329713484815043}
   m_Layer: 0
-  m_Name: DungeonRoom
+  m_Name: DungeonRoomTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
