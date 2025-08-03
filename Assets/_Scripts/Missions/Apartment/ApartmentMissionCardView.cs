@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
+using _Scripts.Utils;
+using ModestTree;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,9 +13,10 @@ namespace _Scripts.Missions.Apartment
     public class ApartmentMissionCardView : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private TextMeshProUGUI missionNameText;
+        [SerializeField] private TextMeshProUGUI missionRequirementsText;
         [SerializeField] private TextMeshProUGUI rewardCountText;
         [SerializeField] private TextMeshProUGUI rewardScoreText;
-        
+
         [SerializeField] private Image missionBackgroundImage;
         [Space] [SerializeField] private Sprite uncompletableMissionBackgroundSprite;
         [Space] [SerializeField] private Sprite completableMissionBackgroundSprite;
@@ -29,6 +34,12 @@ namespace _Scripts.Missions.Apartment
             missionNameText.text = missionDto.Name;
             rewardCountText.text = missionDto.RewardRooms.Count.ToString();
             rewardScoreText.text = missionDto.RewardScore.ToString();
+            missionRequirementsText.text = GetRequirementsText(missionDto.Requirements);
+        }
+
+        private string GetRequirementsText(IEnumerable<RoomRequirement> requirements)
+        {
+            return requirements.Select(requirement => $"- {requirement.RoomType.Translate()}").Join("\n");
         }
 
         public bool Completable
