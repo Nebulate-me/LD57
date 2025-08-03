@@ -11,6 +11,8 @@ namespace _Scripts.RoomTiles
         [SerializeField] private RectTransform tileTransform;
         [SerializeField] private Image tileImage;
         [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects;
+        
+
         public void SetUp(RoomTileCellDto roomTileCell)
         {
             tileImage.sprite = roomTileCell.Tile.UnusedSprite;
