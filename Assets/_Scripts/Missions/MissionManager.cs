@@ -74,8 +74,9 @@ namespace _Scripts.Missions
             _apartmentMissionCardViews.Add(missionCardView);
         }
 
-        public int CompletableMissionsCount => _patternMissionCardViews.Count(mission => mission.Completable);
+        public int CompletableMissionsCount => _apartmentMissionCardViews.Count(mission => mission.Completable);
 
+        [Obsolete]
         public void CompleteMission(PatternMissionCardView patternMissionCard)
         {
             if (!IsPatternMissionCompletable(patternMissionCard.Dto, _dungeonGridManager.RoomTiles,

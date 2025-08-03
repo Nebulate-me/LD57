@@ -20,7 +20,7 @@ namespace _Scripts.Game
         /// etc.
         /// </summary>
         public Vector2Int LevelSize => HalfLevelSize * 2 + Vector2Int.one;
-        private Vector2Int HalfLevelSize => levelSize / 2;
+        public Vector2Int HalfLevelSize => levelSize / 2;
 
         public bool Contains(Vector2Int gridPosition)
         {

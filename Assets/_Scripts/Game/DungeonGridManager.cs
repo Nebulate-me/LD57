@@ -54,6 +54,7 @@ namespace _Scripts.Game
             
             PlaceRoom(startingLevel.StartingRoom.ToDto(), startingLevel.StartingPosition);
             levelBuildingBackground.size = startingLevel.LevelSize;
+            SignalsHub.DispatchAsync(new LevelSetupCompletedSignal());
         }
 
         private void Update()
@@ -173,7 +174,7 @@ namespace _Scripts.Game
 
         private bool IsPositionAdjacent(Vector2Int gridPosition)
         {
-            return _roomTiles.Any(room => room.GridPosition.ManhattanDistance(gridPosition) == 1);
+            return _roomTiles.Any(room => room.GridPosition.IsAdjacent(gridPosition));
         }
         
         private bool AreAllAdjacentPositionsValid(Vector2Int gridPosition, RoomDto roomDto, List<Vector2Int> adjacentPositions)
@@ -250,16 +251,29 @@ namespace _Scripts.Game
         public IReadOnlyList<DungeonRoomTileView> RoomTiles => _roomTiles;
         public IReadOnlyList<DungeonRoomModel> Rooms => _rooms;
 
-        public Bounds GetRoomBounds()
+        public Bounds GetRoomBoundsBasedOnTiles()
         {
             var minX = _roomTiles.Min(room => room.GridPosition.x);
             var minY = _roomTiles.Min(room => room.GridPosition.y);
             var maxX = _roomTiles.Max(room => room.GridPosition.x);
             var maxY = _roomTiles.Max(room => room.GridPosition.y);
-
+            
             var center = new Vector3((minX + maxX) / 2f, (minY + maxY) / 2f);
             var size = new Vector3(maxX - minX, maxY - minY);
 
+            return new Bounds(center, size);
+        }
+
+        public Bounds GetRoomBounds()
+        {
+            var minX = -_currentLevel.HalfLevelSize.x;
+            var maxX = _currentLevel.HalfLevelSize.x;
+            var minY = -_currentLevel.HalfLevelSize.y;
+            var maxY = _currentLevel.HalfLevelSize.y;
+            
+            var center = new Vector3((minX + maxX) / 2f, (minY + maxY) / 2f);
+            var size = new Vector3(maxX - minX, maxY - minY);
+            
             return new Bounds(center, size);
         }
     }

@@ -1,4 +1,5 @@
 using _Scripts.Cards;
+using _Scripts.Game;
 using _Scripts.RoomTiles;
 using Signals;
 using Unity.VisualScripting;
@@ -28,15 +29,22 @@ namespace _Scripts.Rooms
 
         private void OnEnable()
         {
-            SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
+            // SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
+            SignalsHub.AddListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
         }
 
         private void OnDisable()
         {
-            SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
+            // SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
+            SignalsHub.RemoveListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
         }
 
         private void OnRoomTilePlaced(RoomTilePlacedSignal signal)
+        {
+            // dungeonBounds = dungeonGridManager.GetRoomBoundsBasedOnTiles();
+        }
+        
+        private void OnLevelSetupCompleted(LevelSetupCompletedSignal signal)
         {
             dungeonBounds = dungeonGridManager.GetRoomBounds();
         }
@@ -84,7 +92,7 @@ namespace _Scripts.Rooms
         
         private void HandleCameraZoom()
         {
-            if (handManager.SelectedRoomTileCardView.IsNotPresent)
+            if (handManager.SelectedRoomCardView.IsNotPresent)
             {
                 if (Input.mouseScrollDelta.y != 0)
                 {

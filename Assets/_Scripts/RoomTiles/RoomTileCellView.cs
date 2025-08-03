@@ -13,7 +13,7 @@ namespace _Scripts.RoomTiles
         [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects;
         public void SetUp(RoomTileCellDto roomTileCell)
         {
-            tileImage.sprite = roomTileCell.Tile.UsedSprite;
+            tileImage.sprite = roomTileCell.Tile.UnusedSprite;
             tileTransform.rotation = roomTileCell.Direction.ToRotation();
             foreach (var doorObject in doorObjects.Values)
             {

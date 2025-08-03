@@ -8,5 +8,6 @@ namespace _Scripts.Rooms
         IReadOnlyList<DungeonRoomTileView> RoomTiles { get; }
         IReadOnlyList<DungeonRoomModel> Rooms { get; }
         Bounds GetRoomBounds();
+        Bounds GetRoomBoundsBasedOnTiles();
     }
 }

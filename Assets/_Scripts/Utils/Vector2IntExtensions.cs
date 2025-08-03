@@ -24,5 +24,10 @@ namespace _Scripts.Utils
         {
             return new Vector2Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y));
         }
+
+        public static bool IsAdjacent(this Vector2Int from, Vector2Int to)
+        {
+            return from.ManhattanDistance(to) == 1;
+        }
     }
 }
