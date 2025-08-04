@@ -21,6 +21,7 @@ MonoBehaviour:
   - roomType: 5
   - roomType: 3
   - roomType: 4
+  - roomType: 7
   rewards:
   - {fileID: 11400000, guid: 0bf08c4aa28010043be1aed7092fd0b4, type: 2}
   - {fileID: 11400000, guid: 6d99150bdd486e7469b65fcff52195c2, type: 2}
@@ -28,4 +29,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 410ba308f0f4a7d4cad3825490e4c23e, type: 2}
   minCompletedMissions: 1
   maxCompletedMissions: 0
-  rewardScore: 1
+  rewardScore: 6

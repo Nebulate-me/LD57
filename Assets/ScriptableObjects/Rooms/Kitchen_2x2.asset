@@ -23,7 +23,7 @@ MonoBehaviour:
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
   - position: {x: -1, y: 1}
     direction: 3
-    tile: {fileID: 11400000, guid: fa6ffc1f9cffe0b49809850a0e98b562, type: 2}
+    tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
   - position: {x: 0, y: 1}
     direction: 2
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}

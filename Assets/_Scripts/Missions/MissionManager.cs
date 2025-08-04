@@ -25,7 +25,7 @@ namespace _Scripts.Missions
         [SerializeField] private RectTransform missionContainer;
         [SerializeField] private GameObject apartmentMissionCardPrefab;
         [SerializeField] private List<ApartmentMission> availableMissions = new();
-        [SerializeField] private ApartmentMission initialMission;
+        [SerializeField] private List<ApartmentMission> initialMissions = new();
         [SerializeField] private int missionHandSize = 1;
         [SerializeField] private List<int> missionHandSizeIncreases = new() {2, 5, 10};
 
@@ -66,12 +66,15 @@ namespace _Scripts.Missions
         {
             missionContainer.DestroyChildren();
 
-            var missionDto = initialMission.ToDto();
-            var missionCardView = _prefabPool.Spawn(apartmentMissionCardPrefab, missionContainer)
-                .GetComponent<ApartmentMissionCardView>();
-            missionCardView.SetUp(missionDto);
-            missionCardView.Completable = false;
-            _apartmentMissionCardViews.Add(missionCardView);
+            foreach (var apartmentMission in initialMissions)
+            {
+                var missionDto = apartmentMission.ToDto();
+                var missionCardView = _prefabPool.Spawn(apartmentMissionCardPrefab, missionContainer)
+                    .GetComponent<ApartmentMissionCardView>();
+                missionCardView.SetUp(missionDto);
+                missionCardView.Completable = false;
+                _apartmentMissionCardViews.Add(missionCardView);
+            }
         }
 
         public int CompletableMissionsCount => _apartmentMissionCardViews.Count(mission => mission.Completable);

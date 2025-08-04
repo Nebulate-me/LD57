@@ -15,12 +15,15 @@ MonoBehaviour:
   missionName: "\u041E\u0434\u043D\u043E\u043A\u043E\u043C\u043D\u0430\u0442\u043D\u0430\u044F
     \u043A\u0432\u0430\u0440\u0442\u0438\u0440\u0430"
   requirements:
+  - roomType: 7
   - roomType: 1
   - roomType: 2
   - roomType: 5
   rewards:
   - {fileID: 11400000, guid: 0bf08c4aa28010043be1aed7092fd0b4, type: 2}
   - {fileID: 11400000, guid: 1a57416dddc35b74c8a01dbe802cb300, type: 2}
+  - {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
+  - {fileID: 11400000, guid: 6d99150bdd486e7469b65fcff52195c2, type: 2}
   minCompletedMissions: 0
   maxCompletedMissions: 0
   rewardScore: 1
