@@ -29,17 +29,17 @@ namespace _Scripts.RoomTiles
         }
 
         private RoomTileDto(
-            string dtoName, 
-            Sprite dtoUsedSprite,
-            Sprite dtoUnusedSprite,
+            RoomTileDto roomTileDto,
             List<RoomDirection> dtoOpenDirections, 
             List<RoomDirection> dtoDoorDirections)
         {
-            name = dtoName;
-            usedSprite = dtoUsedSprite;
-            unusedSprite = dtoUnusedSprite;
+            name = roomTileDto.Name;
+            usedSprite = roomTileDto.UsedSprite;
+            unusedSprite = roomTileDto.UnusedSprite;
+
             openDirections = dtoOpenDirections;
             doorDirections = dtoDoorDirections;
+            
             isRotatable = GetIsRotatable();
         }
 
@@ -59,9 +59,7 @@ namespace _Scripts.RoomTiles
         public RoomTileDto Rotate(RoomDirection direction)
         {
             return new RoomTileDto(
-                name,
-                usedSprite,
-                unusedSprite,
+                this,
                 openDirections.Rotate(direction),
                 doorDirections.Rotate(direction)
             );

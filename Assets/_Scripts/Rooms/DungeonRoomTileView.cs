@@ -8,6 +8,7 @@ using Plugins.Sirenix.Odin_Inspector.Modules;
 using Signals;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utilities.Prefabs;
 using Zenject;
 
@@ -15,8 +16,9 @@ namespace _Scripts.Rooms
 {
     public class DungeonRoomTileView : MonoBehaviour, IPoolableResource
     {
-        [SerializeField] private Transform spriteTransform;
-        [SerializeField] private SpriteRenderer spriteRenderer;
+        [FormerlySerializedAs("spriteTransform")] [SerializeField] private Transform wallSpriteTransform;
+        [SerializeField] private SpriteRenderer wallRenderer;
+        [SerializeField] private SpriteRenderer furnitureRenderer;
         [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects = new();
 
         [ShowInInspector, ReadOnly] private Vector2Int gridPosition;
@@ -40,18 +42,22 @@ namespace _Scripts.Rooms
             set
             {
                 isUsed = value;
-                spriteRenderer.sprite = isUsed ? _tileDto.UsedSprite : _tileDto.UnusedSprite;
+                wallRenderer.sprite = isUsed ? _tileDto.UsedSprite : _tileDto.UnusedSprite;
                 UpdateDoors();
             }
         }
 
-        public void SetUp(RoomTileDto roomTileDto, Vector2Int initialGridPosition, RoomDirection initialDirection)
+        public void SetUp(RoomTileCellDto roomTileCell, Vector2Int initialGridPosition)
         {
-            _tileDto = roomTileDto;
+            _tileDto = roomTileCell.Tile;
             gridPosition = initialGridPosition;
-            direction = initialDirection;
-            spriteTransform.rotation = direction.ToRotation();
-            spriteRenderer.sprite = _tileDto.UnusedSprite;
+            direction = roomTileCell.Direction;
+            
+            wallSpriteTransform.rotation = direction.ToRotation();
+            wallRenderer.sprite = _tileDto.UnusedSprite;
+            
+            furnitureRenderer.gameObject.SetActive(roomTileCell.FurnitureSprite != null);
+            furnitureRenderer.sprite = roomTileCell.FurnitureSprite;
 
             openDirections = _tileDto.OpenDirections;
             doorDirections = _tileDto.DoorDirections;

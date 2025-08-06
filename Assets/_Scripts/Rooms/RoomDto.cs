@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Scripts.Missions;
 using _Scripts.RoomTiles;
 using _Scripts.Utils;
 using UnityEngine;
@@ -13,25 +12,25 @@ namespace _Scripts.Rooms
     public class RoomDto
     {
         [SerializeField] private string name;
-        [SerializeField] private RoomType roomType;
+        [SerializeField] private List<RoomType> roomTypes;
         [SerializeField] private List<RoomTileCellDto> tiles;
 
         public RoomDto(Room room)
         {
             name = room.RoomName;
-            roomType = room.RoomType;
+            roomTypes = room.RoomTypes;
             tiles = room.Tiles.Select(tile => tile.ToDto()).ToList();
         }
 
-        private RoomDto(string name, RoomType roomType, List<RoomTileCellDto> tiles)
+        private RoomDto(string name, List<RoomType> roomTypes, List<RoomTileCellDto> tiles)
         {
             this.name = name;
-            this.roomType = roomType;
+            this.roomTypes = roomTypes;
             this.tiles = tiles;
         }
 
         public string Name => name;
-        public RoomType RoomType => roomType;
+        public List<RoomType> RoomTypes => roomTypes;
         public List<RoomTileCellDto> Tiles => tiles;
 
         public Vector2Int StartingPosition => tiles.Count <= 0
@@ -46,11 +45,11 @@ namespace _Scripts.Rooms
             var rotatedTiles = tiles.Select(tile =>
                 new RoomTileCellDto(
                         (rotation * tile.Position.ToVector3()).ToVector2Int(),
-                        tile.Direction.Rotate(direction),
-                        tile.Tile.Rotate(direction)
+                        tile,
+                        direction
                 )).ToList();
             
-            return new RoomDto(name, roomType, rotatedTiles);
+            return new RoomDto(name, roomTypes, rotatedTiles);
         }
     }
 }

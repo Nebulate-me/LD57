@@ -3,6 +3,7 @@ using System.Linq;
 using _Scripts.Cards;
 using _Scripts.Game;
 using _Scripts.Missions;
+using _Scripts.Missions.Apartment;
 using _Scripts.Missions.Pattern;
 using Signals;
 using TMPro;
@@ -28,19 +29,19 @@ namespace _Scripts.Score
 
         private void OnEnable()
         {
-            SignalsHub.AddListener<PatternMissionCompletedSignal>(OnMissionCompleted);
+            SignalsHub.AddListener<ApartmentMissionCompletedSignal>(OnApartmentMissionCompleted);
             SignalsHub.AddListener<DeckUpdatedSignal>(OnDeckUpdated);
             SignalsHub.AddListener<MissionsUpdatedSignal>(OnMissionsUpdated);
         }
         
         private void OnDisable()
         {
-            SignalsHub.RemoveListener<PatternMissionCompletedSignal>(OnMissionCompleted);
+            SignalsHub.RemoveListener<ApartmentMissionCompletedSignal>(OnApartmentMissionCompleted);
             SignalsHub.RemoveListener<DeckUpdatedSignal>(OnDeckUpdated);
             SignalsHub.RemoveListener<MissionsUpdatedSignal>(OnMissionsUpdated);
         }
 
-        private void OnMissionCompleted(PatternMissionCompletedSignal signal)
+        private void OnApartmentMissionCompleted(ApartmentMissionCompletedSignal signal)
         {
             currentScore += signal.Dto.RewardScore;
             UpdateScoreText();
@@ -93,8 +94,8 @@ namespace _Scripts.Score
         private void UpdateScoreText()
         {
             scoreText.text = $"Score\n" +
-                             $"*{currentScore}*\n" +
-                             $"{GetCurrentRank()}";
+                             $"*{currentScore}*\n";
+            // $"{GetCurrentRank()}";
         }
 
         private string GetCurrentRank()

@@ -13,17 +13,21 @@ MonoBehaviour:
   m_Name: BedRoom_2x2
   m_EditorClassIdentifier: 
   roomName: "\u0421\u043F\u0430\u043B\u044C\u043D\u044F 2x2"
-  roomType: 3
+  roomTypes: 03000000
   tiles:
   - position: {x: -1, y: 0}
     direction: 0
     tile: {fileID: 11400000, guid: fa6ffc1f9cffe0b49809850a0e98b562, type: 2}
+    furnitureSprite: {fileID: 667951688, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
   - position: {x: 0, y: 0}
     direction: 1
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
+    furnitureSprite: {fileID: 0}
   - position: {x: -1, y: 1}
     direction: 3
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
+    furnitureSprite: {fileID: 0}
   - position: {x: 0, y: 1}
     direction: 2
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
+    furnitureSprite: {fileID: 0}

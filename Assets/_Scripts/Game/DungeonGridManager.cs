@@ -227,7 +227,7 @@ namespace _Scripts.Game
                     .GetComponent<DungeonRoomTileView>();
                 var tileGridPosition = gridPosition + roomTileCell.Position - startingTilePosition;
                 dungeonRoomTile.transform.position = GridToWorld(tileGridPosition);
-                dungeonRoomTile.SetUp(roomTileCell.Tile, tileGridPosition, roomTileCell.Direction);
+                dungeonRoomTile.SetUp(roomTileCell, tileGridPosition);
                 _roomTiles.Add(dungeonRoomTile);
                 selectedRoomTiles.Add(dungeonRoomTile);
                 SignalsHub.DispatchAsync(new RoomTilePlacedSignal(dungeonRoomTile));

@@ -161,7 +161,7 @@ namespace _Scripts.Missions
         {
             roomsToUse = new List<DungeonRoomModel>();
 
-            var sharedRooms = _dungeonGridManager.Rooms.Where(room => room.RoomType == RoomType.Shared);
+            var sharedRooms = _dungeonGridManager.Rooms.Where(room => room.HasType(RoomType.Shared));
             var startingRooms = sharedRooms.SelectMany(sharedRoom =>
                     sharedRoom.AdjacentRooms.Where(room =>
                         !room.IsUsed &&

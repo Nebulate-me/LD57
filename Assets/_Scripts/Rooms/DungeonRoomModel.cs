@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using _Scripts.Missions.Apartment;
 using _Scripts.Utils;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace _Scripts.Rooms
 {
@@ -37,7 +37,7 @@ namespace _Scripts.Rooms
         }
 
         [ShowInInspector, ReadOnly] public string RoomName => _roomDto.Name;
-        [ShowInInspector, ReadOnly] public RoomType RoomType => _roomDto.RoomType;
+        [ShowInInspector, ReadOnly] public List<RoomType> RoomTypes => _roomDto.RoomTypes;
         [ShowInInspector, ReadOnly] public int AdjacentRoomCount => _adjacentRooms.Count;
         public List<DungeonRoomModel> AdjacentRooms => _adjacentRooms;
 
@@ -65,7 +65,12 @@ namespace _Scripts.Rooms
 
         public bool IsFulfilling(RoomRequirement requirement)
         {
-            return requirement.RoomType == RoomType;
+            return HasType(requirement.RoomType);
+        }
+
+        public bool HasType(RoomType roomType)
+        {
+            return RoomTypes.Contains(roomType);
         }
     }
 }

@@ -8,11 +8,11 @@ namespace _Scripts.Rooms
     public class Room : ScriptableObject
     {
         [SerializeField] private string roomName;
-        [SerializeField] private RoomType roomType;
+        [SerializeField] private List<RoomType> roomTypes;
         [SerializeField] private List<RoomTileCell> tiles = new();
 
         public string RoomName => roomName;
-        public RoomType RoomType => roomType;
+        public List<RoomType> RoomTypes => roomTypes;
         public List<RoomTileCell> Tiles => tiles;
 
         public RoomDto ToDto()

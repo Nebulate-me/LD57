@@ -2,6 +2,7 @@ using System;
 using _Scripts.Rooms;
 using Plugins.Sirenix.Odin_Inspector.Modules;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace _Scripts.RoomTiles
@@ -9,13 +10,16 @@ namespace _Scripts.RoomTiles
     public class RoomTileCellView : MonoBehaviour
     {
         [SerializeField] private RectTransform tileTransform;
-        [SerializeField] private Image tileImage;
+        [FormerlySerializedAs("tileImage")] [SerializeField] private Image wallTileImage;
+        [SerializeField] private Image furnitureTileImage;
         [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects;
         
 
         public void SetUp(RoomTileCellDto roomTileCell)
         {
-            tileImage.sprite = roomTileCell.Tile.UnusedSprite;
+            wallTileImage.sprite = roomTileCell.Tile.UnusedSprite;
+            furnitureTileImage.gameObject.SetActive(roomTileCell.FurnitureSprite != null);
+            furnitureTileImage.sprite = roomTileCell.FurnitureSprite;
             tileTransform.rotation = roomTileCell.Direction.ToRotation();
             foreach (var doorObject in doorObjects.Values)
             {
