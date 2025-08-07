@@ -9,8 +9,9 @@ namespace _Scripts.RoomTiles
 {
     public class RoomTileCellView : MonoBehaviour
     {
-        [SerializeField] private RectTransform tileTransform;
+        [FormerlySerializedAs("tileTransform")] [SerializeField] private RectTransform wallTileTransform;
         [FormerlySerializedAs("tileImage")] [SerializeField] private Image wallTileImage;
+        [SerializeField] private RectTransform furnitureTransform;
         [SerializeField] private Image furnitureTileImage;
         [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects;
         
@@ -18,9 +19,12 @@ namespace _Scripts.RoomTiles
         public void SetUp(RoomTileCellDto roomTileCell)
         {
             wallTileImage.sprite = roomTileCell.Tile.UnusedSprite;
+            wallTileTransform.rotation = roomTileCell.Direction.ToRotation();
+            
             furnitureTileImage.gameObject.SetActive(roomTileCell.FurnitureSprite != null);
+            furnitureTransform.rotation = roomTileCell.Direction.Rotate(roomTileCell.FurnitureDirection).ToRotation();
             furnitureTileImage.sprite = roomTileCell.FurnitureSprite;
-            tileTransform.rotation = roomTileCell.Direction.ToRotation();
+
             foreach (var doorObject in doorObjects.Values)
             {
                 doorObject.SetActive(false);

@@ -640,8 +640,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04896ae951a84277bf761401d7883fa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteTransform: {fileID: 3019573541938760808}
+  wallSpriteTransform: {fileID: 3019573541938760808}
   wallRenderer: {fileID: 2709726121561069215}
+  furnitureSpriteTransform: {fileID: 7346406439793502183}
   furnitureRenderer: {fileID: 215766856728591873}
   doorObjects:
     keyData: 00000000010000000200000003000000

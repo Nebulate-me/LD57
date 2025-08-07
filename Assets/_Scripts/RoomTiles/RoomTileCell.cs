@@ -11,11 +11,13 @@ namespace _Scripts.RoomTiles
         [SerializeField] private RoomDirection direction;
         [SerializeField] private RoomTile tile;
         [SerializeField] private Sprite furnitureSprite;
+        [SerializeField] private RoomDirection furnitureDirection;
 
         public Vector2Int Position => position;
         public RoomDirection Direction => direction;
         public RoomTile Tile => tile;
         public Sprite FurnitureSprite => furnitureSprite;
+        public RoomDirection FurnitureDirection => furnitureDirection;
 
         public RoomTileCellDto ToDto()
         {

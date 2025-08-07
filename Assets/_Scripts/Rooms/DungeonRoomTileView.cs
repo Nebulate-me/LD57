@@ -8,7 +8,6 @@ using Plugins.Sirenix.Odin_Inspector.Modules;
 using Signals;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utilities.Prefabs;
 using Zenject;
 
@@ -16,9 +15,12 @@ namespace _Scripts.Rooms
 {
     public class DungeonRoomTileView : MonoBehaviour, IPoolableResource
     {
-        [FormerlySerializedAs("spriteTransform")] [SerializeField] private Transform wallSpriteTransform;
+        [SerializeField] private Transform wallSpriteTransform;
         [SerializeField] private SpriteRenderer wallRenderer;
+        [Space]
+        [SerializeField] private Transform furnitureSpriteTransform;
         [SerializeField] private SpriteRenderer furnitureRenderer;
+        [Space]
         [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects = new();
 
         [ShowInInspector, ReadOnly] private Vector2Int gridPosition;
@@ -56,9 +58,10 @@ namespace _Scripts.Rooms
             wallSpriteTransform.rotation = direction.ToRotation();
             wallRenderer.sprite = _tileDto.UnusedSprite;
             
+            furnitureSpriteTransform.rotation = direction.Rotate(roomTileCell.FurnitureDirection).ToRotation();
             furnitureRenderer.gameObject.SetActive(roomTileCell.FurnitureSprite != null);
             furnitureRenderer.sprite = roomTileCell.FurnitureSprite;
-
+            
             openDirections = _tileDto.OpenDirections;
             doorDirections = _tileDto.DoorDirections;
 

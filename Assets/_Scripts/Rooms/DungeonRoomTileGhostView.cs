@@ -25,7 +25,7 @@ namespace _Scripts.Rooms
             
             furnitureSpriteRenderer.gameObject.SetActive(roomTileCell.FurnitureSprite != null); 
             furnitureSpriteRenderer.sprite = roomTileCell.FurnitureSprite;
-            furnitureSpriteTransform.rotation = roomTileCell.Direction.ToRotation();
+            furnitureSpriteTransform.rotation = roomTileCell.Direction.Rotate(roomTileCell.FurnitureDirection).ToRotation();
             
             foreach (var doorObject in doorObjects.Values)
             {
