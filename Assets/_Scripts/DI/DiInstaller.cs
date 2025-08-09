@@ -5,6 +5,7 @@ using _Scripts.Missions;
 using _Scripts.Rooms;
 using _Scripts.Score;
 using DITools;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Utilities.Prefabs;
 using Utilities.Random;
@@ -25,8 +26,11 @@ namespace _Scripts.DI
         [SerializeField] private MissionManager missionManager;
         [SerializeField] private ScoreManager scoreManager;
 
-        [Header("Do Not Edit")]
-        [SerializeField] private Camera uiCamera;
+        [Header("Prefabs")]
+        [SerializeField] private GameObject roomRegistryPrefab;
+        
+        
+        [ShowInInspector, ReadOnly] private Camera _uiCamera;
 
         protected virtual void ConfigureServices()
         {
@@ -43,8 +47,8 @@ namespace _Scripts.DI
             Container.Bind<IPrefabPool>().FromInstance(prefabPool).AsSingle().NonLazy();
             Container.Bind<IRandomService>().To<RandomService>().AsSingle().NonLazy();
 
-            uiCamera = GameObject.Find("UICamera").GetComponent<Camera>();
-            Container.Bind<Camera>().WithId("uiCamera").FromInstance(uiCamera).AsSingle();
+            _uiCamera = GameObject.Find("UICamera").GetComponent<Camera>();
+            Container.Bind<Camera>().WithId("uiCamera").FromInstance(_uiCamera).AsSingle();
 
             Container.BindInterfacesTo<DungeonCameraController>().FromInstance(cameraController).AsSingle();
             Container.BindInterfacesTo<SoundManager>().FromInstance(soundManager).AsSingle();
@@ -54,6 +58,9 @@ namespace _Scripts.DI
             Container.BindInterfacesTo<DungeonGridManager>().FromInstance(dungeonGridManager).AsSingle();
             Container.BindInterfacesTo<MissionManager>().FromInstance(missionManager).AsSingle();
             Container.BindInterfacesTo<ScoreManager>().FromInstance(scoreManager).AsSingle();
+
+            var roomRegistry = Container.InstantiatePrefab(roomRegistryPrefab, transform).GetComponent<RoomRegistry>();
+            Container.BindInterfacesTo<RoomRegistry>().FromInstance(roomRegistry).AsSingle();
         }
 
         private void OnDisable()

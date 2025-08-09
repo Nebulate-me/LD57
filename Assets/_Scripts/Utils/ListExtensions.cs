@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ModestTree;
 using Utilities.Monads;
 
 namespace _Scripts.Utils
@@ -22,6 +23,12 @@ namespace _Scripts.Utils
         {
             var first = list.FirstOrEmpty(predicate);
             return first.TryGetValue(out match);
+        }
+
+        public static float GetCenter(this List<int> coordinates)
+        {
+            if (coordinates.IsEmpty()) return 0;
+            return (coordinates.Min() + coordinates.Max()) / 2f;
         }
     }
 }

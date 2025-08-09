@@ -19,15 +19,19 @@ MonoBehaviour:
     direction: 0
     tile: {fileID: 11400000, guid: fa6ffc1f9cffe0b49809850a0e98b562, type: 2}
     furnitureSprite: {fileID: 0}
+    furnitureDirection: 0
   - position: {x: 0, y: 0}
     direction: 1
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
     furnitureSprite: {fileID: 0}
+    furnitureDirection: 0
   - position: {x: -1, y: 1}
     direction: 3
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    furnitureSprite: {fileID: -1990259583, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
+    furnitureSprite: {fileID: 75740290, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
+    furnitureDirection: 0
   - position: {x: 0, y: 1}
     direction: 2
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    furnitureSprite: {fileID: -1990259583, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
+    furnitureSprite: {fileID: 1106156025, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
+    furnitureDirection: 1

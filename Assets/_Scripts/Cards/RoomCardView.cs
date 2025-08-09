@@ -14,6 +14,10 @@ namespace _Scripts.Cards
     public class RoomCardView : MonoBehaviour, IPointerClickHandler, IPoolableResource
     {
         [SerializeField] private TextMeshProUGUI roomName;
+        [Header("Room Icons")]
+        [SerializeField] private GameObject roomIconPrefab;
+        [SerializeField] private RectTransform roomIconContainer;
+        [Header("Room Cells")]
         [SerializeField] private RectTransform roomCellContainer;
         [SerializeField] private GameObject roomTileCellPrefab;
         [SerializeField] private float cellSize = 0.33f; 
@@ -35,13 +39,22 @@ namespace _Scripts.Cards
         {
             _roomDto = roomDto;
             roomName.text = roomDto.Name;
+            
+            roomIconContainer.DestroyChildren();
+            foreach (var roomType in roomDto.RoomTypes)
+            {
+                var roomTypeIcon = _prefabPool.Spawn(roomIconPrefab, roomIconContainer).GetComponent<RoomTypeIconView>();
+                roomTypeIcon.SetUp(roomType);
+            }
 
             roomCellContainer.DestroyChildren();
+            var roomCenter = roomDto.GetCenter().ToVector3();
             foreach (var roomTileCell in roomDto.Tiles)
             {
                 var roomTileCellView = _prefabPool.Spawn(roomTileCellPrefab, roomCellContainer).GetComponent<RoomTileCellView>();
                 roomTileCellView.SetUp(roomTileCell);
-                roomTileCellView.transform.position = roomCellContainer.transform.position + roomTileCell.Position.ToVector3() * cellSize;
+                roomTileCellView.transform.position = roomCellContainer.transform.position +
+                                                      (roomTileCell.Position.ToVector3() - roomCenter)* cellSize;
                 _roomTilCellViews.Add(roomTileCellView);
             }
         }

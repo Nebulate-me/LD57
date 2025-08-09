@@ -51,5 +51,12 @@ namespace _Scripts.Rooms
             
             return new RoomDto(name, roomTypes, rotatedTiles);
         }
+
+        public Vector2 GetCenter()
+        {
+            return new Vector2(
+                tiles.Select(tile => tile.Position.x).ToList().GetCenter(),
+                tiles.Select(tile => tile.Position.y).ToList().GetCenter());
+        }
     }
 }
