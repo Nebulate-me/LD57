@@ -10,28 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7a12f5410f346f29790ec35b19e1147, type: 3}
-  m_Name: Bathroom_2x2
+  m_Name: BedRoom 1x2
   m_EditorClassIdentifier: 
-  roomName: "\u0421\u0430\u043D\u0443\u0437\u0435\u043B 2x2"
-  roomTypes: 0100000004000000
+  roomName: "\u0421\u043F\u0430\u043B\u044C\u043D\u044F"
+  roomTypes: 03000000
   tiles:
   - position: {x: -1, y: 0}
     direction: 0
     tile: {fileID: 11400000, guid: fa6ffc1f9cffe0b49809850a0e98b562, type: 2}
-    furnitureSprite: {fileID: -1929502500, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 1
+    furnitureSprite: {fileID: -1841686932, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
+    furnitureDirection: 0
   - position: {x: 0, y: 0}
     direction: 1
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    furnitureSprite: {fileID: 443588989, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
+    furnitureSprite: {fileID: 707701758, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
     furnitureDirection: 3
   - position: {x: -1, y: 1}
     direction: 3
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    furnitureSprite: {fileID: 1811322383, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
+    furnitureSprite: {fileID: -1702812193, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
     furnitureDirection: 1
   - position: {x: 0, y: 1}
     direction: 2
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    furnitureSprite: {fileID: -1953272316, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
+    furnitureSprite: {fileID: -418607922, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
     furnitureDirection: 2

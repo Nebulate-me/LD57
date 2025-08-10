@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using _Scripts.Rooms;
 using UnityEngine;
 
@@ -6,12 +7,11 @@ namespace _Scripts.Game
     [CreateAssetMenu(menuName = "LD57/Create Level", fileName = "Level", order = 1)]
     public class Level : ScriptableObject
     {
-        [SerializeField] private Room startingRoom;
-        [SerializeField] private Vector2Int startingPosition;
+        [SerializeField] private List<RoomPositionDto> startingRooms = new();
         [SerializeField] private Vector2Int levelSize = new(20, 15);
-        
-        public Room StartingRoom => startingRoom;
-        public Vector2Int StartingPosition => startingPosition;
+
+        public List<RoomPositionDto> StartingRooms => startingRooms;
+
         /// <summary>
         /// The real size in cells the Level would take <br/>
         /// 10 = 10 / 2 * 2 + 1 => 11 <br/>

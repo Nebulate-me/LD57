@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f9bfb19f5164e88847d4bd4d43c6347, type: 3}
   m_Name: Level_1
   m_EditorClassIdentifier: 
+  startingRooms:
+  - position: {x: -1, y: -1}
+    direction: 0
+    room: {fileID: 11400000, guid: ee4fc318792d22543816bd7c73a49abc, type: 2}
   startingRoom: {fileID: 11400000, guid: ee4fc318792d22543816bd7c73a49abc, type: 2}
   startingPosition: {x: -1, y: -1}
   levelSize: {x: 12, y: 7}

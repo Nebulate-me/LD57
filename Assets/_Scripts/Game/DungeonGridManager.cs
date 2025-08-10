@@ -52,7 +52,11 @@ namespace _Scripts.Game
             _roomGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
                 .GetComponent<DungeonRoomGhostView>();
             
-            PlaceRoom(startingLevel.StartingRoom.ToDto(), startingLevel.StartingPosition);
+            foreach (var startingRoomDto in _currentLevel.StartingRooms)
+            {
+                PlaceRoom(startingRoomDto.Room.ToDto().Rotate(startingRoomDto.Direction), startingRoomDto.Position);
+            }
+            
             levelBuildingBackground.size = startingLevel.LevelSize;
             SignalsHub.DispatchAsync(new LevelSetupCompletedSignal());
         }
