@@ -71,6 +71,13 @@ namespace _Scripts.Missions.Apartment
                 // TODO: Update based on requirement fulfilment
             }
 
+            if (missionDto.RequiredWindows > 0)
+            {
+                var roomTypeIconView = _prefabPool.Spawn(roomTypeIconViewPrefab, roomTypeIconContainer)
+                    .GetComponent<RoomTypeIconView>();
+                roomTypeIconView.SetUp(missionDto.RequiredWindows);
+            }
+
             foreach (var objectToDestroy in objectsToDestroy)
             {
                 Destroy(objectToDestroy);

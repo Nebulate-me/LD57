@@ -46,10 +46,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultRoomTypeIcon: {fileID: -60880189, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
   roomTypeSprites:
-    keyData: 0100000004000000050000000200000003000000
+    keyData: 010000000400000005000000020000000300000015000000
     valueData:
     - {fileID: -146456968, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
     - {fileID: 1593773622, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
     - {fileID: 1281385086, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
     - {fileID: -60880189, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
     - {fileID: -1484163423, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
+    - {fileID: -1508834631, guid: 6b5e35026fec2404fb71033473826b06, type: 3}

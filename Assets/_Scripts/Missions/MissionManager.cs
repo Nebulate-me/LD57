@@ -171,7 +171,7 @@ namespace _Scripts.Missions
             {
                 var fulfilledRequirementIndex = missionDto.Requirements.FindIndex(startingRoom.IsFulfilling);
                 var startingRequirements = missionDto.Requirements.Where((t, i) => i != fulfilledRequirementIndex).ToList();
-                var inputSearch = new ApartmentMissionSearchDto(startingRequirements, new List<DungeonRoomModel>{ startingRoom });
+                var inputSearch = new ApartmentMissionSearchDto(startingRequirements, new List<DungeonRoomModel>{ startingRoom }, missionDto.RequiredWindows - startingRoom.WindowCount);
                 if (TrySearchApartmentMission(inputSearch, out roomsToUse))
                 {
                     return true;
@@ -214,7 +214,7 @@ namespace _Scripts.Missions
                 var usedRooms = new List<DungeonRoomModel> { roomOption };
                 usedRooms.AddRange(inputSearch.UsedRooms);
                 
-                return new ApartmentMissionSearchDto(requirements, usedRooms);
+                return new ApartmentMissionSearchDto(requirements, usedRooms, inputSearch.RemainingWindowCount - roomOption.WindowCount);
             }).ToList();
             return !outputSearchOptions.IsEmpty();
         }
@@ -329,12 +329,17 @@ namespace _Scripts.Missions
     internal class ApartmentMissionSearchDto
     {
         public readonly List<RoomRequirement> Requirements;
+        public readonly int RequiredWindowCount;
+        
         public readonly List<DungeonRoomModel> UsedRooms;
+        public readonly int RemainingWindowCount;
 
-        public ApartmentMissionSearchDto(List<RoomRequirement> requirements, List<DungeonRoomModel> usedRooms)
+        public ApartmentMissionSearchDto(List<RoomRequirement> requirements, List<DungeonRoomModel> usedRooms,
+            int remainingWindowCount)
         {
             Requirements = requirements;
             UsedRooms = usedRooms;
+            RemainingWindowCount = remainingWindowCount;
         }
 
         public List<DungeonRoomModel> AdjacentRoomOptions => UsedRooms.SelectMany(usedRoom =>
@@ -344,6 +349,6 @@ namespace _Scripts.Missions
                             Requirements.Any(room.IsFulfilling)))
             .ToList();
 
-        public bool IsCompleted => Requirements.IsEmpty();
+        public bool IsCompleted => Requirements.IsEmpty() && RemainingWindowCount <= 0;
     }
 }

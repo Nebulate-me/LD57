@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using _Scripts.Missions.Apartment;
 using _Scripts.Utils;
 using Sirenix.OdinInspector;
@@ -35,6 +36,8 @@ namespace _Scripts.Rooms
                 }
             }
         }
+
+        public int WindowCount => _roomTiles.Sum(roomTile => roomTile.WindowCount);
 
         [ShowInInspector, ReadOnly] public string RoomName => _roomDto.Name;
         [ShowInInspector, ReadOnly] public List<RoomType> RoomTypes => _roomDto.RoomTypes;

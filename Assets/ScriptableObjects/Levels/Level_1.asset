@@ -16,6 +16,4 @@ MonoBehaviour:
   - position: {x: -1, y: -1}
     direction: 0
     room: {fileID: 11400000, guid: ee4fc318792d22543816bd7c73a49abc, type: 2}
-  startingRoom: {fileID: 11400000, guid: ee4fc318792d22543816bd7c73a49abc, type: 2}
-  startingPosition: {x: -1, y: -1}
-  levelSize: {x: 12, y: 7}
+  levelSize: {x: 12, y: 9}

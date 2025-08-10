@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
@@ -266,6 +267,12 @@ namespace _Scripts.Game
             var size = new Vector3(maxX - minX, maxY - minY);
 
             return new Bounds(center, size);
+        }
+
+        public bool IsTileAdjacentToLevelBounds(Vector2Int gridPosition, RoomDirection direction)
+        {
+            var adjacentPosition = gridPosition + direction.ToVector2Int();
+            return !IsPositionInsideLevelBounds(adjacentPosition);
         }
 
         public Bounds GetRoomBounds()

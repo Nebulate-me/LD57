@@ -12,5 +12,6 @@ namespace _Scripts.Rooms
         Hallway = 7,
         Balcony = 8,
         Shared = 20,
+        Window = 21,
     }
 }

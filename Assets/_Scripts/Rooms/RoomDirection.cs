@@ -74,6 +74,23 @@ namespace _Scripts.Rooms
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, $"Invalid Direction to FlipY: {direction}");
             }
         }
+        
+        public static Vector2Int ToVector2Int(this RoomDirection direction)
+        {
+            switch (direction)
+            {
+                case RoomDirection.North:
+                    return Vector2Int.up;
+                case RoomDirection.South:
+                    return Vector2Int.down;
+                case RoomDirection.East:
+                    return Vector2Int.right;
+                case RoomDirection.West:
+                    return Vector2Int.left;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, $"Invalid RoomDirection to convert: {direction}");
+            }
+        }
 
         public static RoomDirection FromVector2Int(this Vector2Int vector)
         {

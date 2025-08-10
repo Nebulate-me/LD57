@@ -9,5 +9,6 @@ namespace _Scripts.Rooms
         IReadOnlyList<DungeonRoomModel> Rooms { get; }
         Bounds GetRoomBounds();
         Bounds GetRoomBoundsBasedOnTiles();
+        bool IsTileAdjacentToLevelBounds(Vector2Int gridPosition, RoomDirection key);
     }
 }

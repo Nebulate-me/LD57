@@ -22,12 +22,14 @@ namespace _Scripts.Rooms
         [SerializeField] private SpriteRenderer furnitureRenderer;
         [Space]
         [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects = new();
+        [SerializeField] private RoomDirectionToGameObjectDictionary windowObjects = new();
 
         [ShowInInspector, ReadOnly] private Vector2Int gridPosition;
         [ShowInInspector, ReadOnly] private RoomDirection direction;
         [ShowInInspector, ReadOnly] private List<RoomDirection> openDirections = new();
         [ShowInInspector, ReadOnly] private List<RoomDirection> doorDirections = new();
         [ShowInInspector, ReadOnly] private bool isUsed = false;
+        [ShowInInspector, ReadOnly] private int _windowCount = 0;
 
         [Inject] private IDungeonGridManager _dungeonGridManager;
 
@@ -37,6 +39,7 @@ namespace _Scripts.Rooms
         public Vector2Int GridPosition => gridPosition;
         public List<RoomDirection> OpenDirections => openDirections;
         public List<RoomDirection> DoorDirections => doorDirections;
+        public int WindowCount => _windowCount;
 
         public bool IsUsed
         {
@@ -69,15 +72,27 @@ namespace _Scripts.Rooms
             {
                 doorObject.SetActive(false);
             }
+            UpdateDoors();
 
+            foreach (var (windowDirection, windowObject) in windowObjects)
+            {
+                var isWindowActive = _dungeonGridManager.IsTileAdjacentToLevelBounds(gridPosition, windowDirection);
+                windowObject.SetActive(isWindowActive);
+                if (isWindowActive) _windowCount++;
+            }
+            UpdateWindows();
+            
+            SetUpAdjacentTiles();
+        }
+
+        private void SetUpAdjacentTiles()
+        {
             var adjacentTiles =
                 _dungeonGridManager.RoomTiles.Where(roomTile => roomTile.gridPosition.IsAdjacent(gridPosition));
             foreach (var adjacentTile in adjacentTiles)
             {
                 AddAdjacentTile(adjacentTile);
             }
-
-            UpdateDoors();
         }
 
         private void UpdateDoors()
@@ -96,9 +111,15 @@ namespace _Scripts.Rooms
             }
         }
 
+        private void UpdateWindows()
+        {
+            
+        }
+
         public void OnSpawn()
         {
             isUsed = false;
+            _windowCount = 0;
 
             SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
         }

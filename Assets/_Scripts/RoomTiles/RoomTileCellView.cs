@@ -14,7 +14,7 @@ namespace _Scripts.RoomTiles
         [SerializeField] private RectTransform furnitureTransform;
         [SerializeField] private Image furnitureTileImage;
         [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects;
-        
+
 
         public void SetUp(RoomTileCellDto roomTileCell)
         {
