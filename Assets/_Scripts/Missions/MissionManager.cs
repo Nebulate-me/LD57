@@ -162,10 +162,11 @@ namespace _Scripts.Missions
             roomsToUse = new List<DungeonRoomModel>();
 
             var sharedRooms = _dungeonGridManager.Rooms.Where(room => room.HasType(RoomType.Shared));
+            // We can start forming apartment from any of the required rooms or a hallway
             var startingRooms = sharedRooms.SelectMany(sharedRoom =>
                     sharedRoom.AdjacentRooms.Where(room =>
                         !room.IsUsed &&
-                        missionDto.Requirements.Any(room.IsFulfilling)))
+                        missionDto.Requirements.Any(room.IsFulfilling) || room.HasType(RoomType.Hallway)))
                 .Distinct();
             foreach (var startingRoom in startingRooms)
             {
@@ -342,11 +343,14 @@ namespace _Scripts.Missions
             RemainingWindowCount = remainingWindowCount;
         }
 
+        /// <summary>
+        /// The idea is to get all adjacent hallways that may connect to the required rooms
+        /// </summary>
         public List<DungeonRoomModel> AdjacentRoomOptions => UsedRooms.SelectMany(usedRoom =>
                 usedRoom.AdjacentRooms.Where(
                     room => !room.IsUsed &&
                             !UsedRooms.Contains(room) &&
-                            Requirements.Any(room.IsFulfilling)))
+                            (Requirements.Any(room.IsFulfilling) || room.HasType(RoomType.Hallway)) ))
             .ToList();
 
         public bool IsCompleted => Requirements.IsEmpty() && RemainingWindowCount <= 0;

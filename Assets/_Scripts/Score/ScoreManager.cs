@@ -93,7 +93,7 @@ namespace _Scripts.Score
 
         private void UpdateScoreText()
         {
-            scoreText.text = $"Score\n" +
+            scoreText.text = $"Очки\n" +
                              $"*{currentScore}*\n";
             // $"{GetCurrentRank()}";
         }

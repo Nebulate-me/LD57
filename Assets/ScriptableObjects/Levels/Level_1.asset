@@ -16,8 +16,8 @@ MonoBehaviour:
   - position: {x: -1, y: -1}
     direction: 0
     room: {fileID: 11400000, guid: ee4fc318792d22543816bd7c73a49abc, type: 2}
-  - position: {x: 3, y: 0}
-    direction: 1
+  - position: {x: 2, y: 0}
+    direction: 3
     room: {fileID: 11400000, guid: b85f20c18ce21d84c820fe1db7706fcc, type: 2}
   - position: {x: -4, y: 0}
     direction: 1
