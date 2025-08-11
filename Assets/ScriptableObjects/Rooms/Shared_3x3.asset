@@ -17,7 +17,7 @@ MonoBehaviour:
   tiles:
   - position: {x: -1, y: -1}
     direction: 0
-    tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
+    tile: {fileID: 11400000, guid: fa6ffc1f9cffe0b49809850a0e98b562, type: 2}
     furnitureSprite: {fileID: 0}
     furnitureDirection: 0
   - position: {x: -1, y: 0}
@@ -27,7 +27,7 @@ MonoBehaviour:
     furnitureDirection: 0
   - position: {x: -1, y: 1}
     direction: 3
-    tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
+    tile: {fileID: 11400000, guid: 719e347d138180b47988a87dfe6d72a2, type: 2}
     furnitureSprite: {fileID: 0}
     furnitureDirection: 0
   - position: {x: 0, y: -1}
@@ -47,7 +47,7 @@ MonoBehaviour:
     furnitureDirection: 0
   - position: {x: 1, y: -1}
     direction: 1
-    tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
+    tile: {fileID: 11400000, guid: 719e347d138180b47988a87dfe6d72a2, type: 2}
     furnitureSprite: {fileID: 0}
     furnitureDirection: 0
   - position: {x: 1, y: 0}
@@ -57,6 +57,6 @@ MonoBehaviour:
     furnitureDirection: 0
   - position: {x: 1, y: 1}
     direction: 2
-    tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
+    tile: {fileID: 11400000, guid: fa6ffc1f9cffe0b49809850a0e98b562, type: 2}
     furnitureSprite: {fileID: 0}
     furnitureDirection: 0

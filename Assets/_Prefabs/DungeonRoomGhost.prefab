@@ -101,6 +101,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   validPlacementColor: {r: 1, g: 1, b: 1, a: 0.5019608}
-  invalidPlacementColor: {r: 1, g: 0.5, b: 0.5, a: 0.5019608}
+  invalidPlacementColor: {r: 1, g: 0.2028302, b: 0.2028302, a: 0.5019608}
   ghostTileContainer: {fileID: 1732442775895766723}
   ghostTileSprite: {fileID: 8651394372544261446, guid: 61b3776979716db42a914a51b9e04143, type: 3}

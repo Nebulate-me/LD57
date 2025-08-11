@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7a12f5410f346f29790ec35b19e1147, type: 3}
-  m_Name: Toilet_1x2
+  m_Name: Toilet_1x2b
   m_EditorClassIdentifier: 
-  roomName: "\u0421\u0430\u043D\u0443\u0437\u0435\u043B 1x2"
+  roomName: "\u0421\u0430\u043D\u0443\u0437\u0435\u043B \u0411"
   roomTypes: 01000000
   tiles:
   - position: {x: 0, y: 0}
@@ -22,6 +22,6 @@ MonoBehaviour:
     furnitureDirection: 2
   - position: {x: 0, y: 1}
     direction: 2
-    tile: {fileID: 11400000, guid: 2b5d2c69ee9cca44782e91d38c2369b5, type: 2}
+    tile: {fileID: 11400000, guid: 7b6416b1396d68546a3a1f3774eeb79c, type: 2}
     furnitureSprite: {fileID: -1929502500, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
     furnitureDirection: 1

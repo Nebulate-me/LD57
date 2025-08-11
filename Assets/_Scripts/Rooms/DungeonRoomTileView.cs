@@ -99,15 +99,26 @@ namespace _Scripts.Rooms
         {
             foreach (var doorDirection in doorDirections)
             {
+                if (_dungeonGridManager.IsTileAdjacentToLevelBounds(gridPosition, doorDirection))
+                {
+                    doorObjects[doorDirection].SetActive(false);
+                    continue;
+                }
+
                 if (_adjacentTiles.TryGetValue(doorDirection, out var adjacentTile))
                 {
+                    if (!adjacentTile.doorDirections.Contains(doorDirection.Invert()))
+                    {
+                        doorObjects[doorDirection].SetActive(false);
+                        continue;
+                    }
+                    
                     doorObjects[doorDirection]
                         .SetActive(IsUsed && adjacentTile.IsUsed || !IsUsed && !adjacentTile.IsUsed);
+                    continue;
                 }
-                else
-                {
-                    doorObjects[doorDirection].SetActive(true); // TODO: Check if we're at the Level border
-                }
+                
+                doorObjects[doorDirection].SetActive(!IsUsed);
             }
         }
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7a12f5410f346f29790ec35b19e1147, type: 3}
   m_Name: Kitchen_2x2
   m_EditorClassIdentifier: 
-  roomName: "\u041A\u0443\u0445\u043D\u044F 2x2"
+  roomName: "\u041A\u0443\u0445\u043D\u044F"
   roomTypes: 05000000
   tiles:
   - position: {x: -1, y: 0}
@@ -22,7 +22,7 @@ MonoBehaviour:
     furnitureDirection: 0
   - position: {x: 0, y: 0}
     direction: 1
-    tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
+    tile: {fileID: 11400000, guid: fa6ffc1f9cffe0b49809850a0e98b562, type: 2}
     furnitureSprite: {fileID: 0}
     furnitureDirection: 0
   - position: {x: -1, y: 1}

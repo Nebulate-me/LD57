@@ -147,7 +147,7 @@ namespace _Scripts.Game
             var allOpenDirectionsOpen =
                 adjacentConfiguration.OpenDirections.All(openDirection => dtoConfiguration.OpenDirections.Contains(openDirection) || dtoConfiguration.AnyDirections.Contains(openDirection) );
             var allClosedDirectionsClosed =
-                adjacentConfiguration.ClosedDirections.All(closedDirection => dtoConfiguration.ClosedDirections.Contains(closedDirection)  || dtoConfiguration.AnyDirections.Contains(closedDirection) );
+                adjacentConfiguration.ClosedDirections.All(closedDirection => dtoConfiguration.ClosedDirections.Contains(closedDirection));
 
             return allOpenDirectionsOpen && allClosedDirectionsClosed;
         }
