@@ -6925,6 +6925,8 @@ MonoBehaviour:
     amount: 2
   - room: {fileID: 11400000, guid: cf20cf8a37bd50444aa98ebd6bd8398d, type: 2}
     amount: 2
+  - room: {fileID: 11400000, guid: 6358b267919d8224db6cc7ba2e75cfc8, type: 2}
+    amount: 2
 --- !u!1 &5946277857184027333
 GameObject:
   m_ObjectHideFlags: 0

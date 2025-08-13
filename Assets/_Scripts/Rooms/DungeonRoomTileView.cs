@@ -18,6 +18,8 @@ namespace _Scripts.Rooms
         [SerializeField] private Transform wallSpriteTransform;
         [SerializeField] private SpriteRenderer wallRenderer;
         [Space]
+        [SerializeField] private SpriteRenderer floorRenderer;
+        [Space]
         [SerializeField] private Transform furnitureSpriteTransform;
         [SerializeField] private SpriteRenderer furnitureRenderer;
         [Space]
@@ -28,13 +30,14 @@ namespace _Scripts.Rooms
         [ShowInInspector, ReadOnly] private RoomDirection direction;
         [ShowInInspector, ReadOnly] private List<RoomDirection> openDirections = new();
         [ShowInInspector, ReadOnly] private List<RoomDirection> doorDirections = new();
-        [ShowInInspector, ReadOnly] private bool isUsed = false;
+        [ShowInInspector, ReadOnly] private bool _isUsed = false;
         [ShowInInspector, ReadOnly] private int _windowCount = 0;
 
         [Inject] private IDungeonGridManager _dungeonGridManager;
+        [Inject] private IRoomRegistry _roomRegistry;
 
         private RoomTileDto _tileDto;
-        private readonly RoomDirectionToDungeonRoomTileViewDictionary _adjacentTiles = new();
+        private RoomDirectionToDungeonRoomTileViewDictionary _adjacentTiles = new();
 
         public Vector2Int GridPosition => gridPosition;
         public List<RoomDirection> OpenDirections => openDirections;
@@ -43,21 +46,28 @@ namespace _Scripts.Rooms
 
         public bool IsUsed
         {
-            get => isUsed;
+            get => _isUsed;
             set
             {
-                isUsed = value;
-                wallRenderer.sprite = isUsed ? _tileDto.UsedSprite : _tileDto.UnusedSprite;
+                _isUsed = value;
+                wallRenderer.sprite = _isUsed ? _tileDto.UsedSprite : _tileDto.UnusedSprite;
                 UpdateDoors();
             }
         }
+        
+        public RoomFloorColor FloorSprite
+        {
+            set => floorRenderer.sprite = _roomRegistry.GetRoomFloorSprite(value);
+        }
 
-        public void SetUp(RoomTileCellDto roomTileCell, Vector2Int initialGridPosition)
+        public void SetUp(RoomTileCellDto roomTileCell, Vector2Int initialGridPosition, Sprite roomFloorSprite)
         {
             _tileDto = roomTileCell.Tile;
             gridPosition = initialGridPosition;
             direction = roomTileCell.Direction;
-            
+
+            floorRenderer.sprite = roomFloorSprite;
+
             wallSpriteTransform.rotation = direction.ToRotation();
             wallRenderer.sprite = _tileDto.UnusedSprite;
             
@@ -129,15 +139,18 @@ namespace _Scripts.Rooms
 
         public void OnSpawn()
         {
-            isUsed = false;
+            _isUsed = false;
             _windowCount = 0;
 
             SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
+            SignalsHub.AddListener<ApartmentMissionCompletedSignal>(OnMissionCompleted);
         }
 
         public void OnDespawn()
         {
-            isUsed = false;
+            _isUsed = false;
+            _tileDto = null;
+            _adjacentTiles = new RoomDirectionToDungeonRoomTileViewDictionary();
 
             SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
             SignalsHub.RemoveListener<ApartmentMissionCompletedSignal>(OnMissionCompleted);

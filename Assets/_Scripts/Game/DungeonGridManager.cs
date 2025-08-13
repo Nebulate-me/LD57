@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
@@ -27,6 +26,7 @@ namespace _Scripts.Game
         [SerializeField] private List<RectTransform> unclickableScreenAreas;
         [SerializeField] private SpriteRenderer levelBuildingBackground;
 
+        [Inject] private IRoomRegistry roomRegistry;
         [Inject] private IHandManager handManager;
         [Inject] private IPrefabPool prefabPool;
         [Inject] private IDungeonCameraController dungeonCameraController;
@@ -226,13 +226,18 @@ namespace _Scripts.Game
             var rotatedRoomDto = selectedRoomDto.Rotate(_currentDirection);
             var startingTilePosition = rotatedRoomDto.StartingPosition;
             var selectedRoomTiles = new List<DungeonRoomTileView>();
+            var roomFloorSprite =
+                selectedRoomDto.RoomTypes.Contains(RoomType.Shared)
+                    ? roomRegistry.SharedRoomFloorSprite
+                    : roomRegistry.UnusedRoomFloorSprite;
+            
             foreach (var roomTileCell in rotatedRoomDto.Tiles)
             {
                 var dungeonRoomTile = prefabPool.Spawn(dungeonRoomTilePrefab, roomContainer)
                     .GetComponent<DungeonRoomTileView>();
                 var tileGridPosition = gridPosition + roomTileCell.Position - startingTilePosition;
                 dungeonRoomTile.transform.position = GridToWorld(tileGridPosition);
-                dungeonRoomTile.SetUp(roomTileCell, tileGridPosition);
+                dungeonRoomTile.SetUp(roomTileCell, tileGridPosition, roomFloorSprite);
                 _roomTiles.Add(dungeonRoomTile);
                 selectedRoomTiles.Add(dungeonRoomTile);
                 SignalsHub.DispatchAsync(new RoomTilePlacedSignal(dungeonRoomTile));

@@ -4,6 +4,7 @@ using Plugins.Sirenix.Odin_Inspector.Modules;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Zenject;
 
 namespace _Scripts.RoomTiles
 {
@@ -11,11 +12,16 @@ namespace _Scripts.RoomTiles
     {
         [FormerlySerializedAs("tileTransform")] [SerializeField] private RectTransform wallTileTransform;
         [FormerlySerializedAs("tileImage")] [SerializeField] private Image wallTileImage;
+        [Space]
         [SerializeField] private RectTransform furnitureTransform;
         [SerializeField] private Image furnitureTileImage;
+        [Space] 
+        [SerializeField] private Image floorTileImage;
+        [Space]
         [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects;
 
-
+        [Inject] private IRoomRegistry _roomRegistry;
+        
         public void SetUp(RoomTileCellDto roomTileCell)
         {
             wallTileImage.sprite = roomTileCell.Tile.UnusedSprite;
@@ -24,6 +30,8 @@ namespace _Scripts.RoomTiles
             furnitureTileImage.gameObject.SetActive(roomTileCell.FurnitureSprite != null);
             furnitureTransform.rotation = roomTileCell.Direction.Rotate(roomTileCell.FurnitureDirection).ToRotation();
             furnitureTileImage.sprite = roomTileCell.FurnitureSprite;
+
+            floorTileImage.sprite = _roomRegistry.UnusedRoomFloorSprite;
 
             foreach (var doorObject in doorObjects.Values)
             {

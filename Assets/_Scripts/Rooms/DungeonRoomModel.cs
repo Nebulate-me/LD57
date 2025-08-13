@@ -15,6 +15,7 @@ namespace _Scripts.Rooms
         private readonly List<DungeonRoomTileView> _roomTiles;
         private List<DungeonRoomModel> _adjacentRooms;
         private bool _isUsed;
+        private RoomFloorColor _apartmentFloorColor;
 
         public DungeonRoomModel(RoomDto roomDto, List<DungeonRoomTileView> roomTiles, List<DungeonRoomModel> adjacentRooms)
         {
@@ -74,6 +75,15 @@ namespace _Scripts.Rooms
         public bool HasType(RoomType roomType)
         {
             return RoomTypes.Contains(roomType);
+        }
+
+        public void SetFloorColor(RoomFloorColor apartmentFloorColor)
+        {
+            _apartmentFloorColor = apartmentFloorColor;
+            foreach (var roomTile in _roomTiles)
+            {
+                roomTile.FloorSprite = apartmentFloorColor;
+            }
         }
     }
 }

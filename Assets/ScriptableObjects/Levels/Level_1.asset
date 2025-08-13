@@ -22,4 +22,4 @@ MonoBehaviour:
   - position: {x: -4, y: 0}
     direction: 1
     room: {fileID: 11400000, guid: b85f20c18ce21d84c820fe1db7706fcc, type: 2}
-  levelSize: {x: 12, y: 9}
+  levelSize: {x: 13, y: 10}

@@ -34,6 +34,7 @@ namespace _Scripts.Missions
         [Inject] private IDungeonGridManager _dungeonGridManager;
         [Inject] private IDeckManager _deckManager;
         [Inject] private ISoundManager _soundManager;
+        [Inject] private IRoomRegistry _roomRegistry;
 
         private readonly List<PatternMissionCardView> _patternMissionCardViews = new();
         private readonly List<ApartmentMissionCardView> _apartmentMissionCardViews = new();
@@ -109,9 +110,13 @@ namespace _Scripts.Missions
         {
             if (!IsApartmentMissionCompletable(apartmentMissionCard.Dto, out var roomsToUse)) return;
 
+            var apartmentFloorColor = _roomRegistry.GetUnusedColor();
             foreach (var dungeonRoomModel in roomsToUse)
+            {
                 dungeonRoomModel.IsUsed = true;
-
+                dungeonRoomModel.SetFloorColor(apartmentFloorColor);
+            }
+            
             var shuffledMissionRewards = _randomService.Shuffle(apartmentMissionCard.Dto.RewardRooms).ToList();
             _deckManager.BuryRoom(shuffledMissionRewards);
             _prefabPool.Despawn(apartmentMissionCard.gameObject);
