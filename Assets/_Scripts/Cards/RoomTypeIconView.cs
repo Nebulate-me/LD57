@@ -33,18 +33,18 @@ namespace _Scripts.Cards
             SetFulfilled(false);
         }
 
-        public void SetUp(RoomRequirement roomRequirement)
+        public void SetUp(RoomRequirement roomRequirement, bool isFulfilled = false)
         {
             roomTypeIcon.sprite = _roomRegistry.GetRoomTypeIcon(roomRequirement.RoomType);
             roomCountText.text = string.Empty;
-            SetFulfilled(false);
+            SetFulfilled(isFulfilled);
         }
 
-        public void SetUp(int windowCount)
+        public void SetUp(int windowCount, bool isFulfilled = false)
         {
             roomTypeIcon.sprite = _roomRegistry.GetRoomTypeIcon(RoomType.Window);
             roomCountText.text = windowCount.ToString();
-            SetFulfilled(false);
+            SetFulfilled(isFulfilled);
         } 
     }
 }

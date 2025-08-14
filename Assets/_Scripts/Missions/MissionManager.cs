@@ -136,7 +136,11 @@ namespace _Scripts.Missions
         private void UpdateMissions()
         {
             foreach (var missionCardView in _apartmentMissionCardViews)
-                missionCardView.Completable = IsApartmentMissionCompletable(missionCardView.Dto, out _);
+            {
+                var isCompletable = IsApartmentMissionCompletable(missionCardView.Dto, out var usedRooms);
+                missionCardView.Completable = isCompletable;
+                missionCardView.SetAchievedRequirements(usedRooms);
+            }
 
             RefillMissionHand();
             SignalsHub.DispatchAsync(new MissionsUpdatedSignal());
@@ -171,16 +175,22 @@ namespace _Scripts.Missions
             var startingRooms = sharedRooms.SelectMany(sharedRoom =>
                     sharedRoom.AdjacentRooms.Where(room =>
                         !room.IsUsed &&
-                        missionDto.Requirements.Any(room.IsFulfilling) || room.HasType(RoomType.Hallway)))
+                        (missionDto.Requirements.Any(room.IsFulfilling) || room.HasType(RoomType.Hallway))))
                 .Distinct();
             foreach (var startingRoom in startingRooms)
             {
                 var fulfilledRequirementIndex = missionDto.Requirements.FindIndex(startingRoom.IsFulfilling);
                 var startingRequirements = missionDto.Requirements.Where((t, i) => i != fulfilledRequirementIndex).ToList();
                 var inputSearch = new ApartmentMissionSearchDto(startingRequirements, new List<DungeonRoomModel>{ startingRoom }, missionDto.RequiredWindows - startingRoom.WindowCount);
-                if (TrySearchApartmentMission(inputSearch, out roomsToUse))
+                if (TrySearchApartmentMission(inputSearch, out var alternativeRoomsToUse))
                 {
+                    roomsToUse = alternativeRoomsToUse;
                     return true;
+                }
+
+                if (alternativeRoomsToUse.Count > roomsToUse.Count) // TODO: Check the requirements in a better available way
+                {
+                    roomsToUse = alternativeRoomsToUse;
                 }
             }
 
@@ -195,18 +205,25 @@ namespace _Scripts.Missions
                 return true;
             }
             
+            roomsToUse = inputSearch.UsedRooms.Select(room => room).ToList();
+            
             if (GetApartmentRoomOptions(inputSearch, out var outputSearchOptions))
             {
                 foreach (var searchOption in outputSearchOptions)
                 {
-                    if (TrySearchApartmentMission(searchOption, out roomsToUse))
+                    if (TrySearchApartmentMission(searchOption, out var alternativeRoomsToUse))
                     {
+                        roomsToUse = alternativeRoomsToUse;
                         return true;
-                    }  
+                    }
+
+                    if (alternativeRoomsToUse.Count > roomsToUse.Count)
+                    {
+                        roomsToUse = alternativeRoomsToUse;
+                    }
                 }
             }
-
-            roomsToUse = new List<DungeonRoomModel>();
+            
             return false;
         }
 

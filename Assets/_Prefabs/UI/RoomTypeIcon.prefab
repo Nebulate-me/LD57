@@ -38,7 +38,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 30, y: 0}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5309460426742324081
 MonoBehaviour:
@@ -54,7 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backgroundImage: {fileID: 2505827699289640954}
   unfulfilledBackgroundSprite: {fileID: -1651583167, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
-  fulfilledBackgroundSprite: {fileID: -1651583167, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
+  fulfilledBackgroundSprite: {fileID: -999526757, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
   roomTypeIcon: {fileID: 5762613649661815238}
   roomCountText: {fileID: 3719742290885232191}
 --- !u!222 &6933376559325570771

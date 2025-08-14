@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using _Scripts.Cards;
+using _Scripts.Rooms;
+using _Scripts.Utils;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,7 +12,7 @@ using Zenject;
 
 namespace _Scripts.Missions.Apartment
 {
-    public class ApartmentMissionCardView : MonoBehaviour, IPointerClickHandler
+    public class ApartmentMissionCardView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private TextMeshProUGUI missionNameText;
         [SerializeField] private TextMeshProUGUI rewardCountText;
@@ -29,6 +32,7 @@ namespace _Scripts.Missions.Apartment
         
         private ApartmentMissionDto _dto;
         private bool _isCompletable;
+        private List<DungeonRoomModel> _roomsToUse = new();
 
         public ApartmentMissionDto Dto => _dto;
         
@@ -63,25 +67,34 @@ namespace _Scripts.Missions.Apartment
                 objectsToDestroy.Add(objectToDestroy);
             }
 
+            var usedRooms = _roomsToUse.Select(room => room).ToList();
+            
             foreach (var requirement in missionDto.Requirements)
             {
+                var isFulfilled = usedRooms.TryRemoveFirst(room => room.IsFulfilling(requirement), out var _);
                 var roomTypeIconView = _prefabPool.Spawn(roomTypeIconViewPrefab, roomTypeIconContainer)
                     .GetComponent<RoomTypeIconView>();
-                roomTypeIconView.SetUp(requirement);
-                // TODO: Update based on requirement fulfilment
+                roomTypeIconView.SetUp(requirement, isFulfilled);
             }
 
             if (missionDto.RequiredWindows > 0)
             {
                 var roomTypeIconView = _prefabPool.Spawn(roomTypeIconViewPrefab, roomTypeIconContainer)
                     .GetComponent<RoomTypeIconView>();
-                roomTypeIconView.SetUp(missionDto.RequiredWindows);
+                var usedWindows = _roomsToUse.Sum(room => room.WindowCount);
+                roomTypeIconView.SetUp(missionDto.RequiredWindows, usedWindows >= missionDto.RequiredWindows);
             }
 
             foreach (var objectToDestroy in objectsToDestroy)
             {
                 Destroy(objectToDestroy);
             }
+        }
+        
+        public void SetAchievedRequirements(List<DungeonRoomModel> roomsToUse)
+        {
+            _roomsToUse = roomsToUse;
+            SetUpRequirements(_dto);
         }
 
         public void OnSpawn()
@@ -100,6 +113,16 @@ namespace _Scripts.Missions.Apartment
             {
                 _missionManager.CompleteMission(this);
             }
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            // TODO: Implement highlighting used Rooms
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            // TODO Implement unhighlighting used rooms
         }
     }
 }
