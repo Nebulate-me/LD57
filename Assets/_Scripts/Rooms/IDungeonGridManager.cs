@@ -10,5 +10,6 @@ namespace _Scripts.Rooms
         Bounds GetRoomBounds();
         Bounds GetRoomBoundsBasedOnTiles();
         bool IsTileAdjacentToLevelBounds(Vector2Int gridPosition, RoomDirection key);
+        Vector2Int WorldToGrid(Vector2 transformPosition);
     }
 }

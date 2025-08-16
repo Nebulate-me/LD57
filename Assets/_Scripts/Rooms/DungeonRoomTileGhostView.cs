@@ -1,5 +1,6 @@
 using _Scripts.RoomTiles;
 using UnityEngine;
+using Utilities;
 using Zenject;
 
 namespace _Scripts.Rooms
@@ -15,8 +16,11 @@ namespace _Scripts.Rooms
         [SerializeField] private SpriteRenderer floorRenderer;
         [Space]
         [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects;
+        [Space]
+        [SerializeField] private RoomDirectionToGameObjectDictionary windowObjects;
 
         [Inject] private IRoomRegistry _roomRegistry;
+        [Inject] private IDungeonGridManager _dungeonGridManager;
 
         public Color Color
         {
@@ -34,6 +38,13 @@ namespace _Scripts.Rooms
 
             floorRenderer.sprite = _roomRegistry.SharedRoomFloorSprite;
             
+            var tilePosition = _dungeonGridManager.WorldToGrid(transform.position.ToVector2());
+            foreach (var (windowDirection, windowObject) in windowObjects)
+            {
+                var isWindowActive = _dungeonGridManager.IsTileAdjacentToLevelBounds(tilePosition, windowDirection);
+                windowObject.SetActive(isWindowActive);
+            }
+
             foreach (var doorObject in doorObjects.Values)
             {
                 doorObject.SetActive(false);            
@@ -41,7 +52,7 @@ namespace _Scripts.Rooms
             
             foreach (var doorDirection in roomTileCell.Tile.DoorDirections)
             {
-                doorObjects[doorDirection].SetActive(true);
+                doorObjects[doorDirection].SetActive(!windowObjects[doorDirection].activeSelf);
             }
         }
     }

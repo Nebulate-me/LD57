@@ -22,11 +22,9 @@ namespace _Scripts.Rooms
         public void SetUpValid(RoomDto roomDto, RoomDirection roomDirection)
         {
             if (roomDto == null) return; // erroneous case
-            if (_currentRoomDto != roomDto || _currentRoomDirection != roomDirection)
-            {
-                ResetCurrentRoomDto(roomDto, roomDirection);
-            }
             
+            ResetCurrentRoomDto(roomDto, roomDirection);
+
             foreach (var tileGhostView in _roomTileGhostViews)
             {
                 tileGhostView.Color = validPlacementColor;
@@ -36,10 +34,9 @@ namespace _Scripts.Rooms
         public void SetUpInvalid(RoomDto roomDto, RoomDirection roomDirection)
         {
             if (roomDto == null) return; // erroneous case
-            if (_currentRoomDto != roomDto || _currentRoomDirection != roomDirection)
-            {
-                ResetCurrentRoomDto(roomDto, roomDirection);
-            }
+            
+            ResetCurrentRoomDto(roomDto, roomDirection);
+            
             
             foreach (var tileGhostView in _roomTileGhostViews)
             {

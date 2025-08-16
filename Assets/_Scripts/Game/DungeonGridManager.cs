@@ -203,7 +203,7 @@ namespace _Scripts.Game
             return true;
         }
 
-        private Vector2Int WorldToGrid(Vector2 worldPos)
+        public Vector2Int WorldToGrid(Vector2 worldPos)
         {
             return new Vector2Int(
                 Mathf.RoundToInt(worldPos.x + mousePositionOffset.x),
