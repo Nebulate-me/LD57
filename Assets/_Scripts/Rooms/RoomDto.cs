@@ -58,5 +58,10 @@ namespace _Scripts.Rooms
                 tiles.Select(tile => tile.Position.x).ToList().GetCenter(),
                 tiles.Select(tile => tile.Position.y).ToList().GetCenter());
         }
+
+        public bool HasRoomType(RoomType roomType)
+        {
+            return RoomTypes.Contains(roomType);
+        }
     }
 }

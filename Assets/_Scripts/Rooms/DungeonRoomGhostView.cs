@@ -16,7 +16,6 @@ namespace _Scripts.Rooms
         [Inject] private IPrefabPool _prefabPool;
 
         private RoomDto _currentRoomDto;
-        private RoomDirection _currentRoomDirection = RoomDirection.North;
         private List<DungeonRoomTileGhostView> _roomTileGhostViews = new();
         
         public void SetUpValid(RoomDto roomDto, RoomDirection roomDirection)
@@ -57,7 +56,6 @@ namespace _Scripts.Rooms
             }
 
             _currentRoomDto = roomDto;
-            _currentRoomDirection = roomDirection;
 
             var rotatedRoomDto = _currentRoomDto.Rotate(roomDirection); 
 

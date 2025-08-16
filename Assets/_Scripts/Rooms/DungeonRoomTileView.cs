@@ -38,6 +38,7 @@ namespace _Scripts.Rooms
 
         private RoomTileDto _tileDto;
         private RoomDirectionToDungeonRoomTileViewDictionary _adjacentTiles = new();
+        private RoomDto _roomDto;
 
         public Vector2Int GridPosition => gridPosition;
         public List<RoomDirection> OpenDirections => openDirections;
@@ -60,9 +61,11 @@ namespace _Scripts.Rooms
             set => floorRenderer.sprite = _roomRegistry.GetRoomFloorSprite(value);
         }
 
-        public void SetUp(RoomTileCellDto roomTileCell, Vector2Int initialGridPosition, Sprite roomFloorSprite)
+        public void SetUp(RoomTileCellDto roomTileCell, Vector2Int initialGridPosition, Sprite roomFloorSprite,
+            RoomDto selectedRoomDto)
         {
             _tileDto = roomTileCell.Tile;
+            _roomDto = selectedRoomDto;
             gridPosition = initialGridPosition;
             direction = roomTileCell.Direction;
 
@@ -122,14 +125,22 @@ namespace _Scripts.Rooms
                         doorObjects[doorDirection].SetActive(false);
                         continue;
                     }
-                    
+
+                    var isConnectingToSharedRoom = HasRoomType(RoomType.Shared) || adjacentTile.HasRoomType(RoomType.Shared);
+                    var isConnectingUsedRooms = IsUsed && adjacentTile.IsUsed;
+                    var isConnectingUnusedRooms = !IsUsed && !adjacentTile.IsUsed;
                     doorObjects[doorDirection]
-                        .SetActive(IsUsed && adjacentTile.IsUsed || !IsUsed && !adjacentTile.IsUsed);
+                        .SetActive(isConnectingUsedRooms || isConnectingUnusedRooms || isConnectingToSharedRoom);
                     continue;
                 }
                 
                 doorObjects[doorDirection].SetActive(!IsUsed);
             }
+        }
+
+        private bool HasRoomType(RoomType roomType)
+        {
+            return _roomDto.HasRoomType(roomType);
         }
 
         private void UpdateWindows()

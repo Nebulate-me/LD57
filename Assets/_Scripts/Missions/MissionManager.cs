@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
@@ -102,7 +103,7 @@ namespace _Scripts.Missions
             _soundManager.PlaySound(SoundType.CompleteMission);
             SignalsHub.DispatchAsync(new PatternMissionCompletedSignal(patternMissionCard.Dto));
             _lastCompletedMissionName = patternMissionCard.Dto.Name;
-
+            
             UpdateMissions();
         }
 
@@ -130,6 +131,13 @@ namespace _Scripts.Missions
             SignalsHub.DispatchAsync(new ApartmentMissionCompletedSignal(apartmentMissionCard.Dto));
             _lastCompletedMissionName = apartmentMissionCard.Dto.Name;
 
+            StartCoroutine(UpdateMissionCoroutine());
+        }
+        
+        private IEnumerator UpdateMissionCoroutine()
+        {
+            yield return new WaitForEndOfFrame();
+            
             UpdateMissions();
         }
 
@@ -161,7 +169,8 @@ namespace _Scripts.Missions
                 var missionCardView = _prefabPool.Spawn(apartmentMissionCardPrefab, missionContainer)
                     .GetComponent<ApartmentMissionCardView>();
                 missionCardView.SetUp(missionDto);
-                missionCardView.Completable = IsApartmentMissionCompletable(missionCardView.Dto, out _);
+                missionCardView.Completable = IsApartmentMissionCompletable(missionCardView.Dto, out var usedRooms);
+                missionCardView.SetAchievedRequirements(usedRooms);
                 _apartmentMissionCardViews.Add(missionCardView);
             }
         }
