@@ -286,7 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38992331f88c4333a4cd88f1bd0a22a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallTileTransform: {fileID: 1139272484422532496}
+  wallTileTransform: {fileID: 5102338005644858406}
   wallTileImage: {fileID: 1775943175298040638}
   furnitureTransform: {fileID: 4628673188994019952}
   furnitureTileImage: {fileID: 4132764699360574896}

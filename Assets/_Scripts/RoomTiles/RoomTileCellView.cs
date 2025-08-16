@@ -1,6 +1,7 @@
 using System;
 using _Scripts.Rooms;
 using Plugins.Sirenix.Odin_Inspector.Modules;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -38,7 +39,7 @@ namespace _Scripts.RoomTiles
                 doorObject.SetActive(false);
             }
 
-            var rotatedDoorDirections = roomTileCell.Tile.DoorDirections.Rotate(roomTileCell.Direction);
+            var rotatedDoorDirections = roomTileCell.Tile.DoorDirections; // .Rotate(roomTileCell.Direction);
             foreach (var tileDoorDirection in rotatedDoorDirections)
             {
                 doorObjects[tileDoorDirection].SetActive(true);
