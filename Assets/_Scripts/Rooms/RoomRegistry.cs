@@ -14,8 +14,9 @@ namespace _Scripts.Rooms
         [SerializeField] private Sprite defaultRoomTypeIcon;
         [SerializeField] private RoomTypeToSpriteDictionary roomTypeSprites;
         [Header("Floor")]
-        [SerializeField] private RoomFloorColor unusedRoomFloorColor;
-        [SerializeField] private RoomFloorColor sharedRoomFloorColor;
+        [SerializeField] private RoomFloorColor unusedRoomFloorColor = RoomFloorColor.Gray;
+        [SerializeField] private RoomFloorColor sharedRoomFloorColor = RoomFloorColor.Black;
+        [SerializeField] private RoomFloorColor highlightFloorColor = RoomFloorColor.Yellow;
         [SerializeField] private FloorColorToSpriteDictionary floorColorSprites;
 
         [ShowInInspector, ReadOnly] private List<RoomFloorColor> _usedFloorColors = new();
@@ -24,6 +25,8 @@ namespace _Scripts.Rooms
         
         public Sprite UnusedRoomFloorSprite => floorColorSprites.TryGetValue(unusedRoomFloorColor, out var roomFloorSprite) ? roomFloorSprite : null;
         public Sprite SharedRoomFloorSprite => floorColorSprites.TryGetValue(sharedRoomFloorColor, out var roomFloorSprite) ? roomFloorSprite : null;
+        public RoomFloorColor UnusedRoomColor => unusedRoomFloorColor;
+        public RoomFloorColor HighlightColor => highlightFloorColor;
         
         public Sprite GetRoomTypeIcon(RoomType roomType)
         {
@@ -37,17 +40,20 @@ namespace _Scripts.Rooms
                 : UnusedRoomFloorSprite;
         }
 
-        public RoomFloorColor GetUnusedColor()
+        public RoomFloorColor TakeUnusedColor()
         {
             if (floorColorSprites.IsEmpty()) return RoomFloorColor.Black;
             
             var unusedColors = floorColorSprites.Keys
-                .Where(color => color != unusedRoomFloorColor && color != sharedRoomFloorColor && !_usedFloorColors.Contains(color))
+                .Where(color => color != unusedRoomFloorColor && 
+                                color != sharedRoomFloorColor &&
+                                color != highlightFloorColor &&
+                                !_usedFloorColors.Contains(color))
                 .ToList();
             if (unusedColors.IsEmpty())
             {
                 _usedFloorColors = new List<RoomFloorColor>();
-                return GetUnusedColor();
+                return TakeUnusedColor();
             }
 
             _randomService.ShuffleInPlace(unusedColors);
@@ -55,6 +61,6 @@ namespace _Scripts.Rooms
             _usedFloorColors.Add(colorToUse);
             
             return colorToUse;
-        } 
+        }
     }
 }

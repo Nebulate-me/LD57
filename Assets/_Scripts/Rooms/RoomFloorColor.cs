@@ -11,8 +11,8 @@ namespace _Scripts.Rooms
         Green,
         Pink,
         Red,
-        Orange,
         Sky,
-        Sage
+        Sage,
+        Yellow,
     }
 }

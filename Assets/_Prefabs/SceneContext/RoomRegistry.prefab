@@ -56,8 +56,9 @@ MonoBehaviour:
     - {fileID: -1508834631, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
   unusedRoomFloorColor: 0
   sharedRoomFloorColor: 1
+  highlightFloorColor: 12
   floorColorSprites:
-    keyData: 0000000001000000020000000300000004000000050000000600000007000000080000000a000000090000000b000000
+    keyData: 0000000001000000020000000300000004000000050000000600000007000000080000000a0000000b0000000c000000
     valueData:
     - {fileID: 1625352318, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
     - {fileID: -1700980749, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
@@ -69,5 +70,5 @@ MonoBehaviour:
     - {fileID: 1269558959, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
     - {fileID: 1969821803, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
     - {fileID: -1911756444, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
-    - {fileID: -71258625, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
     - {fileID: -1529466858, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
+    - {fileID: -71258625, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}

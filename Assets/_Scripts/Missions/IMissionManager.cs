@@ -7,5 +7,7 @@ namespace _Scripts.Missions
         int CompletableMissionsCount { get; }
         void CompleteMission(PatternMissionCardView patternMissionCard);
         void CompleteMission(ApartmentMissionCardView apartmentMissionCard);
+        void HighlightMission(ApartmentMissionCardView apartmentMissionCardView);
+        void UnhighlightMission(ApartmentMissionCardView apartmentMissionCardView);
     }
 }

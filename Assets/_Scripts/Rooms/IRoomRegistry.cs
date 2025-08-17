@@ -6,9 +6,11 @@ namespace _Scripts.Rooms
     {
         Sprite UnusedRoomFloorSprite { get; }
         Sprite SharedRoomFloorSprite { get; }
+        RoomFloorColor UnusedRoomColor { get; }
+        RoomFloorColor HighlightColor { get; }
         
         Sprite GetRoomTypeIcon(RoomType roomType);
         Sprite GetRoomFloorSprite(RoomFloorColor color);
-        RoomFloorColor GetUnusedColor();
+        RoomFloorColor TakeUnusedColor();
     }
 }

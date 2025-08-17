@@ -117,12 +117,12 @@ namespace _Scripts.Missions.Apartment
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            // TODO: Implement highlighting used Rooms
+            _missionManager.HighlightMission(this);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            // TODO Implement unhighlighting used rooms
+            _missionManager.UnhighlightMission(this);
         }
     }
 }

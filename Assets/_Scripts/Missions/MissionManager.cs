@@ -12,7 +12,6 @@ using _Scripts.Utils;
 using ModestTree;
 using Signals;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 using Utilities;
 using Utilities.Monads;
 using Utilities.Prefabs;
@@ -41,6 +40,7 @@ namespace _Scripts.Missions
         private readonly List<ApartmentMissionCardView> _apartmentMissionCardViews = new();
         private int _completedMissionCount;
         private string _lastCompletedMissionName;
+        private List<DungeonRoomModel> _highlightedRooms = new();
 
         private void OnEnable()
         {
@@ -111,7 +111,7 @@ namespace _Scripts.Missions
         {
             if (!IsApartmentMissionCompletable(apartmentMissionCard.Dto, out var roomsToUse)) return;
 
-            var apartmentFloorColor = _roomRegistry.GetUnusedColor();
+            var apartmentFloorColor = _roomRegistry.TakeUnusedColor();
             foreach (var dungeonRoomModel in roomsToUse)
             {
                 dungeonRoomModel.IsUsed = true;
@@ -133,7 +133,31 @@ namespace _Scripts.Missions
 
             StartCoroutine(UpdateMissionCoroutine());
         }
-        
+
+        public void HighlightMission(ApartmentMissionCardView apartmentMissionCard)
+        {
+            var isCompletable = IsApartmentMissionCompletable(apartmentMissionCard.Dto, out var roomsToUse);
+            
+            var apartmentFloorColor = _roomRegistry.HighlightColor;
+            foreach (var dungeonRoomModel in roomsToUse)
+            {
+                dungeonRoomModel.SetFloorColor(apartmentFloorColor);
+            }
+
+            _highlightedRooms = roomsToUse;
+        }
+
+        public void UnhighlightMission(ApartmentMissionCardView apartmentMissionCard)
+        {
+            var apartmentFloorColor = _roomRegistry.UnusedRoomColor;
+            
+            foreach (var dungeonRoomModel in _highlightedRooms)
+            {
+                if (!dungeonRoomModel.IsUsed)
+                    dungeonRoomModel.SetFloorColor(apartmentFloorColor);
+            }
+        }
+
         private IEnumerator UpdateMissionCoroutine()
         {
             yield return new WaitForEndOfFrame();
