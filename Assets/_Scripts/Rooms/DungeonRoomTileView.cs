@@ -4,6 +4,7 @@ using System.Linq;
 using _Scripts.Missions.Apartment;
 using _Scripts.RoomTiles;
 using _Scripts.Utils;
+using ModestTree;
 using Plugins.Sirenix.Odin_Inspector.Modules;
 using Signals;
 using Sirenix.OdinInspector;
@@ -38,7 +39,9 @@ namespace _Scripts.Rooms
 
         private RoomTileDto _tileDto;
         private RoomDirectionToDungeonRoomTileViewDictionary _adjacentTiles = new();
+        private RoomDirectionToDungeonRoomTileCellDtoDictionary _adjacentGhostTiles = new();
         private RoomDto _roomDto;
+        private List<RoomDirection> _potentialGhostTileDirections = new();
 
         public Vector2Int GridPosition => gridPosition;
         public List<RoomDirection> OpenDirections => openDirections;
@@ -96,6 +99,7 @@ namespace _Scripts.Rooms
             UpdateWindows();
             
             SetUpAdjacentTiles();
+            UpdatePotentialGhostTileDirections();
         }
 
         private void SetUpAdjacentTiles()
@@ -106,6 +110,12 @@ namespace _Scripts.Rooms
             {
                 AddAdjacentTile(adjacentTile);
             }
+        }
+
+        private void UpdatePotentialGhostTileDirections()
+        {
+            _potentialGhostTileDirections =
+                doorDirections.Where(doorDirection => !_adjacentTiles.ContainsKey(doorDirection)).ToList();
         }
 
         private void UpdateDoors()
@@ -133,7 +143,19 @@ namespace _Scripts.Rooms
                         .SetActive(isConnectingUsedRooms || isConnectingUnusedRooms || isConnectingToSharedRoom);
                     continue;
                 }
-                
+
+                if (!IsUsed && _adjacentGhostTiles.TryGetValue(doorDirection, out var adjacentGhostTileDto))
+                {
+                    if (!adjacentGhostTileDto.Tile.DoorDirections.Contains(doorDirection.Invert()))
+                    {
+                        doorObjects[doorDirection].SetActive(false);
+                        continue;
+                    }
+                    
+                    doorObjects[doorDirection].SetActive(true);
+                    continue;
+                }
+
                 doorObjects[doorDirection].SetActive(!IsUsed);
             }
         }
@@ -152,8 +174,9 @@ namespace _Scripts.Rooms
         {
             _isUsed = false;
             _windowCount = 0;
-
+            
             SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
+            SignalsHub.AddListener<DungeonRoomGhostViewMovedSignal>(OnGhostViewMoved);
             SignalsHub.AddListener<ApartmentMissionCompletedSignal>(OnMissionCompleted);
         }
 
@@ -162,8 +185,10 @@ namespace _Scripts.Rooms
             _isUsed = false;
             _tileDto = null;
             _adjacentTiles = new RoomDirectionToDungeonRoomTileViewDictionary();
+            _adjacentGhostTiles = new RoomDirectionToDungeonRoomTileCellDtoDictionary();
 
             SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
+            SignalsHub.RemoveListener<DungeonRoomGhostViewMovedSignal>(OnGhostViewMoved);
             SignalsHub.RemoveListener<ApartmentMissionCompletedSignal>(OnMissionCompleted);
         }
 
@@ -177,6 +202,33 @@ namespace _Scripts.Rooms
             if (!signal.Room.GridPosition.IsAdjacent(GridPosition)) return;
 
             AddAdjacentTile(signal.Room);
+            UpdatePotentialGhostTileDirections();
+            UpdateDoors();
+        }
+        
+        private void OnGhostViewMoved(DungeonRoomGhostViewMovedSignal signal)
+        {
+            if (_isUsed || (_potentialGhostTileDirections.IsEmpty() && _adjacentGhostTiles.IsEmpty())) return;
+
+            if (!signal.IsValid)
+            {
+                _adjacentGhostTiles.Clear();
+                UpdateDoors();
+                return;
+            }
+            
+            foreach (var doorDirection in _potentialGhostTileDirections)
+            {
+                var adjacentPosition = gridPosition + doorDirection.ToVector2Int();
+                if (signal.RoomDto.TryGetTile(adjacentPosition, out var adjacentGhostTile))
+                {
+                    _adjacentGhostTiles[doorDirection] = adjacentGhostTile;
+                }
+                else
+                {
+                    _adjacentGhostTiles.Remove(doorDirection);
+                }
+            }
             UpdateDoors();
         }
 
@@ -189,6 +241,11 @@ namespace _Scripts.Rooms
 
     [Serializable]
     public class RoomDirectionToDungeonRoomTileViewDictionary : UnitySerializedDictionary<RoomDirection, DungeonRoomTileView>
+    {
+    }
+    
+    [Serializable]
+    public class RoomDirectionToDungeonRoomTileCellDtoDictionary : UnitySerializedDictionary<RoomDirection, RoomTileCellDto>
     {
     }
 }

@@ -33,8 +33,7 @@ namespace _Scripts.Cards
         private RoomDto _roomDto;
         private readonly List<RoomTileCellView> _roomTilCellViews = new();
         public RoomDto RoomDto => _roomDto;
-
-
+        
         public void SetUp(RoomDto roomDto)
         {
             _roomDto = roomDto;

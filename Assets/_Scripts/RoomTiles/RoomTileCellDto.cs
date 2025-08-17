@@ -21,6 +21,15 @@ namespace _Scripts.RoomTiles
             furnitureSprite = tileCell.FurnitureSprite;
             furnitureDirection = tileCell.FurnitureDirection;
         }
+        
+        public RoomTileCellDto(Vector2Int newPosition, RoomTileCellDto newTileDto)
+        {
+            position = newPosition;
+            direction = newTileDto.Direction;
+            tile = newTileDto.Tile;
+            furnitureSprite = newTileDto.FurnitureSprite;
+            furnitureDirection = newTileDto.FurnitureDirection;
+        }
 
         public RoomTileCellDto(Vector2Int newPosition, RoomTileCellDto newTileDto, RoomDirection newDirection)
         {

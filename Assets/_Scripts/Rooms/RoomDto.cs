@@ -51,6 +51,16 @@ namespace _Scripts.Rooms
             
             return new RoomDto(name, roomTypes, rotatedTiles);
         }
+        
+        public RoomDto Shift(Vector2Int positionShift)
+        {
+            if (positionShift == Vector2.zero) return this;
+
+            var shiftedTiles = tiles.Select(tile =>
+                new RoomTileCellDto(tile.Position + positionShift, tile)).ToList();
+            
+            return new RoomDto(name, roomTypes, shiftedTiles);
+        }
 
         public Vector2 GetCenter()
         {
@@ -62,6 +72,11 @@ namespace _Scripts.Rooms
         public bool HasRoomType(RoomType roomType)
         {
             return RoomTypes.Contains(roomType);
+        }
+
+        public bool TryGetTile(Vector2Int position, out RoomTileCellDto tileCellDto)
+        {
+            return tiles.TryGetFirst(tile => tile.Position == position, out tileCellDto);
         }
     }
 }

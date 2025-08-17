@@ -10,6 +10,7 @@ namespace _Scripts.Rooms
         Bounds GetRoomBounds();
         Bounds GetRoomBoundsBasedOnTiles();
         bool IsTileAdjacentToLevelBounds(Vector2Int gridPosition, RoomDirection key);
+        bool IsTileAdjacentToDoorOrEmpty(Vector2Int tilePosition, RoomDirection doorDirection);
         Vector2Int WorldToGrid(Vector2 transformPosition);
     }
 }

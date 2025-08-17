@@ -52,7 +52,10 @@ namespace _Scripts.Rooms
             
             foreach (var doorDirection in roomTileCell.Tile.DoorDirections)
             {
-                doorObjects[doorDirection].SetActive(!windowObjects[doorDirection].activeSelf);
+                var isActiveWindow = windowObjects[doorDirection].activeSelf;
+                var isAdjacentDoorOrEmpty =
+                    _dungeonGridManager.IsTileAdjacentToDoorOrEmpty(tilePosition, doorDirection);
+                doorObjects[doorDirection].SetActive(!isActiveWindow && isAdjacentDoorOrEmpty);
             }
         }
     }

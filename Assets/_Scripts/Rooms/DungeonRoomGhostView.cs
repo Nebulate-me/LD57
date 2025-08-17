@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using _Scripts.Utils;
+using Signals;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Utilities;
 using Utilities.Prefabs;
@@ -14,15 +17,15 @@ namespace _Scripts.Rooms
         [SerializeField] private GameObject ghostTileSprite;
 
         [Inject] private IPrefabPool _prefabPool;
+        [Inject] private IDungeonGridManager _dungeonGridManager;
 
         private RoomDto _currentRoomDto;
         private List<DungeonRoomTileGhostView> _roomTileGhostViews = new();
-        
+
         public void SetUpValid(RoomDto roomDto, RoomDirection roomDirection)
         {
             if (roomDto == null) return; // erroneous case
-            
-            ResetCurrentRoomDto(roomDto, roomDirection);
+            ResetCurrentRoomDto(roomDto, roomDirection, isValid: true);
 
             foreach (var tileGhostView in _roomTileGhostViews)
             {
@@ -34,7 +37,7 @@ namespace _Scripts.Rooms
         {
             if (roomDto == null) return; // erroneous case
             
-            ResetCurrentRoomDto(roomDto, roomDirection);
+            ResetCurrentRoomDto(roomDto, roomDirection, isValid: false);
             
             
             foreach (var tileGhostView in _roomTileGhostViews)
@@ -43,7 +46,7 @@ namespace _Scripts.Rooms
             }
         }
         
-        private void ResetCurrentRoomDto(RoomDto roomDto, RoomDirection roomDirection)
+        private void ResetCurrentRoomDto(RoomDto roomDto, RoomDirection roomDirection, bool isValid)
         {
             if (_currentRoomDto != null)
             {
@@ -63,11 +66,14 @@ namespace _Scripts.Rooms
             foreach (var roomTileCell in rotatedRoomDto.Tiles)
             {
                 var tileGhostVew = _prefabPool.Spawn(ghostTileSprite, ghostTileContainer).GetComponent<DungeonRoomTileGhostView>();
-                tileGhostVew.transform.localPosition = (roomTileCell.Position - roomTileStartingPosition).ToVector3();
+                tileGhostVew.transform.localPosition = (roomTileCell.Position - roomTileStartingPosition).ToVector3(); // FIXME: gridToWorld this?
                 tileGhostVew.SetUp(roomTileCell);
 
                 _roomTileGhostViews.Add(tileGhostVew);
             }
+
+            var positionShift = _dungeonGridManager.WorldToGrid(transform.position.ToVector2Int()) - roomTileStartingPosition;
+            SignalsHub.DispatchAsync(new DungeonRoomGhostViewMovedSignal(rotatedRoomDto.Shift(positionShift), isValid));
         }
     }
 }

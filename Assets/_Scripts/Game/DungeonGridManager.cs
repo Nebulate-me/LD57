@@ -73,6 +73,7 @@ namespace _Scripts.Game
             if (Input.GetMouseButtonDown(1))
             {
                 _roomGhostInstance.gameObject.SetActive(false);
+                SignalsHub.DispatchAsync(new DungeonRoomGhostViewMovedSignal(null, isValid: false));
                 handManager.DeselectRoomCard();
                 return;
             }
@@ -145,9 +146,9 @@ namespace _Scripts.Game
             TileDirectionConfiguration adjacentConfiguration)
         {
             var allOpenDirectionsOpen =
-                adjacentConfiguration.OpenDirections.All(openDirection => dtoConfiguration.OpenDirections.Contains(openDirection) || dtoConfiguration.AnyDirections.Contains(openDirection) );
+                adjacentConfiguration.OpenDirections.All(openDirection => dtoConfiguration.OpenDirections.Contains(openDirection) || dtoConfiguration.AnyDirections.Contains(openDirection));
             var allClosedDirectionsClosed =
-                adjacentConfiguration.ClosedDirections.All(closedDirection => dtoConfiguration.ClosedDirections.Contains(closedDirection));
+                adjacentConfiguration.ClosedDirections.All(closedDirection => dtoConfiguration.ClosedDirections.Contains(closedDirection) || dtoConfiguration.AnyDirections.Contains(closedDirection) );
 
             return allOpenDirectionsOpen && allClosedDirectionsClosed;
         }
@@ -277,7 +278,16 @@ namespace _Scripts.Game
         public bool IsTileAdjacentToLevelBounds(Vector2Int gridPosition, RoomDirection direction)
         {
             var adjacentPosition = gridPosition + direction.ToVector2Int();
-            return !IsPositionInsideLevelBounds(adjacentPosition);
+            return IsPositionInsideLevelBounds(gridPosition) && !IsPositionInsideLevelBounds(adjacentPosition);
+        }
+        
+        public bool IsTileAdjacentToDoorOrEmpty(Vector2Int gridPosition, RoomDirection direction)
+        {
+            var adjacentPosition = gridPosition + direction.ToVector2Int();
+            if (!_roomTiles.TryGetFirst(tile => tile.GridPosition == adjacentPosition, out var adjacentTile))
+                return true;
+
+            return adjacentTile.DoorDirections.Contains(direction.Invert());
         }
 
         public Bounds GetRoomBounds()
