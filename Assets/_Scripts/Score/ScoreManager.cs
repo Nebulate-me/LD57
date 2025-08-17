@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
 using _Scripts.Game;
+using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Missions.Apartment;
-using _Scripts.Missions.Pattern;
 using Signals;
 using TMPro;
 using UnityEngine;
@@ -24,14 +24,18 @@ namespace _Scripts.Score
         [Inject] private IHandManager handManager;
         [Inject] private IMissionManager missionManager;
         [Inject] private ISoundManager soundManager;
+        [Inject] private IGameTimerController _gameTimerController;
         
-        private int currentScore = 0;
+        private int _currentScore = 0;
+
+        public int Score => _currentScore;
 
         private void OnEnable()
         {
             SignalsHub.AddListener<ApartmentMissionCompletedSignal>(OnApartmentMissionCompleted);
             SignalsHub.AddListener<DeckUpdatedSignal>(OnDeckUpdated);
             SignalsHub.AddListener<MissionsUpdatedSignal>(OnMissionsUpdated);
+            _gameTimerController.OnTimerFinished.AddListener(OnTimerFinished);
         }
         
         private void OnDisable()
@@ -39,11 +43,12 @@ namespace _Scripts.Score
             SignalsHub.RemoveListener<ApartmentMissionCompletedSignal>(OnApartmentMissionCompleted);
             SignalsHub.RemoveListener<DeckUpdatedSignal>(OnDeckUpdated);
             SignalsHub.RemoveListener<MissionsUpdatedSignal>(OnMissionsUpdated);
+            _gameTimerController.OnTimerFinished.RemoveListener(OnTimerFinished);
         }
 
         private void OnApartmentMissionCompleted(ApartmentMissionCompletedSignal signal)
         {
-            currentScore += signal.Dto.RewardScore;
+            _currentScore += signal.Dto.RewardScore;
             UpdateScoreText();
         }
         
@@ -55,6 +60,11 @@ namespace _Scripts.Score
         private void OnMissionsUpdated(MissionsUpdatedSignal signal)
         {
             CheckDefeat();
+        }
+        
+        private void OnTimerFinished()
+        {
+            ShowTimeOut();
         }
 
         private void CheckDefeat()
@@ -71,8 +81,17 @@ namespace _Scripts.Score
         {
             defeatText.text = $"We are out of Resources to build,\n" +
                               $"{GetCurrentRank()}!\n" +
-                              $"Final Score: {currentScore}\n" +
+                              $"Final Score: {_currentScore}\n" +
                               $"Press \"R\" to try again.";
+            defeatText.gameObject.SetActive(true);
+        }
+        
+        private void ShowTimeOut()
+        {
+            defeatText.text = $"Время вышло! Ваш ранг:\n" +
+                              $"{GetCurrentRank()}!\n" +
+                              $"Очки: {_currentScore}\n" +
+                              $"Нажмите \"R\", чтобы начать заново.";
             defeatText.gameObject.SetActive(true);
         }
 
@@ -94,13 +113,13 @@ namespace _Scripts.Score
         private void UpdateScoreText()
         {
             scoreText.text = $"Очки\n" +
-                             $"*{currentScore}*\n";
+                             $"*{_currentScore}*\n";
             // $"{GetCurrentRank()}";
         }
 
         private string GetCurrentRank()
         {
-            var currentRank = scoreRanks.Where(rank => rank.MinScore <= currentScore).OrderByDescending(rank => rank.MinScore).First();
+            var currentRank = scoreRanks.Where(rank => rank.MinScore <= _currentScore).OrderByDescending(rank => rank.MinScore).First();
             return currentRank.Rank;
         }
         

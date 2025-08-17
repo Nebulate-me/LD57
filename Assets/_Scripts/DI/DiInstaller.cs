@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Scripts.Cards;
 using _Scripts.Game;
+using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Rooms;
 using _Scripts.Score;
@@ -25,6 +26,7 @@ namespace _Scripts.DI
         [SerializeField] private DungeonGridManager dungeonGridManager;
         [SerializeField] private MissionManager missionManager;
         [SerializeField] private ScoreManager scoreManager;
+        [SerializeField] private GameTimerController gameTimer;
 
         [Header("Prefabs")]
         [SerializeField] private GameObject roomRegistryPrefab;
@@ -58,6 +60,7 @@ namespace _Scripts.DI
             Container.BindInterfacesTo<DungeonGridManager>().FromInstance(dungeonGridManager).AsSingle();
             Container.BindInterfacesTo<MissionManager>().FromInstance(missionManager).AsSingle();
             Container.BindInterfacesTo<ScoreManager>().FromInstance(scoreManager).AsSingle();
+            Container.BindInterfacesTo<GameTimerController>().FromInstance(gameTimer).AsSingle();
 
             var roomRegistry = Container.InstantiatePrefab(roomRegistryPrefab, transform).GetComponent<RoomRegistry>();
             Container.BindInterfacesTo<RoomRegistry>().FromInstance(roomRegistry).AsSingle();
