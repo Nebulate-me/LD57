@@ -98,11 +98,11 @@ namespace _Scripts.Score
         
         private void ShowTimeOut()
         {
-            defeatText.text = $"Время вышло! Ваш ранг:\n" +
-                              $"{GetCurrentRank()}!\n" +
-                              $"Очки: {_currentScore}\n" +
-                              $"Нажмите \"R\", чтобы начать заново.";
-            defeatText.gameObject.SetActive(true);
+            // defeatText.text = $"Время вышло! Ваш ранг:\n" +
+            //                   $"{GetCurrentRank()}!\n" +
+            //                   $"Очки: {_currentScore}\n" +
+            //                   $"Нажмите \"R\", чтобы начать заново.";
+            // defeatText.gameObject.SetActive(true);
         }
 
         private void Start()

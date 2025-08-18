@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using _Scripts.Popups.HighscoreTable;
+using Signals;
 using UnityEngine;
 
 namespace _Scripts.Score
@@ -15,6 +17,8 @@ namespace _Scripts.Score
         [SerializeField] private string jsonFileName = "highscores.json";
         [SerializeField] private string textFileName = "highscores.txt";
 
+        private const string PlayerPrefsKey = "Highscores";
+        
         public List<HighscoreEntry> Entries => _data.entries;
 
         private HighscoreData _data = new();
@@ -31,6 +35,7 @@ namespace _Scripts.Score
             _data.entries.Add(new HighscoreEntry(playerName, score));
             SortAndTrim();
             Save();
+            SignalsHub.DispatchAsync(new GameFinishedSignal());
         }
 
         public void ClearAll()
@@ -69,15 +74,45 @@ namespace _Scripts.Score
         {
             try
             {
-                #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-                if (File.Exists(JsonPath))
+                #if UNITY_STANDALONE_WIN
+                try
                 {
-                    var json = File.ReadAllText(JsonPath);
-                    _data = JsonUtility.FromJson<HighscoreData>(json) ?? new HighscoreData();
+                    if (File.Exists(JsonPath))
+                    {
+                        var json = File.ReadAllText(JsonPath);
+                        _data = JsonUtility.FromJson<HighscoreData>(json) ?? new HighscoreData();
+                        Debug.Log($"{_data.entries.Count} Highscores read from: {TextPath}");
+                    }
+                    else
+                    {
+                        _data = new HighscoreData();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[Highscores] File Load failed: {ex}");
+                    _data = new HighscoreData();
                 }
                 #endif
                 #if UNITY_WEBGL
-                // TODO
+                try
+                {
+                    if (PlayerPrefs.HasKey(PlayerPrefsKey))
+                    {
+                        var json = PlayerPrefs.GetString(PlayerPrefsKey, "{}");
+                        _data = JsonUtility.FromJson<HighscoreData>(json) ?? new HighscoreData();
+                        Debug.Log($"{_data.entries.Count} Highscores read");
+                    }
+                    else
+                    {
+                        _data = new HighscoreData();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[Highscores] WebGL load failed: {ex}");
+                    _data = new HighscoreData();
+                }
                 #endif
             }
             catch (Exception ex)
@@ -91,17 +126,30 @@ namespace _Scripts.Score
 
         private void Save()
         {
+            var json = JsonUtility.ToJson(_data, true);
+
+        #if UNITY_WEBGL
             try
             {
-                var directoryPath = Path.GetDirectoryName(JsonPath); 
-                Directory.CreateDirectory(directoryPath);
-                var json = JsonUtility.ToJson(_data, true);
-                File.WriteAllText(JsonPath, json);
+                PlayerPrefs.SetString(PlayerPrefsKey, json);
+                PlayerPrefs.Save(); // important on WebGL
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                Debug.LogError($"Failed to save highscores: {ex}");
+                Debug.LogError($"[Highscores] WebGL save failed: {ex}");
             }
+        #endif
+        #if UNITY_STANDALONE_WIN
+            try
+            {
+                System.IO.Directory.CreateDirectory(Path.GetDirectoryName(JsonPath) ?? string.Empty);
+                System.IO.File.WriteAllText(JsonPath, json);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[Highscores] Save failed: {ex}");
+            }
+        #endif
         }
 
         private void SortAndTrim()
