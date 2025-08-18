@@ -18,7 +18,6 @@ namespace _Scripts.Game.Timer
         [SerializeField] private string format = "{0:00}:{1:00}";
 
         [Header("Timing")] [SerializeField] private float startSeconds = 600f;
-        [SerializeField] private bool autoStart = true;
         [SerializeField] private bool ignoreTimeScale;
 
         public UnityEvent OnTimerFinished { get; } = new();
@@ -31,11 +30,6 @@ namespace _Scripts.Game.Timer
         {
             ResetTimer();
             UpdateLabel();
-        }
-
-        private void OnEnable()
-        {
-            if (autoStart) StartTimer();
         }
 
         private void Update()

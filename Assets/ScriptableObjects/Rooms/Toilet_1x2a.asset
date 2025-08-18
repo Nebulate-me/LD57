@@ -22,6 +22,6 @@ MonoBehaviour:
     furnitureDirection: 2
   - position: {x: 0, y: 1}
     direction: 2
-    tile: {fileID: 11400000, guid: 2b5d2c69ee9cca44782e91d38c2369b5, type: 2}
+    tile: {fileID: 11400000, guid: f1695824af97223449e6d74fdbbd0dbf, type: 2}
     furnitureSprite: {fileID: -1929502500, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
     furnitureDirection: 1

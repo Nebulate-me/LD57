@@ -6,6 +6,7 @@ using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Missions.Apartment;
 using Signals;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -25,10 +26,18 @@ namespace _Scripts.Score
         [Inject] private IMissionManager missionManager;
         [Inject] private ISoundManager soundManager;
         [Inject] private IGameTimerController _gameTimerController;
+        [Inject] private IScoreSaver _scoreSaver;
         
-        private int _currentScore = 0;
+        [ShowInInspector, ReadOnly] private int _currentScore = 0;
+        [ShowInInspector, ReadOnly] private string _currentPlayerName = string.Empty; 
 
         public int Score => _currentScore;
+        public void StartGame(string playerName)
+        {
+            _currentScore = 0;
+            _currentPlayerName = playerName;
+            _gameTimerController.StartTimer();
+        }
 
         private void OnEnable()
         {
@@ -64,6 +73,7 @@ namespace _Scripts.Score
         
         private void OnTimerFinished()
         {
+            _scoreSaver.SubmitScore(_currentScore, _currentPlayerName);   
             ShowTimeOut();
         }
 
