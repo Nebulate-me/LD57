@@ -208,7 +208,7 @@ namespace _Scripts.Missions
             var startingRooms = sharedRooms.SelectMany(sharedRoom =>
                     sharedRoom.AdjacentRooms.Where(room =>
                         !room.IsUsed &&
-                        (missionDto.Requirements.Any(room.IsFulfilling) || room.HasType(RoomType.Hallway))))
+                        ((missionDto.Requirements.Any(room.IsFulfilling) && room.HasType(RoomType.LivingRoom)) || room.HasType(RoomType.Hallway))))
                 .Distinct();
             foreach (var startingRoom in startingRooms)
             {
