@@ -43,7 +43,7 @@ namespace _Scripts.Rooms
         [ShowInInspector, ReadOnly] public string RoomName => _roomDto.Name;
         [ShowInInspector, ReadOnly] public List<RoomType> RoomTypes => _roomDto.RoomTypes;
         [ShowInInspector, ReadOnly] public int AdjacentRoomCount => _adjacentRooms.Count;
-        public List<DungeonRoomModel> AdjacentRooms => _adjacentRooms;
+        [HideInInspector] public List<DungeonRoomModel> AdjacentRooms => _adjacentRooms;
 
         public bool IsAdjacent(List<DungeonRoomTileView> otherRoomTiles)
         {

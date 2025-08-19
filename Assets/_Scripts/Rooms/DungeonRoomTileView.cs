@@ -122,9 +122,11 @@ namespace _Scripts.Rooms
         {
             foreach (var doorDirection in doorDirections)
             {
+                if (!doorObjects.TryGetValue(doorDirection, out var doorObject) || doorObject == null) continue;
+                
                 if (_dungeonGridManager.IsTileAdjacentToLevelBounds(gridPosition, doorDirection))
                 {
-                    doorObjects[doorDirection].SetActive(false);
+                    doorObject.SetActive(false);
                     continue;
                 }
 
@@ -132,15 +134,14 @@ namespace _Scripts.Rooms
                 {
                     if (!adjacentTile.doorDirections.Contains(doorDirection.Invert()))
                     {
-                        doorObjects[doorDirection].SetActive(false);
+                        doorObject.SetActive(false);
                         continue;
                     }
 
                     var isConnectingToSharedRoom = HasRoomType(RoomType.Shared) || adjacentTile.HasRoomType(RoomType.Shared);
                     var isConnectingUsedRooms = IsUsed && adjacentTile.IsUsed;
                     var isConnectingUnusedRooms = !IsUsed && !adjacentTile.IsUsed;
-                    doorObjects[doorDirection]
-                        .SetActive(isConnectingUsedRooms || isConnectingUnusedRooms || isConnectingToSharedRoom);
+                    doorObject.SetActive(isConnectingUsedRooms || isConnectingUnusedRooms || isConnectingToSharedRoom);
                     continue;
                 }
 
@@ -148,15 +149,15 @@ namespace _Scripts.Rooms
                 {
                     if (!adjacentGhostTileDto.Tile.DoorDirections.Contains(doorDirection.Invert()))
                     {
-                        doorObjects[doorDirection].SetActive(false);
+                        doorObject.SetActive(false);
                         continue;
                     }
                     
-                    doorObjects[doorDirection].SetActive(true);
+                    doorObject.SetActive(true);
                     continue;
                 }
 
-                doorObjects[doorDirection].SetActive(!IsUsed);
+                doorObject.SetActive(!IsUsed);
             }
         }
 
