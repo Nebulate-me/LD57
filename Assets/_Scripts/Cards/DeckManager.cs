@@ -64,6 +64,13 @@ namespace _Scripts.Cards
             SignalsHub.DispatchAsync(new DeckUpdatedSignal());
         }
 
+        public void BuryRoom(RoomDto cardToBury)
+        {
+            _roomCards.Add(cardToBury);
+            UpdateRemainingCardsText();
+            SignalsHub.DispatchAsync(new DeckUpdatedSignal());
+        }
+
         #endregion
         
     }

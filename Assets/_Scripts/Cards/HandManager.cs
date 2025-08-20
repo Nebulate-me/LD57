@@ -3,6 +3,7 @@ using _Scripts.Rooms;
 using _Scripts.RoomTiles;
 using _Scripts.Utils;
 using Signals;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Utilities;
@@ -162,6 +163,16 @@ namespace _Scripts.Cards
                     break;
                 }
             }
+        }
+
+        public void RedrawRoomHand()
+        {
+            while (_roomCardViews.TryRemoveFirst(out var roomCard))
+            {
+                _prefabPool.Despawn(roomCard.gameObject);
+                _deckManager.BuryRoom(roomCard.RoomDto);
+            }
+            RefillRoomHand();
         }
 
         #endregion

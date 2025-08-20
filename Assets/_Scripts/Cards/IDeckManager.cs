@@ -8,5 +8,6 @@ namespace _Scripts.Cards
         int RoomCardAmount { get; }
         bool TryDrawRoom(out RoomDto roomDto);
         void BuryRoom(List<RoomDto> cardsToBury);
+        void BuryRoom(RoomDto cardToBury);
     }
 }

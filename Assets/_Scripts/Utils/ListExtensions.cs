@@ -30,6 +30,11 @@ namespace _Scripts.Utils
             if (coordinates.IsEmpty()) return 0;
             return (coordinates.Min() + coordinates.Max()) / 2f;
         }
+        
+        public static bool TryRemoveFirst<T>(this IList<T> list, out T match)
+        {
+            return list.TryRemoveFirst(_ => true, out match);
+        }
 
         public static bool TryRemoveFirst<T>(this IList<T> list, Func<T, bool> predicate, out T match)
         {
