@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
@@ -9,18 +10,17 @@ using Signals;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Utilities.Monads;
 using Utilities.Prefabs;
 using Zenject;
 
 namespace _Scripts.Game
 {
-    public class DungeonGridManager : MonoBehaviour, IDungeonGridManager
+    public class DungeonGridManager : MonoBehaviour, IDungeonGridManager, IInitializable
     {
         [SerializeField] private Transform roomContainer;
         [FormerlySerializedAs("dungeonRoomPrefab")] [SerializeField] private GameObject dungeonRoomTilePrefab;
         [SerializeField] private GameObject dungeonRoomGhostPrefab;
-        [Space] 
-        [SerializeField] private Level startingLevel; // TODO: Pass the Level on SetUp
         [Space]
         [SerializeField] private Vector2 mousePositionOffset;
         [SerializeField] private List<RectTransform> unclickableScreenAreas;
@@ -40,11 +40,10 @@ namespace _Scripts.Game
         private RoomDirection _currentDirection = RoomDirectionExtensions.Default;
         
         private List<Bounds> _unclickableBounds;
-        private Level _currentLevel;
+        private IMaybe<Level> _maybeCurrentLevel = Maybe.Empty<Level>();
 
-        private void Start()
+        public void Initialize()
         {
-            _currentLevel = startingLevel;
             _currentDirection = RoomDirectionExtensions.Default;
             _roomTiles = new List<DungeonRoomTileView>();
             _unclickableBounds = unclickableScreenAreas.Select(RectTransformUtility.CalculateRelativeRectTransformBounds)
@@ -52,14 +51,11 @@ namespace _Scripts.Game
             
             _roomGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
                 .GetComponent<DungeonRoomGhostView>();
+        }
+        
+        private void Start()
+        {
             
-            foreach (var startingRoomDto in _currentLevel.StartingRooms)
-            {
-                PlaceRoom(startingRoomDto.Room.ToDto().Rotate(startingRoomDto.Direction), startingRoomDto.Position);
-            }
-            
-            levelBuildingBackground.size = startingLevel.LevelSize;
-            SignalsHub.DispatchAsync(new LevelSetupCompletedSignal());
         }
 
         private void Update()
@@ -175,7 +171,7 @@ namespace _Scripts.Game
 
         private bool IsPositionInsideLevelBounds(Vector2Int gridPosition)
         {
-            return _currentLevel.Contains(gridPosition);
+            return _maybeCurrentLevel.TryGetValue(out var currentLevel) && currentLevel.Contains(gridPosition);
         }
 
         private bool IsPositionAdjacent(Vector2Int gridPosition)
@@ -209,6 +205,31 @@ namespace _Scripts.Game
             return new Vector2Int(
                 Mathf.RoundToInt(worldPos.x + mousePositionOffset.x),
                 Mathf.RoundToInt(worldPos.y + mousePositionOffset.y));
+        }
+
+        public void UnloadLevel()
+        {
+            foreach (var roomModel in _rooms)
+            {
+                roomModel.ClearTiles(prefabPool);
+            }
+            _rooms.Clear();
+            _roomTiles.Clear();
+
+            _maybeCurrentLevel = Maybe.Empty<Level>();
+        }
+
+        public void LoadLevel(Level level)
+        {
+            _maybeCurrentLevel = Maybe.Of(level);
+
+            foreach (var roomDto in level.StartingPlacedRooms)
+            {
+                PlaceRoom(roomDto.Room.ToDto().Rotate(roomDto.Direction), roomDto.Position);
+            }
+            
+            levelBuildingBackground.size = level.LevelSize;
+            SignalsHub.DispatchAsync(new LevelSetupCompletedSignal(level));
         }
 
         private Vector3 GridToWorld(Vector2Int gridPos)
@@ -290,12 +311,14 @@ namespace _Scripts.Game
             return adjacentTile.DoorDirections.Contains(direction.Invert());
         }
 
-        public Bounds GetRoomBounds()
+        public Bounds GetLevelBounds()
         {
-            var minX = -_currentLevel.HalfLevelSize.x;
-            var maxX = _currentLevel.HalfLevelSize.x;
-            var minY = -_currentLevel.HalfLevelSize.y;
-            var maxY = _currentLevel.HalfLevelSize.y;
+            if (!_maybeCurrentLevel.TryGetValue(out var currentLevel)) return new Bounds();
+            
+            var minX = -currentLevel.HalfLevelSize.x;
+            var maxX = currentLevel.HalfLevelSize.x;
+            var minY = -currentLevel.HalfLevelSize.y;
+            var maxY = currentLevel.HalfLevelSize.y;
             
             var center = new Vector3((minX + maxX) / 2f, (minY + maxY) / 2f);
             var size = new Vector3(maxX - minX, maxY - minY);

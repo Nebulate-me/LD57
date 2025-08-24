@@ -5,6 +5,7 @@ using _Scripts.Game;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Missions.Apartment;
+using _Scripts.Popups.HighscoreTable;
 using Signals;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -73,7 +74,8 @@ namespace _Scripts.Score
         
         private void OnTimerFinished()
         {
-            _scoreSaver.SubmitScore(_currentScore, _currentPlayerName);   
+            _scoreSaver.SubmitScore(_currentScore, _currentPlayerName);
+            SignalsHub.DispatchAsync(new GameFinishedSignal(GameFinishedReason.TimeOut));
             ShowTimeOut();
         }
 

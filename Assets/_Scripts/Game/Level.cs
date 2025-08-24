@@ -1,16 +1,23 @@
 using System.Collections.Generic;
+using _Scripts.Missions.Apartment;
 using _Scripts.Rooms;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Scripts.Game
 {
     [CreateAssetMenu(menuName = "LD57/Create Level", fileName = "Level", order = 1)]
     public class Level : ScriptableObject
     {
-        [SerializeField] private List<RoomPositionDto> startingRooms = new();
+        [SerializeField] private string levelName;
+        [FormerlySerializedAs("startingRooms")] [SerializeField] private List<RoomPositionDto> startingPlacedRooms = new();
         [SerializeField] private Vector2Int levelSize = new(20, 15);
+        [SerializeField] private List<RoomAmountDto> initialRooms = new();
+        [SerializeField] private List<ApartmentMission> availableMissions = new();
+        [SerializeField] private List<ApartmentMission> initialMissions = new();
+        [SerializeField] private int missionsToComplete = 4;
 
-        public List<RoomPositionDto> StartingRooms => startingRooms;
+        public List<RoomPositionDto> StartingPlacedRooms => startingPlacedRooms;
 
         /// <summary>
         /// The real size in cells the Level would take <br/>
@@ -27,5 +34,10 @@ namespace _Scripts.Game
             return gridPosition.x >= -HalfLevelSize.x && gridPosition.x <= HalfLevelSize.x &&
                    gridPosition.y >= -HalfLevelSize.y && gridPosition.y <= HalfLevelSize.y;
         }
+
+        public IReadOnlyList<RoomAmountDto> InitialRooms => initialRooms;
+        public IReadOnlyList<ApartmentMission> AvailableMissions => availableMissions;
+        public IReadOnlyList<ApartmentMission> InitialMissions => initialMissions;
+        public int MissionsToComplete => missionsToComplete;
     }
 }

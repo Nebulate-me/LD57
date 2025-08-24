@@ -46,7 +46,7 @@ namespace _Scripts.Rooms
         
         private void OnLevelSetupCompleted(LevelSetupCompletedSignal signal)
         {
-            dungeonBounds = dungeonGridManager.GetRoomBounds();
+            dungeonBounds = dungeonGridManager.GetLevelBounds();
         }
 
         private void Start()

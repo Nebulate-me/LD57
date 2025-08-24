@@ -1,9 +1,12 @@
 namespace _Scripts.Game
 {
-    public class LevelSetupCompletedSignal
+    public readonly struct LevelSetupCompletedSignal
     {
-        public LevelSetupCompletedSignal()
+        public Level Level { get; }
+        
+        public LevelSetupCompletedSignal(Level level)
         {
+            Level = level;
         }
     }
 }

@@ -5,6 +5,7 @@ using _Scripts.Missions.Apartment;
 using _Scripts.Utils;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Utilities.Prefabs;
 
 namespace _Scripts.Rooms
 {
@@ -15,7 +16,6 @@ namespace _Scripts.Rooms
         private readonly List<DungeonRoomTileView> _roomTiles;
         private List<DungeonRoomModel> _adjacentRooms;
         private bool _isUsed;
-        private RoomFloorColor _apartmentFloorColor;
 
         public DungeonRoomModel(RoomDto roomDto, List<DungeonRoomTileView> roomTiles, List<DungeonRoomModel> adjacentRooms)
         {
@@ -79,10 +79,18 @@ namespace _Scripts.Rooms
 
         public void SetFloorColor(RoomFloorColor apartmentFloorColor)
         {
-            _apartmentFloorColor = apartmentFloorColor;
             foreach (var roomTile in _roomTiles)
             {
                 roomTile.FloorSprite = apartmentFloorColor;
+            }
+        }
+
+        public void ClearTiles(IPrefabPool prefabPool)
+        {
+            _adjacentRooms.Clear();
+            foreach (var roomTile in _roomTiles)
+            {
+                prefabPool.Despawn(roomTile.gameObject);
             }
         }
     }

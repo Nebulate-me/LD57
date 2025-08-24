@@ -17,10 +17,10 @@ MonoBehaviour:
   - roomType: 2
   - roomType: 3
   - roomType: 5
-  - roomType: 1
+  - roomType: 4
   - roomType: 2
   - roomType: 3
-  - roomType: 1
+  - roomType: 4
   requiredWindows: 6
   rewards:
   - {fileID: 11400000, guid: 0bf08c4aa28010043be1aed7092fd0b4, type: 2}

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8f9bfb19f5164e88847d4bd4d43c6347, type: 3}
-  m_Name: Level_1
+  m_Name: Level_2
   m_EditorClassIdentifier: 
   startingPlacedRooms:
   - position: {x: -1, y: -1}
@@ -25,10 +25,10 @@ MonoBehaviour:
   levelSize: {x: 13, y: 10}
   initialRooms: []
   availableMissions:
-  - {fileID: 11400000, guid: 7a0b1d15e5737924d805c5507e0d64e4, type: 2}
-  - {fileID: 11400000, guid: 65206c5c23fe19944ab937b19c367957, type: 2}
   - {fileID: 11400000, guid: d6ed78f5435d5264baea8cdc6acdfe80, type: 2}
   - {fileID: 11400000, guid: 1662047b0c92cfc42af781058777194f, type: 2}
+  - {fileID: 11400000, guid: bca220e77c58b384db04b6b2f1b2c6cd, type: 2}
+  - {fileID: 11400000, guid: 3c7f8043f3eecc8418ae12b4b0e96411, type: 2}
   initialMissions:
-  - {fileID: 11400000, guid: 7a0b1d15e5737924d805c5507e0d64e4, type: 2}
+  - {fileID: 11400000, guid: d6ed78f5435d5264baea8cdc6acdfe80, type: 2}
   missionsToComplete: 4

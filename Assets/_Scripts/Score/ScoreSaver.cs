@@ -35,7 +35,6 @@ namespace _Scripts.Score
             _data.entries.Add(new HighscoreEntry(playerName, score));
             SortAndTrim();
             Save();
-            SignalsHub.DispatchAsync(new GameFinishedSignal());
         }
 
         public void ClearAll()

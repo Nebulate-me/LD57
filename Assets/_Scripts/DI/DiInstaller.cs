@@ -28,6 +28,7 @@ namespace _Scripts.DI
         [SerializeField] private ScoreManager scoreManager;
         [SerializeField] private GameTimerController gameTimer;
         [SerializeField] private ScoreSaver scoreSaver;
+        [SerializeField] private GameManager gameManager;
 
         [Header("Prefabs")]
         [SerializeField] private GameObject roomRegistryPrefab;
@@ -63,6 +64,7 @@ namespace _Scripts.DI
             Container.BindInterfacesTo<ScoreManager>().FromInstance(scoreManager).AsSingle();
             Container.BindInterfacesTo<ScoreSaver>().FromInstance(scoreSaver).AsSingle();
             Container.BindInterfacesTo<GameTimerController>().FromInstance(gameTimer).AsSingle();
+            Container.BindInterfacesTo<GameManager>().FromInstance(gameManager).AsSingle();
 
             var roomRegistry = Container.InstantiatePrefab(roomRegistryPrefab, transform).GetComponent<RoomRegistry>();
             Container.BindInterfacesTo<RoomRegistry>().FromInstance(roomRegistry).AsSingle();
