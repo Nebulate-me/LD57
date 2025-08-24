@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using _Scripts.Game;
 using _Scripts.Rooms;
 using _Scripts.RoomTiles;
 using _Scripts.Utils;
 using Signals;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Utilities;
@@ -22,18 +22,22 @@ namespace _Scripts.Cards
 
         private readonly List<RoomTileCardView> _roomTileCardViews = new();
         private readonly List<RoomCardView> _roomCardViews = new();
-
+        private Level _currentLevel;
+        
         [Inject] private IDeckManager _deckManager;
         [Inject] private IPrefabPool _prefabPool;
+        
 
         private void OnEnable()
         {
             SignalsHub.AddListener<DeckUpdatedSignal>(OnDeckUpdated);
+            SignalsHub.AddListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
         }
 
         private void OnDisable()
         {
             SignalsHub.RemoveListener<DeckUpdatedSignal>(OnDeckUpdated);
+            SignalsHub.RemoveListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
         }
 
         private void OnDeckUpdated(DeckUpdatedSignal signal)
@@ -41,12 +45,19 @@ namespace _Scripts.Cards
             // RefillRoomTileHand();
             RefillRoomHand();
         }
-
-        private void Start()
+        
+        private void OnLevelSetupCompleted(LevelSetupCompletedSignal signal)
         {
+            _currentLevel = signal.Level;
+            
             roomCardContainer.DestroyChildren();
-
-            RefillRoomHand();
+            
+            foreach (var room in _currentLevel.InitialRooms)
+            {
+                var cardView = _prefabPool.Spawn(roomCardPrefab, roomCardContainer).GetComponent<RoomCardView>();
+                cardView.SetUp(room.ToDto());
+                _roomCardViews.Add(cardView);
+            }
         }
 
         public int CardAmount => _roomTileCardViews.Count;

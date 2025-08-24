@@ -7705,13 +7705,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   missionContainer: {fileID: 6964188635224951889}
   apartmentMissionCardPrefab: {fileID: 503265729348047692, guid: 732f4afef9b8a234a89f976bd5a4cd4d, type: 3}
-  availableMissions:
-  - {fileID: 11400000, guid: 7a0b1d15e5737924d805c5507e0d64e4, type: 2}
-  - {fileID: 11400000, guid: d6ed78f5435d5264baea8cdc6acdfe80, type: 2}
-  - {fileID: 11400000, guid: bca220e77c58b384db04b6b2f1b2c6cd, type: 2}
-  - {fileID: 11400000, guid: 1677988671daf334b998e7e506df6a50, type: 2}
-  initialMissions:
-  - {fileID: 11400000, guid: d6ed78f5435d5264baea8cdc6acdfe80, type: 2}
   missionHandSize: 2
   missionHandSizeIncreases: 
 --- !u!224 &5124335146558077082
@@ -7807,29 +7800,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   remainingCardsText: {fileID: 6519991216603289360}
-  initialRooms:
-  - room: {fileID: 11400000, guid: 4b63c69263018d7499bda5f446f95ea4, type: 2}
-    amount: 3
-  - room: {fileID: 11400000, guid: 410ba308f0f4a7d4cad3825490e4c23e, type: 2}
-    amount: 3
-  - room: {fileID: 11400000, guid: 1a57416dddc35b74c8a01dbe802cb300, type: 2}
-    amount: 3
-  - room: {fileID: 11400000, guid: 0bf08c4aa28010043be1aed7092fd0b4, type: 2}
-    amount: 2
-  - room: {fileID: 11400000, guid: e982d24cd887b4e44aaecdef34b622c7, type: 2}
-    amount: 2
-  - room: {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
-    amount: 3
-  - room: {fileID: 11400000, guid: 6d99150bdd486e7469b65fcff52195c2, type: 2}
-    amount: 2
-  - room: {fileID: 11400000, guid: 3bc6891088cbc6c46bffff1ac34fa676, type: 2}
-    amount: 2
-  - room: {fileID: 11400000, guid: 52a5e13b1fe2a904c9901388e6e751d3, type: 2}
-    amount: 2
-  - room: {fileID: 11400000, guid: cf20cf8a37bd50444aa98ebd6bd8398d, type: 2}
-    amount: 2
-  - room: {fileID: 11400000, guid: 6358b267919d8224db6cc7ba2e75cfc8, type: 2}
-    amount: 3
 --- !u!1 &5946277857184027333
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f9bfb19f5164e88847d4bd4d43c6347, type: 3}
   m_Name: Level_3
   m_EditorClassIdentifier: 
+  levelName: 
+  levelSize: {x: 13, y: 10}
   startingPlacedRooms:
   - position: {x: -1, y: -1}
     direction: 0
@@ -22,8 +24,25 @@ MonoBehaviour:
   - position: {x: -4, y: 0}
     direction: 1
     room: {fileID: 11400000, guid: b85f20c18ce21d84c820fe1db7706fcc, type: 2}
-  levelSize: {x: 13, y: 10}
-  initialRooms: []
+  availableRooms:
+  - {fileID: 11400000, guid: 410ba308f0f4a7d4cad3825490e4c23e, type: 2}
+  - {fileID: 11400000, guid: 1a57416dddc35b74c8a01dbe802cb300, type: 2}
+  - {fileID: 11400000, guid: 6d99150bdd486e7469b65fcff52195c2, type: 2}
+  - {fileID: 11400000, guid: 3bc6891088cbc6c46bffff1ac34fa676, type: 2}
+  - {fileID: 11400000, guid: 6358b267919d8224db6cc7ba2e75cfc8, type: 2}
+  - {fileID: 11400000, guid: c743531fc59900541bf3454550ac4192, type: 2}
+  - {fileID: 11400000, guid: 0bf08c4aa28010043be1aed7092fd0b4, type: 2}
+  - {fileID: 11400000, guid: e982d24cd887b4e44aaecdef34b622c7, type: 2}
+  - {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
+  - {fileID: 11400000, guid: 52a5e13b1fe2a904c9901388e6e751d3, type: 2}
+  - {fileID: 11400000, guid: cf20cf8a37bd50444aa98ebd6bd8398d, type: 2}
+  initialRooms:
+  - {fileID: 11400000, guid: c743531fc59900541bf3454550ac4192, type: 2}
+  - {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
+  - {fileID: 11400000, guid: 410ba308f0f4a7d4cad3825490e4c23e, type: 2}
+  - {fileID: 11400000, guid: 6d99150bdd486e7469b65fcff52195c2, type: 2}
+  - {fileID: 11400000, guid: 3bc6891088cbc6c46bffff1ac34fa676, type: 2}
+  initialRemainingRoomCards: 15
   availableMissions:
   - {fileID: 11400000, guid: d6ed78f5435d5264baea8cdc6acdfe80, type: 2}
   - {fileID: 11400000, guid: 1662047b0c92cfc42af781058777194f, type: 2}
@@ -31,4 +50,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3c7f8043f3eecc8418ae12b4b0e96411, type: 2}
   initialMissions:
   - {fileID: 11400000, guid: d6ed78f5435d5264baea8cdc6acdfe80, type: 2}
-  missionsToComplete: 4
+  missionsToComplete: 5

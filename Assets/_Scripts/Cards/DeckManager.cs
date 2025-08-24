@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
+using _Scripts.Game;
 using _Scripts.Rooms;
 using Signals;
 using Sirenix.OdinInspector;
@@ -13,24 +13,27 @@ namespace _Scripts.Cards
     public class DeckManager : MonoBehaviour, IDeckManager
     {
         [SerializeField] private TextMeshProUGUI remainingCardsText;
-        [SerializeField] private List<RoomAmountDto> initialRooms = new();
         
-        [ShowInInspector, ReadOnly] private List<RoomDto> _roomCards = new();
+        [ShowInInspector, ReadOnly] private int _remainingRoomCards;
+        [ShowInInspector, ReadOnly] private Level _currentLevel;
         
-
         [Inject] private IRandomService _randomService;
+        
 
-        private void Start()
+        private void OnEnable()
         {
-            _roomCards = new List<RoomDto>();
-            foreach (var initialRoom in initialRooms)
-            {
-                for (var i = 0; i < initialRoom.Amount; i++)
-                {
-                    _roomCards.Add(initialRoom.Room.ToDto());   
-                }
-            }
-            _randomService.ShuffleInPlace(_roomCards);
+            SignalsHub.AddListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
+        }
+
+        private void OnDisable()
+        {
+            SignalsHub.RemoveListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
+        }
+
+        private void OnLevelSetupCompleted(LevelSetupCompletedSignal signal)
+        {
+            _currentLevel = signal.Level;
+            _remainingRoomCards = _currentLevel.InitialRemainingRoomCards;
             
             SignalsHub.DispatchAsync(new DeckUpdatedSignal());
 
@@ -44,29 +47,31 @@ namespace _Scripts.Cards
 
 
         #region Rooms
-        public int RoomCardAmount => _roomCards.Count;
+        public int RoomCardAmount => _remainingRoomCards;
 
         public bool TryDrawRoom(out RoomDto roomDto)
         {
             roomDto = null;
-            if (RoomCardAmount <= 0) return false;
+            if (RoomCardAmount <= 0 || !_currentLevel) return false;
 
-            roomDto = _roomCards.First();
-            _roomCards.RemoveAt(0);
+            // TODO: Improve this to draw what the player needs
+            roomDto = _randomService.Sample(_currentLevel.AvailableRooms).ToDto();
+            
+            _remainingRoomCards--;
             UpdateRemainingCardsText();
             return true;
         }
 
         public void BuryRoom(List<RoomDto> cardsToBury)
         {
-            _roomCards.AddRange(cardsToBury);
+            _remainingRoomCards += cardsToBury.Count;
             UpdateRemainingCardsText();
             SignalsHub.DispatchAsync(new DeckUpdatedSignal());
         }
 
         public void BuryRoom(RoomDto cardToBury)
         {
-            _roomCards.Add(cardToBury);
+            _remainingRoomCards++;
             UpdateRemainingCardsText();
             SignalsHub.DispatchAsync(new DeckUpdatedSignal());
         }

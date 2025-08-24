@@ -24,8 +24,6 @@ namespace _Scripts.Missions
     {
         [SerializeField] private RectTransform missionContainer;
         [SerializeField] private GameObject apartmentMissionCardPrefab;
-        [SerializeField] private List<ApartmentMission> availableMissions = new();
-        [SerializeField] private List<ApartmentMission> initialMissions = new();
         [SerializeField] private int missionHandSize = 1;
         [SerializeField] private List<int> missionHandSizeIncreases = new() {2, 5, 10};
 
@@ -41,34 +39,30 @@ namespace _Scripts.Missions
         private int _completedMissionCount;
         private string _lastCompletedMissionName;
         private List<DungeonRoomModel> _highlightedRooms = new();
+        private Level _currentLevel;
 
         private void OnEnable()
         {
-            SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
             SignalsHub.AddListener<RoomPlacedSignal>(OnRoomPlaced);
+            SignalsHub.AddListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
         }
 
         private void OnDisable()
         {
-            SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
             SignalsHub.RemoveListener<RoomPlacedSignal>(OnRoomPlaced);
+            SignalsHub.RemoveListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
         }
 
-        private void OnRoomTilePlaced(RoomTilePlacedSignal signal)
-        {
-            // UpdateMissions();
-        }
-        
         private void OnRoomPlaced(RoomPlacedSignal signal)
         {
             UpdateMissions();
         }
-
-        private void Start()
+        
+        private void OnLevelSetupCompleted(LevelSetupCompletedSignal signal)
         {
+            _currentLevel = signal.Level;
             missionContainer.DestroyChildren();
-
-            foreach (var apartmentMission in initialMissions)
+            foreach (var apartmentMission in _currentLevel.InitialMissions)
             {
                 var missionDto = apartmentMission.ToDto();
                 var missionCardView = _prefabPool.Spawn(apartmentMissionCardPrefab, missionContainer)
@@ -77,6 +71,11 @@ namespace _Scripts.Missions
                 missionCardView.Completable = false;
                 _apartmentMissionCardViews.Add(missionCardView);
             }
+        }
+
+        private void Start()
+        {
+            missionContainer.DestroyChildren();
         }
 
         public int CompletableMissionsCount => _apartmentMissionCardViews.Count(mission => mission.Completable);
@@ -180,7 +179,9 @@ namespace _Scripts.Missions
 
         private void RefillMissionHand()
         {
-            var unlockedMissions = availableMissions
+            if (!_currentLevel) return;
+            
+            var unlockedMissions = _currentLevel.AvailableMissions
                 .Where(mission => _completedMissionCount >= mission.MinCompletedMissions &&
                                   (mission.MaxCompletedMissions <= 0 ||
                                    _completedMissionCount < mission.MaxCompletedMissions) &&

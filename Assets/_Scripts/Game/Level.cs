@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using _Scripts.Missions.Apartment;
 using _Scripts.Rooms;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Scripts.Game
 {
@@ -10,9 +9,15 @@ namespace _Scripts.Game
     public class Level : ScriptableObject
     {
         [SerializeField] private string levelName;
-        [FormerlySerializedAs("startingRooms")] [SerializeField] private List<RoomPositionDto> startingPlacedRooms = new();
         [SerializeField] private Vector2Int levelSize = new(20, 15);
-        [SerializeField] private List<RoomAmountDto> initialRooms = new();
+        [SerializeField] private List<RoomPositionDto> startingPlacedRooms = new();
+        
+        [Header("Room Cards")]
+        [SerializeField] private List<Room> availableRooms = new();
+        [SerializeField] private List<Room> initialRooms = new();
+        [SerializeField] private int initialRemainingRoomCards;
+        
+        [Header("Missions")]
         [SerializeField] private List<ApartmentMission> availableMissions = new();
         [SerializeField] private List<ApartmentMission> initialMissions = new();
         [SerializeField] private int missionsToComplete = 4;
@@ -34,8 +39,10 @@ namespace _Scripts.Game
             return gridPosition.x >= -HalfLevelSize.x && gridPosition.x <= HalfLevelSize.x &&
                    gridPosition.y >= -HalfLevelSize.y && gridPosition.y <= HalfLevelSize.y;
         }
-
-        public IReadOnlyList<RoomAmountDto> InitialRooms => initialRooms;
+        
+        public IList<Room> AvailableRooms => availableRooms;
+        public IReadOnlyList<Room> InitialRooms => initialRooms;
+        public int InitialRemainingRoomCards => initialRemainingRoomCards; 
         public IReadOnlyList<ApartmentMission> AvailableMissions => availableMissions;
         public IReadOnlyList<ApartmentMission> InitialMissions => initialMissions;
         public int MissionsToComplete => missionsToComplete;
