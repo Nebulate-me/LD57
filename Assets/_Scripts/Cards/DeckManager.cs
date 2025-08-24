@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using _Scripts.Game;
 using _Scripts.Rooms;
 using Signals;
@@ -49,13 +50,17 @@ namespace _Scripts.Cards
         #region Rooms
         public int RoomCardAmount => _remainingRoomCards;
 
-        public bool TryDrawRoom(out RoomDto roomDto)
+        public bool TryDrawRoom(IEnumerable<RoomDto> handRooms, out RoomDto roomDto)
         {
             roomDto = null;
             if (RoomCardAmount <= 0 || !_currentLevel) return false;
 
-            // TODO: Improve this to draw what the player needs
-            roomDto = _randomService.Sample(_currentLevel.AvailableRooms).ToDto();
+            var nonPresentAvailableRooms = _currentLevel.AvailableRooms
+                .Where(room => handRooms.All(handRoom => !handRoom.HasAnyRoomTypes(room.RoomTypes))).ToList();
+
+            roomDto = nonPresentAvailableRooms.Count <= 0 
+                ? _randomService.Sample(_currentLevel.AvailableRooms).ToDto() 
+                : _randomService.Sample(nonPresentAvailableRooms).ToDto();
             
             _remainingRoomCards--;
             UpdateRemainingCardsText();

@@ -73,6 +73,11 @@ namespace _Scripts.Rooms
         {
             return RoomTypes.Contains(roomType);
         }
+        
+        public bool HasAnyRoomTypes(List<RoomType> requestedRoomTypes)
+        {
+            return requestedRoomTypes.Any(HasRoomType);
+        }
 
         public bool TryGetTile(Vector2Int position, out RoomTileCellDto tileCellDto)
         {

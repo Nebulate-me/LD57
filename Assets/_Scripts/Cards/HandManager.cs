@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using _Scripts.Game;
 using _Scripts.Rooms;
 using _Scripts.RoomTiles;
@@ -162,7 +163,7 @@ namespace _Scripts.Cards
         {
             while (_roomCardViews.Count < handSize)
             {
-                if (_deckManager.TryDrawRoom(out var card))
+                if (_deckManager.TryDrawRoom(_roomCardViews.Select(view => view.RoomDto), out var card))
                 {
                     var cardView = _prefabPool.Spawn(roomCardPrefab, roomCardContainer).GetComponent<RoomCardView>();
                     cardView.SetUp(card);

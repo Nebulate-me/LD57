@@ -6,7 +6,7 @@ namespace _Scripts.Cards
     public interface IDeckManager
     {
         int RoomCardAmount { get; }
-        bool TryDrawRoom(out RoomDto roomDto);
+        bool TryDrawRoom(IEnumerable<RoomDto> handRooms, out RoomDto roomDto);
         void BuryRoom(List<RoomDto> cardsToBury);
         void BuryRoom(RoomDto cardToBury);
     }

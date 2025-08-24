@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7a12f5410f346f29790ec35b19e1147, type: 3}
   m_Name: Toilet_1x2a
   m_EditorClassIdentifier: 
-  roomName: "\u0421\u0430\u043D\u0443\u0437\u0435\u043B \u0410"
+  roomName: "\u0422\u0443\u0430\u043B\u0435\u0442 \u0410"
   roomTypes: 01000000
   tiles:
   - position: {x: 0, y: 0}

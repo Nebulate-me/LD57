@@ -55,6 +55,7 @@ namespace _Scripts.Game
                 return;
             }
             
+            _dungeonGridManager.UnloadLevel();
             _dungeonGridManager.LoadLevel(level);
             _currentLevelCompletedMissionsCount = 0;
         }

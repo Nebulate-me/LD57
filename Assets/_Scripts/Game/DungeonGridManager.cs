@@ -222,6 +222,7 @@ namespace _Scripts.Game
         public void LoadLevel(Level level)
         {
             _maybeCurrentLevel = Maybe.Of(level);
+            _currentDirection = RoomDirectionExtensions.Default;
 
             foreach (var roomDto in level.StartingPlacedRooms)
             {

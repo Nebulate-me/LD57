@@ -3,6 +3,7 @@ using _Scripts.Missions.Apartment;
 using Signals;
 using TMPro;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 namespace _Scripts.Missions
 {
@@ -35,6 +36,7 @@ namespace _Scripts.Missions
         {
             _completedMissions = 0;
             _missionsToComplete = signal.Level.MissionsToComplete;
+            UpdateMissionCounterText();
         }
 
         private void UpdateMissionCounterText()

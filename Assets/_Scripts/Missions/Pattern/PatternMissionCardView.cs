@@ -79,7 +79,7 @@ namespace _Scripts.Missions
         {
             if (isCompletable)
             {
-                missionManager.CompleteMission(this);
+                // missionManager.CompleteMission(this);
             }
         }
     }
