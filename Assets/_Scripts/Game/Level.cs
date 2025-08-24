@@ -46,5 +46,6 @@ namespace _Scripts.Game
         public IReadOnlyList<ApartmentMission> AvailableMissions => availableMissions;
         public IReadOnlyList<ApartmentMission> InitialMissions => initialMissions;
         public int MissionsToComplete => missionsToComplete;
+        public int TileCount => LevelSize.x * LevelSize.y;
     }
 }

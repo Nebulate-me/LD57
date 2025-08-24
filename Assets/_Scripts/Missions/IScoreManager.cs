@@ -4,5 +4,6 @@ namespace _Scripts.Missions
     {
         int Score { get; }
         void StartGame(string playerName);
+        void FinishLevel(int emptyRoomTilesCount);
     }
 }

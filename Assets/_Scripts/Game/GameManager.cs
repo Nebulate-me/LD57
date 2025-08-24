@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _Scripts.Missions;
 using _Scripts.Missions.Apartment;
 using _Scripts.Popups.HighscoreTable;
 using _Scripts.Rooms;
@@ -19,6 +20,7 @@ namespace _Scripts.Game
         [ShowInInspector, ReadOnly] private int _currentLevelCompletedMissionsCount = 0;
             
         [Inject] private IDungeonGridManager _dungeonGridManager;
+        [Inject] private IScoreManager _scoreManager;
 
         private void OnEnable()
         {
@@ -36,6 +38,7 @@ namespace _Scripts.Game
             _currentLevelCompletedMissionsCount++;
             if (_currentLevelCompletedMissionsCount < currentLevel.MissionsToComplete) return;
             
+            _scoreManager.FinishLevel(_dungeonGridManager.EmptyRoomTilesCount); // TODO: Some animation to show how every empty or unused tile contributes to negative score
             // TODO: Level Completed Popup
             _currentLevelIndex++;
             LoadCurrentLevel();

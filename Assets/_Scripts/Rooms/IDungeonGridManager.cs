@@ -8,6 +8,7 @@ namespace _Scripts.Rooms
     {
         IReadOnlyList<DungeonRoomTileView> RoomTiles { get; }
         IReadOnlyList<DungeonRoomModel> Rooms { get; }
+        int EmptyRoomTilesCount { get; }
         Bounds GetLevelBounds();
         Bounds GetRoomBoundsBasedOnTiles();
         bool IsTileAdjacentToLevelBounds(Vector2Int gridPosition, RoomDirection key);

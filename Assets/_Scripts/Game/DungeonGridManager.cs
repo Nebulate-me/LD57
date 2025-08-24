@@ -283,6 +283,7 @@ namespace _Scripts.Game
 
         public IReadOnlyList<DungeonRoomTileView> RoomTiles => _roomTiles;
         public IReadOnlyList<DungeonRoomModel> Rooms => _rooms;
+        public int EmptyRoomTilesCount => _maybeCurrentLevel.TryGetValue(out var currentLevel) ? currentLevel.TileCount - _roomTiles.Count(tile => tile.IsUsed) : 0;
 
         public Bounds GetRoomBoundsBasedOnTiles()
         {

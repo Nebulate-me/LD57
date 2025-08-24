@@ -40,6 +40,13 @@ namespace _Scripts.Score
             _gameTimerController.StartTimer();
         }
 
+        public void FinishLevel(int emptyRoomTilesCount)
+        {
+            Debug.Log(
+                $"Reducing the current score {_currentScore} by {emptyRoomTilesCount} for every empty or unused tile");
+            _currentScore -= emptyRoomTilesCount;
+        }
+
         private void OnEnable()
         {
             SignalsHub.AddListener<ApartmentMissionCompletedSignal>(OnApartmentMissionCompleted);
@@ -58,7 +65,7 @@ namespace _Scripts.Score
 
         private void OnApartmentMissionCompleted(ApartmentMissionCompletedSignal signal)
         {
-            _currentScore += signal.Dto.RewardScore;
+            _currentScore += signal.Score;
             UpdateScoreText();
         }
         
@@ -115,8 +122,9 @@ namespace _Scripts.Score
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.R))
-                RestartGame();
+            
+            // if (Input.GetKeyDown(KeyCode.R))
+            //     RestartGame();
             
             if (Input.GetKeyDown(KeyCode.Escape))
                 Application.Quit();

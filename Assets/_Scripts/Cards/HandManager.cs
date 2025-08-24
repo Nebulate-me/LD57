@@ -14,7 +14,7 @@ using Zenject;
 
 namespace _Scripts.Cards
 {
-    public class HandManager : MonoBehaviour, IHandManager
+    public class HandManager : MonoBehaviour, IHandManager, IInitializable
     {
         [FormerlySerializedAs("roomCardPrefab")] [SerializeField] private GameObject roomTileCardPrefab;
         [SerializeField] private GameObject roomCardPrefab;
@@ -40,6 +40,11 @@ namespace _Scripts.Cards
             SignalsHub.RemoveListener<DeckUpdatedSignal>(OnDeckUpdated);
             SignalsHub.RemoveListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
         }
+        
+        public void Initialize()
+        {
+            roomCardContainer.DestroyChildren();
+        }
 
         private void OnDeckUpdated(DeckUpdatedSignal signal)
         {
@@ -50,14 +55,24 @@ namespace _Scripts.Cards
         private void OnLevelSetupCompleted(LevelSetupCompletedSignal signal)
         {
             _currentLevel = signal.Level;
-            
-            roomCardContainer.DestroyChildren();
+
+            var viewsToDespawn = new List<Transform>();
+            foreach (Transform roomCardView in roomCardContainer.transform)
+            {
+                viewsToDespawn.Add(roomCardView);
+            }
+            _roomCardViews.Clear();
             
             foreach (var room in _currentLevel.InitialRooms)
             {
                 var cardView = _prefabPool.Spawn(roomCardPrefab, roomCardContainer).GetComponent<RoomCardView>();
                 cardView.SetUp(room.ToDto());
                 _roomCardViews.Add(cardView);
+            }
+
+            foreach (var view in viewsToDespawn)
+            {
+                _prefabPool.Despawn(view.gameObject);
             }
         }
 

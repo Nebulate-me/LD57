@@ -15,7 +15,7 @@ using Zenject;
 
 namespace _Scripts.Missions
 {
-    public class MissionManager : MonoBehaviour, IMissionManager
+    public class MissionManager : MonoBehaviour, IMissionManager, IInitializable
     {
         [SerializeField] private RectTransform missionContainer;
         [SerializeField] private GameObject apartmentMissionCardPrefab;
@@ -47,6 +47,11 @@ namespace _Scripts.Missions
             SignalsHub.RemoveListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
         }
 
+        void IInitializable.Initialize()
+        {
+            missionContainer.DestroyChildren();
+        }
+
         private void OnRoomPlaced(RoomPlacedSignal signal)
         {
             UpdateMissions();
@@ -56,10 +61,13 @@ namespace _Scripts.Missions
         {
             _currentLevel = signal.Level;
             _completedMissionCount = 0;
+
+            var cardViewsToSpawn = new List<GameObject>();
             foreach (var cardView in _apartmentMissionCardViews)
             {
-                _prefabPool.Despawn(cardView.gameObject);
+                cardViewsToSpawn.Add(cardView.gameObject);
             }
+            _apartmentMissionCardViews.Clear();
             
             foreach (var apartmentMission in _currentLevel.InitialMissions)
             {
@@ -69,6 +77,11 @@ namespace _Scripts.Missions
                 missionCardView.SetUp(missionDto);
                 missionCardView.Completable = false;
                 _apartmentMissionCardViews.Add(missionCardView);
+            }
+
+            foreach (var view in cardViewsToSpawn)
+            {
+                _prefabPool.Despawn(view.gameObject);
             }
         }
 
@@ -84,10 +97,16 @@ namespace _Scripts.Missions
             if (!IsApartmentMissionCompletable(apartmentMissionCard.Dto, out var roomsToUse)) return;
 
             var apartmentFloorColor = _roomRegistry.TakeUnusedColor();
+            var roomScore = apartmentMissionCard.Dto.RewardScore;
             foreach (var dungeonRoomModel in roomsToUse)
             {
                 dungeonRoomModel.IsUsed = true;
                 dungeonRoomModel.SetFloorColor(apartmentFloorColor);
+                if (apartmentMissionCard.Dto.Requirements.Any(requirement =>
+                        dungeonRoomModel.HasType(requirement.RoomType)))
+                {
+                    roomScore += dungeonRoomModel.Score;   
+                }
             }
             
             var shuffledMissionRewards = _randomService.Shuffle(apartmentMissionCard.Dto.RewardRooms).ToList();
@@ -100,7 +119,7 @@ namespace _Scripts.Missions
                 missionHandSize++;
 
             _soundManager.PlaySound(SoundType.CompleteMission);
-            SignalsHub.DispatchAsync(new ApartmentMissionCompletedSignal(apartmentMissionCard.Dto));
+            SignalsHub.DispatchAsync(new ApartmentMissionCompletedSignal(apartmentMissionCard.Dto, roomScore));
             _lastCompletedMissionName = apartmentMissionCard.Dto.Name;
 
             StartCoroutine(UpdateMissionCoroutine());
@@ -156,8 +175,6 @@ namespace _Scripts.Missions
             
             var unlockedMissions = _currentLevel.AvailableMissions
                 .Where(mission => _completedMissionCount >= mission.MinCompletedMissions &&
-                                  (mission.MaxCompletedMissions <= 0 ||
-                                   _completedMissionCount < mission.MaxCompletedMissions) &&
                                   mission.MissionName != _lastCompletedMissionName)
                 .ToList();
             while (_apartmentMissionCardViews.Count < missionHandSize)
@@ -187,7 +204,7 @@ namespace _Scripts.Missions
             foreach (var startingRoom in startingRooms)
             {
                 var fulfilledRequirementIndex = missionDto.Requirements.FindIndex(startingRoom.IsFulfilling);
-                var startingRequirements = missionDto.Requirements.Where((t, i) => i != fulfilledRequirementIndex).ToList();
+                var startingRequirements = missionDto.Requirements.Where((_, i) => i != fulfilledRequirementIndex).ToList();
                 var inputSearch = new ApartmentMissionSearchDto(startingRequirements, new List<DungeonRoomModel>{ startingRoom }, missionDto.RequiredWindows - startingRoom.WindowCount);
                 if (TrySearchApartmentMission(inputSearch, out var alternativeRoomsToUse))
                 {
@@ -240,7 +257,7 @@ namespace _Scripts.Missions
             outputSearchOptions = inputSearch.AdjacentRoomOptions.Select(roomOption =>
             {
                 var fulfilledRequirementIndex = inputSearch.Requirements.FindIndex(roomOption.IsFulfilling);
-                var requirements = inputSearch.Requirements.Where((t, i) => i != fulfilledRequirementIndex).ToList();
+                var requirements = inputSearch.Requirements.Where((_, i) => i != fulfilledRequirementIndex).ToList();
                 var usedRooms = new List<DungeonRoomModel> { roomOption };
                 usedRooms.AddRange(inputSearch.UsedRooms);
                 

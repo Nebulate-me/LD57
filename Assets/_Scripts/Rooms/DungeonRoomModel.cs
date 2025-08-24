@@ -44,6 +44,7 @@ namespace _Scripts.Rooms
         [ShowInInspector, ReadOnly] public List<RoomType> RoomTypes => _roomDto.RoomTypes;
         [ShowInInspector, ReadOnly] public int AdjacentRoomCount => _adjacentRooms.Count;
         [HideInInspector] public List<DungeonRoomModel> AdjacentRooms => _adjacentRooms;
+        public int Score => _roomTiles.Count;
 
         public bool IsAdjacent(List<DungeonRoomTileView> otherRoomTiles)
         {
