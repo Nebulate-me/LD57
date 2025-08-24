@@ -22,6 +22,9 @@ namespace _Scripts.Game
         [SerializeField] private List<ApartmentMission> initialMissions = new();
         [SerializeField] private int missionsToComplete = 4;
 
+        [Header("Visuals")]
+        [SerializeField] private bool showPorch = false;
+
         public List<RoomPositionDto> StartingPlacedRooms => startingPlacedRooms;
 
         /// <summary>
@@ -47,5 +50,7 @@ namespace _Scripts.Game
         public IReadOnlyList<ApartmentMission> InitialMissions => initialMissions;
         public int MissionsToComplete => missionsToComplete;
         public int TileCount => LevelSize.x * LevelSize.y;
+
+        public bool ShowPorch => showPorch;
     }
 }
