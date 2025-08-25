@@ -1,4 +1,4 @@
-namespace _Scripts.Popups.HighscoreTable
+namespace _Scripts.Popups.GameFinished
 {
     public enum GameFinishedReason
     {

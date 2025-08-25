@@ -1,7 +1,6 @@
-using System;
+using _Scripts.Popups.GameFinished;
 using _Scripts.Score;
 using Signals;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -9,7 +8,7 @@ using UnityEngine.UI;
 using Utilities.Prefabs;
 using Zenject;
 
-namespace _Scripts.Popups.HighscoreTable
+namespace _Scripts.Popups.HighScore
 {
     public class HighScorePopupController : MonoBehaviour
     {
@@ -23,13 +22,13 @@ namespace _Scripts.Popups.HighscoreTable
 
         private void OnEnable()
         {
-            SignalsHub.AddListener<GameFinishedSignal>(OnGameFinished);
+            SignalsHub.AddListener<ShowGameFinishedPopupSignal>(OnGameFinished);
             restartGameButton.onClick.AddListener(RestartGame);
         }
 
         private void OnDisable()
         {
-            SignalsHub.RemoveListener<GameFinishedSignal>(OnGameFinished);
+            SignalsHub.RemoveListener<ShowGameFinishedPopupSignal>(OnGameFinished);
             restartGameButton.onClick.RemoveListener(RestartGame);
         }
 
@@ -38,7 +37,7 @@ namespace _Scripts.Popups.HighscoreTable
             popup.SetActive(false);
         }
 
-        private void OnGameFinished(GameFinishedSignal signal)
+        private void OnGameFinished(ShowGameFinishedPopupSignal popupSignal)
         {
             popup.SetActive(true);
             Refresh();

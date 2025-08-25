@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using _Scripts.Popups.HighscoreTable;
 using Signals;
 using UnityEngine;
 

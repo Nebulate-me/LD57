@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Missions;
 using _Scripts.Missions.Apartment;
-using _Scripts.Popups.HighscoreTable;
+using _Scripts.Popups.GameFinished;
 using _Scripts.Rooms;
 using ModestTree;
 using Signals;
@@ -54,7 +54,7 @@ namespace _Scripts.Game
         {
             if (!TryGetCurrentLevel(out var level))
             {
-                SignalsHub.DispatchAsync(new GameFinishedSignal(GameFinishedReason.AllLevelsCompleted));
+                SignalsHub.DispatchAsync(new ShowGameFinishedPopupSignal(GameFinishedReason.AllLevelsCompleted));
                 return;
             }
             

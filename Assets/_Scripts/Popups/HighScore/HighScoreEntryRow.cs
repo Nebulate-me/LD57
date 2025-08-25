@@ -2,7 +2,7 @@ using _Scripts.Score;
 using TMPro;
 using UnityEngine;
 
-namespace _Scripts.Popups.HighscoreTable
+namespace _Scripts.Popups.HighScore
 {
     public class HighScoreEntryRow : MonoBehaviour
     {

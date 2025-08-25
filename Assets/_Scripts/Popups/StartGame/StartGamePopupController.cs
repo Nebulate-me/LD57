@@ -6,22 +6,26 @@ using Zenject;
 
 namespace _Scripts.Popups.StartGame
 {
-    public class StartGamePopupController : MonoBehaviour
+    public class StartGamePopupController : BasePopupController
     {
-        [SerializeField] private GameObject popupGameObject;
         [SerializeField] private TMP_InputField playerNameField;
         [SerializeField] private Button startGameButton;
 
         [Inject] private IScoreManager _scoreManager;
 
-        private void OnEnable()
+        protected override PopupType Type => PopupType.StartGame;
+
+        protected override void SetupSubscriptions()
         {
+            base.SetupSubscriptions();
             playerNameField.onValueChanged.AddListener(OnPlayerNameUpdated);
             startGameButton.onClick.AddListener(StartGame);
         }
 
-        private void OnDisable()
+        protected override void DisposeSubscriptions()
         {
+            base.DisposeSubscriptions();
+            
             playerNameField.onValueChanged.RemoveListener(OnPlayerNameUpdated);
             startGameButton.onClick.RemoveListener(StartGame);
         }
@@ -34,7 +38,7 @@ namespace _Scripts.Popups.StartGame
         private void StartGame()
         {
             _scoreManager.StartGame(playerNameField.text);
-            popupGameObject.SetActive(false);
+            HidePopup();
         }
 
         private void UpdateStartGameButton(string playerName)
@@ -44,6 +48,7 @@ namespace _Scripts.Popups.StartGame
 
         private void Start()
         {
+            OnStart();
             UpdateStartGameButton(playerNameField.text);
         }
     }

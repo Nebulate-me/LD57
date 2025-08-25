@@ -5,7 +5,7 @@ using _Scripts.Game;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Missions.Apartment;
-using _Scripts.Popups.HighscoreTable;
+using _Scripts.Popups.GameFinished;
 using Signals;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -33,6 +33,10 @@ namespace _Scripts.Score
         [ShowInInspector, ReadOnly] private string _currentPlayerName = string.Empty; 
 
         public int Score => _currentScore;
+        public string PlayerName => _currentPlayerName;
+        public string RankName => "Rank TBD";
+        public string RankDescription => "Rank Description TBD";
+
         public void StartGame(string playerName)
         {
             _currentScore = 0;
@@ -82,7 +86,7 @@ namespace _Scripts.Score
         private void OnTimerFinished()
         {
             _scoreSaver.SubmitScore(_currentScore, _currentPlayerName);
-            SignalsHub.DispatchAsync(new GameFinishedSignal(GameFinishedReason.TimeOut));
+            SignalsHub.DispatchAsync(new ShowGameFinishedPopupSignal(GameFinishedReason.TimeOut));
             ShowTimeOut();
         }
 
@@ -140,7 +144,7 @@ namespace _Scripts.Score
         private string GetCurrentRank()
         {
             var currentRank = scoreRanks.Where(rank => rank.MinScore <= _currentScore).OrderByDescending(rank => rank.MinScore).First();
-            return currentRank.Rank;
+            return currentRank.RankName;
         }
         
 
