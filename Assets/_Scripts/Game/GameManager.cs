@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Missions;
 using _Scripts.Missions.Apartment;
+using _Scripts.Popups;
 using _Scripts.Popups.GameFinished;
+using _Scripts.Popups.LevelFinished;
 using _Scripts.Rooms;
 using ModestTree;
 using Signals;
@@ -25,11 +27,13 @@ namespace _Scripts.Game
         private void OnEnable()
         {
             SignalsHub.AddListener<ApartmentMissionCompletedSignal>(OnApartmentMissionCompleted);
+            SignalsHub.AddListener<StartNextLevelSignal>(OnStartNextLevelSignal);
         }
 
         private void OnDisable()
         {
             SignalsHub.RemoveListener<ApartmentMissionCompletedSignal>(OnApartmentMissionCompleted);
+            SignalsHub.RemoveListener<StartNextLevelSignal>(OnStartNextLevelSignal);
         }
 
         private void OnApartmentMissionCompleted(ApartmentMissionCompletedSignal signal)
@@ -38,8 +42,13 @@ namespace _Scripts.Game
             _currentLevelCompletedMissionsCount++;
             if (_currentLevelCompletedMissionsCount < currentLevel.MissionsToComplete) return;
             
-            _scoreManager.FinishLevel(_dungeonGridManager.EmptyRoomTilesCount); // TODO: Some animation to show how every empty or unused tile contributes to negative score
-            // TODO: Level Completed Popup
+            _scoreManager.FinishLevel(_dungeonGridManager.EmptyRoomTilesCount); 
+            // TODO: Some animation to show how every empty or unused tile contributes to negative score
+            SignalsHub.DispatchAsync(new ShowPopupSignal(PopupType.LevelFinished));
+        }
+        
+        private void OnStartNextLevelSignal(StartNextLevelSignal signal)
+        {
             _currentLevelIndex++;
             LoadCurrentLevel();
         }

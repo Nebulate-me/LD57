@@ -37,6 +37,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
   - {fileID: 11400000, guid: 52a5e13b1fe2a904c9901388e6e751d3, type: 2}
   - {fileID: 11400000, guid: cf20cf8a37bd50444aa98ebd6bd8398d, type: 2}
+  - {fileID: 11400000, guid: e6ab93a5429c8154fb5754e65699c776, type: 2}
   initialRooms:
   - {fileID: 11400000, guid: 0bf08c4aa28010043be1aed7092fd0b4, type: 2}
   - {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
@@ -47,9 +48,12 @@ MonoBehaviour:
   availableMissions:
   - {fileID: 11400000, guid: d6ed78f5435d5264baea8cdc6acdfe80, type: 2}
   - {fileID: 11400000, guid: 1662047b0c92cfc42af781058777194f, type: 2}
+  - {fileID: 11400000, guid: 520cd83ac03311541947d4b50f1c4f6d, type: 2}
   - {fileID: 11400000, guid: bca220e77c58b384db04b6b2f1b2c6cd, type: 2}
   - {fileID: 11400000, guid: 3c7f8043f3eecc8418ae12b4b0e96411, type: 2}
+  - {fileID: 11400000, guid: 1f9880325df08354f965a71294b52322, type: 2}
   initialMissions:
   - {fileID: 11400000, guid: d6ed78f5435d5264baea8cdc6acdfe80, type: 2}
   - {fileID: 11400000, guid: 1662047b0c92cfc42af781058777194f, type: 2}
   missionsToComplete: 5
+  showPorch: 0
