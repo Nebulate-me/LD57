@@ -68,6 +68,7 @@ namespace _Scripts.Popups
 
         protected void ShowPopup()
         {
+            if (IsShown) return;
             IsShown = true;
             popup.SetActive(true);
             // TODO: Animation
@@ -80,6 +81,7 @@ namespace _Scripts.Popups
 
         protected void HidePopup()
         {
+            if (!IsShown) return;
             IsShown = false;
             popup.SetActive(false);
             // TODO: Animation

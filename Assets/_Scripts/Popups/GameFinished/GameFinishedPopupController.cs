@@ -31,19 +31,11 @@ namespace _Scripts.Popups.GameFinished
             OnStart();
         }
 
-        private void OnEnable()
-        {
-            SignalsHub.AddListener<ShowGameFinishedPopupSignal>(OnShowGameFinishedPopup);
-        }
-
-        private void OnDisable()
-        {
-            SignalsHub.RemoveListener<ShowGameFinishedPopupSignal>(OnShowGameFinishedPopup);
-        }
-
         protected override void SetupSubscriptions()
         {
             base.SetupSubscriptions();
+            SignalsHub.AddListener<ShowGameFinishedPopupSignal>(OnShowGameFinishedPopup);
+            
             highScoreButton.onClick.AddListener(OnHighScoreButtonClicked);
             restartGameButton.onClick.AddListener(OnRestartGameButtonClicked); 
         }
@@ -51,6 +43,8 @@ namespace _Scripts.Popups.GameFinished
         protected override void DisposeSubscriptions()
         {
             base.DisposeSubscriptions();
+            
+            SignalsHub.RemoveListener<ShowGameFinishedPopupSignal>(OnShowGameFinishedPopup);
             highScoreButton.onClick.RemoveListener(OnHighScoreButtonClicked);
             restartGameButton.onClick.RemoveListener(OnRestartGameButtonClicked);
         }

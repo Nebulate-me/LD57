@@ -4,7 +4,6 @@ using Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Utilities.TimeManagement;
 using Zenject;
 
 namespace _Scripts.Popups.LevelFinished

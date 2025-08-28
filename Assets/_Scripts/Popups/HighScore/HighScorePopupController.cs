@@ -1,51 +1,51 @@
-using _Scripts.Popups.GameFinished;
 using _Scripts.Score;
-using Signals;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Utilities.Prefabs;
 using Zenject;
 
 namespace _Scripts.Popups.HighScore
 {
-    public class HighScorePopupController : MonoBehaviour
+    public class HighScorePopupController : BasePopupController
     {
-        [SerializeField] private GameObject popup;
         [SerializeField] private Transform contentParent;
-        [FormerlySerializedAs("highscoreEntryRowPrefab")] [SerializeField] private GameObject highScoreEntryRowPrefab;
+        [SerializeField] private GameObject highScoreEntryRowPrefab;
         [SerializeField] private Button restartGameButton;
 
         [Inject] private IScoreSaver _scoreSaver;
         [Inject] private IPrefabPool _prefabPool;
 
-        private void OnEnable()
+        protected override PopupType Type => PopupType.HighScore;
+        
+        public void Start()
         {
-            SignalsHub.AddListener<ShowGameFinishedPopupSignal>(OnGameFinished);
+            OnStart();
+        }
+        
+        protected override void SetupSubscriptions()
+        {
+            base.SetupSubscriptions();
+            
             restartGameButton.onClick.AddListener(RestartGame);
         }
 
-        private void OnDisable()
+        protected override void DisposeSubscriptions()
         {
-            SignalsHub.RemoveListener<ShowGameFinishedPopupSignal>(OnGameFinished);
+            base.DisposeSubscriptions();
+            
             restartGameButton.onClick.RemoveListener(RestartGame);
         }
 
-        private void Start()
+        protected override void OnShowPopup()
         {
-            popup.SetActive(false);
-        }
-
-        private void OnGameFinished(ShowGameFinishedPopupSignal popupSignal)
-        {
-            popup.SetActive(true);
+            base.OnShowPopup();
             Refresh();
         }
-        
+
         private void RestartGame()
         {
-            popup.SetActive(false);
+            HidePopup();
             string currentSceneName = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(currentSceneName);
         }

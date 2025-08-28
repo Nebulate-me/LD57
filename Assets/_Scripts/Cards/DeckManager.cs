@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Game;
 using _Scripts.Rooms;
+using _Scripts.Utils;
 using Signals;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -54,17 +55,28 @@ namespace _Scripts.Cards
         {
             roomDto = null;
             if (RoomCardAmount <= 0 || !_currentLevel) return false;
+            
+            var preferredAvailableRooms = GetPreferredAvailableRooms(handRooms);
 
-            var nonPresentAvailableRooms = _currentLevel.AvailableRooms
-                .Where(room => handRooms.All(handRoom => !handRoom.HasAnyRoomTypes(room.RoomTypes))).ToList();
-
-            roomDto = nonPresentAvailableRooms.Count <= 0 
+            roomDto = preferredAvailableRooms.Count <= 0 
                 ? _randomService.Sample(_currentLevel.AvailableRooms).ToDto() 
-                : _randomService.Sample(nonPresentAvailableRooms).ToDto();
+                : _randomService.Sample(preferredAvailableRooms).ToDto();
             
             _remainingRoomCards--;
             UpdateRemainingCardsText();
             return true;
+        }
+
+        private List<Room> GetPreferredAvailableRooms(IEnumerable<RoomDto> handRooms)
+        {
+            var handRoomsList = handRooms.ToList();
+            if (!handRoomsList.Any(handRoom => handRoom.HasAnyRoomTypes(RoomTypeExtensions.ApartmentStartingRoomTypes)))
+            {
+                return _currentLevel.AvailableRooms.Where(room => room.ToDto().HasAnyRoomTypes(RoomTypeExtensions.ApartmentStartingRoomTypes)).ToList();
+            }
+            
+            return _currentLevel.AvailableRooms
+                .Where(room => handRoomsList.All(handRoom => !handRoom.HasAnyRoomTypes(room.RoomTypes))).ToList();
         }
 
         public void BuryRoom(List<RoomDto> cardsToBury)
