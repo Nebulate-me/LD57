@@ -1,3 +1,5 @@
+using _Scripts.Game;
+using _Scripts.Missions;
 using _Scripts.Score;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,7 +14,9 @@ namespace _Scripts.Popups.HighScore
         [SerializeField] private Transform contentParent;
         [SerializeField] private GameObject highScoreEntryRowPrefab;
         [SerializeField] private Button restartGameButton;
+        [SerializeField] private int maxScoreRows = 10;
 
+        [Inject] private IScoreManager _scoreManager;
         [Inject] private IScoreSaver _scoreSaver;
         [Inject] private IPrefabPool _prefabPool;
 
@@ -55,11 +59,11 @@ namespace _Scripts.Popups.HighScore
             foreach (Transform c in contentParent) Destroy(c.gameObject);
 
             var entries = _scoreSaver.Entries;
-            for (var i = 0; i < entries.Count; i++)
+            var entryCount = Mathf.Min(entries.Count, maxScoreRows);
+            for (var i = 0; i < entryCount; i++)
             {
                 var row = _prefabPool.Spawn(highScoreEntryRowPrefab, contentParent).GetComponent<HighScoreEntryRow>();
-                row.SetUp(i+1, entries[i]);
-                // TODO: Highlight the current player's score
+                row.SetUp(i + 1, entries[i], entries[i].playerName == _scoreManager.PlayerName);
             }
         }
 
