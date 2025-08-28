@@ -1,8 +1,10 @@
+using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Utilities.TimeManagement;
 using Zenject;
 
 namespace _Scripts.Popups.LevelFinished
@@ -13,6 +15,8 @@ namespace _Scripts.Popups.LevelFinished
         [SerializeField] private Button nextLevelButton;
         
         [Inject] private IScoreManager _scoreManager;
+        [Inject] private IGameTimerController _gameTimerController;
+        
         protected override PopupType Type => PopupType.LevelFinished;
         
         public void Start()
@@ -23,7 +27,14 @@ namespace _Scripts.Popups.LevelFinished
         protected override void OnShowPopup()
         {
             base.OnShowPopup();
-            currentRankText.text = _scoreManager.RankName;
+            currentRankText.text = _scoreManager.GetCurrentRank().RankName;
+            _gameTimerController.PauseTimer();
+        }
+
+        protected override void OnHidePopup()
+        {
+            base.OnHidePopup();
+            _gameTimerController.StartTimer();
         }
 
         protected override void SetupSubscriptions()

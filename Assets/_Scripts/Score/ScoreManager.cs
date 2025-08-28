@@ -30,16 +30,17 @@ namespace _Scripts.Score
         [Inject] private IScoreSaver _scoreSaver;
         
         [ShowInInspector, ReadOnly] private int _currentScore = 0;
+        [ShowInInspector, ReadOnly] private int _completedMissionsCount = 0;
         [ShowInInspector, ReadOnly] private string _currentPlayerName = string.Empty; 
 
         public int Score => _currentScore;
+        public int CompletedMissionsCount => _completedMissionsCount;
         public string PlayerName => _currentPlayerName;
-        public string RankName => "Rank TBD";
-        public string RankDescription => "Rank Description TBD";
 
         public void StartGame(string playerName)
         {
             _currentScore = 0;
+            _completedMissionsCount = 0;
             _currentPlayerName = playerName;
             _gameTimerController.StartTimer();
         }
@@ -70,6 +71,7 @@ namespace _Scripts.Score
         private void OnApartmentMissionCompleted(ApartmentMissionCompletedSignal signal)
         {
             _currentScore += signal.Score;
+            _completedMissionsCount++;
             UpdateScoreText();
         }
         
@@ -87,7 +89,6 @@ namespace _Scripts.Score
         {
             _scoreSaver.SubmitScore(_currentScore, _currentPlayerName);
             SignalsHub.DispatchAsync(new ShowGameFinishedPopupSignal(GameFinishedReason.TimeOut));
-            ShowTimeOut();
         }
 
         private void CheckDefeat()
@@ -102,20 +103,12 @@ namespace _Scripts.Score
 
         private void ShowRestartButton()
         {
+            var currentRank = GetCurrentRank();
             defeatText.text = $"We are out of Resources to build,\n" +
-                              $"{GetCurrentRank()}!\n" +
+                              $"{currentRank.RankName}!\n" +
                               $"Final Score: {_currentScore}\n" +
                               $"Press \"R\" to try again.";
             defeatText.gameObject.SetActive(true);
-        }
-        
-        private void ShowTimeOut()
-        {
-            // defeatText.text = $"Время вышло! Ваш ранг:\n" +
-            //                   $"{GetCurrentRank()}!\n" +
-            //                   $"Очки: {_currentScore}\n" +
-            //                   $"Нажмите \"R\", чтобы начать заново.";
-            // defeatText.gameObject.SetActive(true);
         }
 
         private void Start()
@@ -141,10 +134,12 @@ namespace _Scripts.Score
             // $"{GetCurrentRank()}";
         }
 
-        private string GetCurrentRank()
+        public ScoreRank GetCurrentRank()
         {
-            var currentRank = scoreRanks.Where(rank => rank.MinScore <= _currentScore).OrderByDescending(rank => rank.MinScore).First();
-            return currentRank.RankName;
+            var currentRank = scoreRanks
+                .Where(rank => rank is not null && rank.MinCompletedMissions <= _completedMissionsCount)
+                .OrderByDescending(rank => rank.MinCompletedMissions).First();
+            return currentRank;
         }
         
 

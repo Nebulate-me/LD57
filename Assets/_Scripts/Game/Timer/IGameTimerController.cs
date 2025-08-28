@@ -6,5 +6,6 @@ namespace _Scripts.Game.Timer
     {
         UnityEvent OnTimerFinished { get; }
         void StartTimer();
+        void PauseTimer();
     }
 }

@@ -8,10 +8,10 @@ namespace _Scripts.Score
     {
         [FormerlySerializedAs("rank")] [SerializeField] private string rankName;
         [SerializeField] private string rankDescription;
-        [SerializeField] private int minScore;
+        [SerializeField] private int minCompletedMissions = 1;
 
         public string RankName => rankName;
         public string RankDescription => rankDescription;
-        public int MinScore => minScore;
+        public int MinCompletedMissions => minCompletedMissions;
     }
 }

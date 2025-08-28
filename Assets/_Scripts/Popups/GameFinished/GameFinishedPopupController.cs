@@ -60,8 +60,9 @@ namespace _Scripts.Popups.GameFinished
             gameFinishedReason.text = GetGameFinishedText(signal.Reason);
             playerNameText.text = _scoreManager.PlayerName;
             scoreText.text = _scoreManager.Score.ToString();
-            rankNameText.text = _scoreManager.RankName;
-            rankDescriptionText.text = _scoreManager.RankDescription;
+            var rank = _scoreManager.GetCurrentRank();
+            rankNameText.text = rank.RankName;
+            rankDescriptionText.text = rank.RankDescription;
             
             ShowPopup();
         }
