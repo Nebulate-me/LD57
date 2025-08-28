@@ -46,7 +46,8 @@ namespace _Scripts.Rooms
                 new RoomTileCellDto(
                         (rotation * tile.Position.ToVector3()).ToVector2Int(),
                         tile,
-                        direction
+                        direction,
+                        this
                 )).ToList();
             
             return new RoomDto(name, roomTypes, rotatedTiles);
@@ -57,7 +58,7 @@ namespace _Scripts.Rooms
             if (positionShift == Vector2.zero) return this;
 
             var shiftedTiles = tiles.Select(tile =>
-                new RoomTileCellDto(tile.Position + positionShift, tile)).ToList();
+                new RoomTileCellDto(tile.Position + positionShift, tile, this)).ToList();
             
             return new RoomDto(name, roomTypes, shiftedTiles);
         }

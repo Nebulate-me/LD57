@@ -73,9 +73,14 @@ namespace _Scripts.Rooms
             return HasType(requirement.RoomType);
         }
 
-        public bool HasType(RoomType roomType)
+        public bool HasType(RoomType expectedRoomType)
         {
-            return RoomTypes.Contains(roomType);
+            return RoomTypes.Contains(expectedRoomType);
+        }
+        
+        public bool HasAnyType(IEnumerable<RoomType> expectedTypes)
+        {
+            return RoomTypes.Intersect(expectedTypes).Any();
         }
 
         public void SetFloorColor(RoomFloorColor apartmentFloorColor)

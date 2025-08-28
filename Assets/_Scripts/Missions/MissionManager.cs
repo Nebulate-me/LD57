@@ -5,6 +5,7 @@ using _Scripts.Cards;
 using _Scripts.Game;
 using _Scripts.Missions.Apartment;
 using _Scripts.Rooms;
+using _Scripts.Utils;
 using ModestTree;
 using Signals;
 using UnityEngine;
@@ -199,7 +200,8 @@ namespace _Scripts.Missions
             var startingRooms = sharedRooms.SelectMany(sharedRoom =>
                     sharedRoom.AdjacentRooms.Where(room =>
                         !room.IsUsed &&
-                        (missionDto.Requirements.Any(room.IsFulfilling) && room.HasType(RoomType.LivingRoom) || room.HasType(RoomType.Hallway))))
+                        missionDto.Requirements.Any(room.IsFulfilling) && 
+                        room.HasAnyType(RoomTypeExtensions.ApartmentStartingRoomTypes)))
                 .Distinct();
             foreach (var startingRoom in startingRooms)
             {
@@ -290,7 +292,7 @@ namespace _Scripts.Missions
                 usedRoom.AdjacentRooms.Where(
                     room => !room.IsUsed &&
                             !UsedRooms.Contains(room) &&
-                            (Requirements.Any(room.IsFulfilling) || room.HasType(RoomType.Hallway)) ))
+                            (Requirements.Any(room.IsFulfilling) || room.HasType(RoomTypeExtensions.ConnectingRoomType)) ))
             .ToList();
 
         public bool IsCompleted => Requirements.IsEmpty() && RemainingWindowCount <= 0;

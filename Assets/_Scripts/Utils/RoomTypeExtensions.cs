@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using _Scripts.Rooms;
 
 namespace _Scripts.Utils
@@ -23,6 +24,15 @@ namespace _Scripts.Utils
                 RoomType.Window => "Окно",
                 _ => throw new ArgumentOutOfRangeException(nameof(roomType), roomType, null)
             };
+        }
+
+        public static RoomType ConnectingRoomType => RoomType.Hallway;
+
+        public static List<RoomType> ApartmentStartingRoomTypes => new() {RoomType.LivingRoom, RoomType.Hallway};
+
+        public static bool IsApartmentStarting(this RoomType roomType)
+        {
+            return ApartmentStartingRoomTypes.Contains(roomType);
         }
     }
 }

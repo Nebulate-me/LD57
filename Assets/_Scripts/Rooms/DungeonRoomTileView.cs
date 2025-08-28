@@ -47,6 +47,7 @@ namespace _Scripts.Rooms
         public List<RoomDirection> OpenDirections => openDirections;
         public List<RoomDirection> DoorDirections => doorDirections;
         public int WindowCount => _windowCount;
+        public RoomDto RoomDto => _roomDto;
 
         public bool IsUsed
         {
@@ -138,16 +139,29 @@ namespace _Scripts.Rooms
                         continue;
                     }
 
-                    var isConnectingToSharedRoom = HasRoomType(RoomType.Shared) || adjacentTile.HasRoomType(RoomType.Shared);
-                    var isConnectingUsedRooms = IsUsed && adjacentTile.IsUsed;
-                    var isConnectingUnusedRooms = !IsUsed && !adjacentTile.IsUsed;
-                    doorObject.SetActive(isConnectingUsedRooms || isConnectingUnusedRooms || isConnectingToSharedRoom);
+                    var isTileShared = HasRoomType(RoomType.Shared);
+                    var isAdjacentTileShared = adjacentTile.HasRoomType(RoomType.Shared);
+                    var noSharedRoomConnection = !isTileShared && !isAdjacentTileShared;
+                    
+                    var isConnectingSharedRooms = isTileShared && isAdjacentTileShared;
+                    var isApartmentStarting = (isTileShared && adjacentTile.HasAnyRoomType(RoomTypeExtensions.ApartmentStartingRoomTypes)) ||
+                                              (isAdjacentTileShared && HasAnyRoomType(RoomTypeExtensions.ApartmentStartingRoomTypes));
+                    var isConnectingUsedRooms = noSharedRoomConnection && IsUsed && adjacentTile.IsUsed;
+                    var isConnectingUnusedRooms = noSharedRoomConnection && !IsUsed && !adjacentTile.IsUsed;
+                    doorObject.SetActive(isConnectingSharedRooms || isApartmentStarting ||  isConnectingUsedRooms || isConnectingUnusedRooms);
                     continue;
                 }
 
                 if (!IsUsed && _adjacentGhostTiles.TryGetValue(doorDirection, out var adjacentGhostTileDto))
                 {
                     if (!adjacentGhostTileDto.Tile.DoorDirections.Contains(doorDirection.Invert()))
+                    {
+                        doorObject.SetActive(false);
+                        continue;
+                    }
+
+                    if (HasRoomType(RoomType.Shared) &&
+                        !adjacentGhostTileDto.Room.HasAnyRoomTypes(RoomTypeExtensions.ApartmentStartingRoomTypes))
                     {
                         doorObject.SetActive(false);
                         continue;
@@ -164,6 +178,11 @@ namespace _Scripts.Rooms
         private bool HasRoomType(RoomType roomType)
         {
             return _roomDto.HasRoomType(roomType);
+        }
+        
+        private bool HasAnyRoomType(List<RoomType> roomTypes)
+        {
+            return _roomDto.HasAnyRoomTypes(roomTypes);
         }
 
         private void UpdateWindows()

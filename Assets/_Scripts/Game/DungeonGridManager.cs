@@ -307,10 +307,10 @@ namespace _Scripts.Game
             return IsPositionInsideLevelBounds(gridPosition) && !IsPositionInsideLevelBounds(adjacentPosition);
         }
         
-        public bool IsTileAdjacentToDoorOrEmpty(Vector2Int gridPosition, RoomDirection direction)
+        public bool IsTileAdjacentToDoorOrEmpty(Vector2Int gridPosition, RoomDirection direction, out DungeonRoomTileView adjacentTile)
         {
             var adjacentPosition = gridPosition + direction.ToVector2Int();
-            if (!_roomTiles.TryGetFirst(tile => tile.GridPosition == adjacentPosition, out var adjacentTile))
+            if (!_roomTiles.TryGetFirst(tile => tile.GridPosition == adjacentPosition, out adjacentTile))
                 return true;
 
             return adjacentTile.DoorDirections.Contains(direction.Invert());

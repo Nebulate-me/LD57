@@ -12,7 +12,7 @@ namespace _Scripts.Rooms
         Bounds GetLevelBounds();
         Bounds GetRoomBoundsBasedOnTiles();
         bool IsTileAdjacentToLevelBounds(Vector2Int gridPosition, RoomDirection key);
-        bool IsTileAdjacentToDoorOrEmpty(Vector2Int tilePosition, RoomDirection doorDirection);
+        bool IsTileAdjacentToDoorOrEmpty(Vector2Int gridPosition, RoomDirection direction, out DungeonRoomTileView adjacentTile);
         Vector2Int WorldToGrid(Vector2 transformPosition);
         void UnloadLevel();
         void LoadLevel(Level level);

@@ -1,4 +1,5 @@
 using _Scripts.RoomTiles;
+using _Scripts.Utils;
 using UnityEngine;
 using Utilities;
 using Zenject;
@@ -27,7 +28,7 @@ namespace _Scripts.Rooms
             set => wallSpriteRenderer.color = value;
         }
 
-        public void SetUp(RoomTileCellDto roomTileCell)
+        public void SetUp(RoomTileCellDto roomTileCell, RoomDto roomDto)
         {
             wallSpriteRenderer.sprite = roomTileCell.Tile.UnusedSprite;
             wallSpriteTransform.rotation = roomTileCell.Direction.ToRotation();
@@ -52,10 +53,32 @@ namespace _Scripts.Rooms
             
             foreach (var doorDirection in roomTileCell.Tile.DoorDirections)
             {
+                var door = doorObjects[doorDirection];
+                
                 var isActiveWindow = windowObjects[doorDirection].activeSelf;
+                if (isActiveWindow)
+                {
+                    door.SetActive(false);
+                    continue;
+                }
+                
                 var isAdjacentDoorOrEmpty =
-                    _dungeonGridManager.IsTileAdjacentToDoorOrEmpty(tilePosition, doorDirection);
-                doorObjects[doorDirection].SetActive(!isActiveWindow && isAdjacentDoorOrEmpty);
+                    _dungeonGridManager.IsTileAdjacentToDoorOrEmpty(tilePosition, doorDirection, out var adjacentTile);
+                if (!isAdjacentDoorOrEmpty)
+                {
+                    door.SetActive(false);
+                    continue;
+                }
+
+                if (adjacentTile != null && 
+                    adjacentTile.RoomDto.HasRoomType(RoomType.Shared) &&
+                    !roomDto.HasAnyRoomTypes(RoomTypeExtensions.ApartmentStartingRoomTypes))
+                {
+                    door.SetActive(false);
+                    continue;
+                }
+                
+                doorObjects[doorDirection].SetActive(true);
             }
         }
     }

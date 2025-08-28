@@ -12,6 +12,7 @@ namespace _Scripts.RoomTiles
         [SerializeField] private RoomTileDto tile;
         [SerializeField] private Sprite furnitureSprite;
         [SerializeField] private RoomDirection furnitureDirection;
+        [SerializeField] private RoomDto room;
 
         public RoomTileCellDto(RoomTileCell tileCell)
         {
@@ -22,27 +23,31 @@ namespace _Scripts.RoomTiles
             furnitureDirection = tileCell.FurnitureDirection;
         }
         
-        public RoomTileCellDto(Vector2Int newPosition, RoomTileCellDto newTileDto)
+        public RoomTileCellDto(Vector2Int newPosition, RoomTileCellDto newTileDto, RoomDto roomDto)
         {
             position = newPosition;
             direction = newTileDto.Direction;
             tile = newTileDto.Tile;
             furnitureSprite = newTileDto.FurnitureSprite;
             furnitureDirection = newTileDto.FurnitureDirection;
+            room = roomDto;
         }
 
-        public RoomTileCellDto(Vector2Int newPosition, RoomTileCellDto newTileDto, RoomDirection newDirection)
+        public RoomTileCellDto(Vector2Int newPosition, RoomTileCellDto newTileDto, RoomDirection newDirection,
+            RoomDto roomDto)
         {
             position = newPosition;
             direction = newTileDto.Direction.Rotate(newDirection);
             tile = newTileDto.Tile.Rotate(newDirection);
             furnitureSprite = newTileDto.FurnitureSprite;
             furnitureDirection = newTileDto.FurnitureDirection;
+            room = roomDto;
         }
 
         public Vector2Int Position => position;
         public RoomDirection Direction => direction;
         public RoomTileDto Tile => tile;
+        public RoomDto Room => room;
         public Sprite FurnitureSprite => furnitureSprite;
         public RoomDirection FurnitureDirection => furnitureDirection;
     }

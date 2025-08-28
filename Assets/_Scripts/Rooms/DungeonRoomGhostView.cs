@@ -67,7 +67,7 @@ namespace _Scripts.Rooms
             {
                 var tileGhostVew = _prefabPool.Spawn(ghostTileSprite, ghostTileContainer).GetComponent<DungeonRoomTileGhostView>();
                 tileGhostVew.transform.localPosition = (roomTileCell.Position - roomTileStartingPosition).ToVector3(); // FIXME: gridToWorld this?
-                tileGhostVew.SetUp(roomTileCell);
+                tileGhostVew.SetUp(roomTileCell, roomDto);
 
                 _roomTileGhostViews.Add(tileGhostVew);
             }
