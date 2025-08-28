@@ -200,7 +200,6 @@ namespace _Scripts.Missions
             var startingRooms = sharedRooms.SelectMany(sharedRoom =>
                     sharedRoom.AdjacentRooms.Where(room =>
                         !room.IsUsed &&
-                        missionDto.Requirements.Any(room.IsFulfilling) && 
                         room.HasAnyType(RoomTypeExtensions.ApartmentStartingRoomTypes)))
                 .Distinct();
             foreach (var startingRoom in startingRooms)

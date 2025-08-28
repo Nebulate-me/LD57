@@ -54,8 +54,8 @@ namespace _Scripts.Rooms
                 {
                     if (roomTile.GridPosition.ManhattanDistance(otherRoomTile.GridPosition) != 1) continue;
                     var adjacentDirection = (roomTile.GridPosition - otherRoomTile.GridPosition).FromVector2Int();
-                    if (otherRoomTile.OpenDirections.Contains(adjacentDirection) ||
-                        otherRoomTile.DoorDirections.Contains(adjacentDirection) ||
+                    // FIXME: Ignoring open directions here because we only ever connect rooms via doors
+                    if (otherRoomTile.DoorDirections.Contains(adjacentDirection) &&
                         roomTile.DoorDirections.Contains(adjacentDirection.Invert())) return true;
                 }
             }
@@ -78,9 +78,9 @@ namespace _Scripts.Rooms
             return RoomTypes.Contains(expectedRoomType);
         }
         
-        public bool HasAnyType(IEnumerable<RoomType> expectedTypes)
+        public bool HasAnyType(IEnumerable<RoomType> expectedRoomTypes)
         {
-            return RoomTypes.Intersect(expectedTypes).Any();
+            return expectedRoomTypes.Any(HasType);
         }
 
         public void SetFloorColor(RoomFloorColor apartmentFloorColor)
