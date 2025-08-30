@@ -23,15 +23,15 @@ MonoBehaviour:
   - position: {x: 0, y: 0}
     direction: 1
     tile: {fileID: 11400000, guid: 124e89d276441184a945bcc24294bbf2, type: 2}
-    furnitureSprite: {fileID: -2605753, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 2
+    furnitureSprite: {fileID: 1999828224, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 3
   - position: {x: -1, y: 1}
     direction: 3
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    furnitureSprite: {fileID: 660020673, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 2
+    furnitureSprite: {fileID: 1556976021, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 1
   - position: {x: 0, y: 1}
     direction: 2
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    furnitureSprite: {fileID: 781872503, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 3
+    furnitureSprite: {fileID: -577483421, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 2

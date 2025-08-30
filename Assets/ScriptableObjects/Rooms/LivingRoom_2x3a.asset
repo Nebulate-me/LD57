@@ -18,30 +18,30 @@ MonoBehaviour:
   - position: {x: -1, y: 0}
     direction: 0
     tile: {fileID: 11400000, guid: fa6ffc1f9cffe0b49809850a0e98b562, type: 2}
-    furnitureSprite: {fileID: 516520959, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 3
+    furnitureSprite: {fileID: 886838786, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 0
   - position: {x: 0, y: 0}
     direction: 0
     tile: {fileID: 11400000, guid: dd8348d7baae84d47842a95069b851be, type: 2}
-    furnitureSprite: {fileID: 489214714, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 1
+    furnitureSprite: {fileID: 1792633620, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 0
   - position: {x: 1, y: 0}
     direction: 1
     tile: {fileID: 11400000, guid: 719e347d138180b47988a87dfe6d72a2, type: 2}
-    furnitureSprite: {fileID: 516520959, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 0
+    furnitureSprite: {fileID: 1465559653, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 3
   - position: {x: -1, y: 1}
     direction: 3
     tile: {fileID: 11400000, guid: 719e347d138180b47988a87dfe6d72a2, type: 2}
-    furnitureSprite: {fileID: 516520959, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 0
+    furnitureSprite: {fileID: 400352421, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 1
   - position: {x: 0, y: 1}
     direction: 2
     tile: {fileID: 11400000, guid: dd8348d7baae84d47842a95069b851be, type: 2}
-    furnitureSprite: {fileID: -552514603, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 3
+    furnitureSprite: {fileID: -964949609, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 2
   - position: {x: 1, y: 1}
     direction: 2
     tile: {fileID: 11400000, guid: fa6ffc1f9cffe0b49809850a0e98b562, type: 2}
-    furnitureSprite: {fileID: 516520959, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 3
+    furnitureSprite: {fileID: -1349038778, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 2

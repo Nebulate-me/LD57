@@ -18,20 +18,20 @@ MonoBehaviour:
   - position: {x: -1, y: 0}
     direction: 0
     tile: {fileID: 11400000, guid: fa6ffc1f9cffe0b49809850a0e98b562, type: 2}
-    furnitureSprite: {fileID: -1929502500, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 1
+    furnitureSprite: {fileID: -2037453264, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 0
   - position: {x: 0, y: 0}
     direction: 1
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    furnitureSprite: {fileID: 443588989, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 3
+    furnitureSprite: {fileID: 675397310, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 0
   - position: {x: -1, y: 1}
     direction: 3
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    furnitureSprite: {fileID: 1811322383, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
+    furnitureSprite: {fileID: -1385338190, guid: b639034da6e497a4da8701589f57a36b, type: 3}
     furnitureDirection: 1
   - position: {x: 0, y: 1}
     direction: 2
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    furnitureSprite: {fileID: -1953272316, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
+    furnitureSprite: {fileID: 27076399, guid: b639034da6e497a4da8701589f57a36b, type: 3}
     furnitureDirection: 2

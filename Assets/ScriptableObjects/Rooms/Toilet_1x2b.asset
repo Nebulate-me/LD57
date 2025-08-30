@@ -17,11 +17,11 @@ MonoBehaviour:
   tiles:
   - position: {x: 0, y: 0}
     direction: 0
-    tile: {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
-    furnitureSprite: {fileID: 1811322383, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
+    tile: {fileID: 11400000, guid: 380da597ec4e8814e8f91558b9039b5b, type: 2}
+    furnitureSprite: {fileID: -2037453264, guid: b639034da6e497a4da8701589f57a36b, type: 3}
     furnitureDirection: 2
   - position: {x: 0, y: 1}
     direction: 2
-    tile: {fileID: 11400000, guid: 380da597ec4e8814e8f91558b9039b5b, type: 2}
-    furnitureSprite: {fileID: -1929502500, guid: 4f99494b59cea214b8bf78634869f444, type: 3}
-    furnitureDirection: 3
+    tile: {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
+    furnitureSprite: {fileID: 675397310, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 2

@@ -99,7 +99,7 @@ namespace _Scripts.Score
                     {
                         var json = PlayerPrefs.GetString(PlayerPrefsKey, "{}");
                         _data = JsonUtility.FromJson<HighscoreData>(json) ?? new HighscoreData();
-                        Debug.Log($"{_data.entries.Count} Highscores read");
+                        Debug.Log($"{_data.entries.Count} Highscores read from PlayerPrefs");
                     }
                     else
                     {
