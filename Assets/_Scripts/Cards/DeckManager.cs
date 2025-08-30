@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Game;
+using _Scripts.Missions;
 using _Scripts.Rooms;
 using _Scripts.Utils;
+using ModestTree;
 using Signals;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -19,8 +21,8 @@ namespace _Scripts.Cards
         [ShowInInspector, ReadOnly] private int _remainingRoomCards;
         [ShowInInspector, ReadOnly] private Level _currentLevel;
         
+        [Inject] private IMissionManager _missionManager;
         [Inject] private IRandomService _randomService;
-        
 
         private void OnEnable()
         {
@@ -70,13 +72,28 @@ namespace _Scripts.Cards
         private List<Room> GetPreferredAvailableRooms(IEnumerable<RoomDto> handRooms)
         {
             var handRoomsList = handRooms.ToList();
-            if (!handRoomsList.Any(handRoom => handRoom.HasAnyRoomTypes(RoomTypeExtensions.ApartmentStartingRoomTypes)))
+            if (DoesContainRoomTypes(handRoomsList, RoomTypeExtensions.ApartmentStartingRoomTypes))
             {
-                return _currentLevel.AvailableRooms.Where(room => room.ToDto().HasAnyRoomTypes(RoomTypeExtensions.ApartmentStartingRoomTypes)).ToList();
+                return _currentLevel.AvailableRooms.Where(room => room.HasAnyRoomTypes(RoomTypeExtensions.ApartmentStartingRoomTypes)).ToList();
+            }
+
+            var availableNonHandRooms = _currentLevel.AvailableRooms
+                .Where(room => room && handRoomsList.All(handRoom => !handRoom.HasAnyRoomTypes(room.RoomTypes)))
+                .ToList();
+
+            if (_missionManager.UnfulfilledRoomTypeRequirements.Any())
+            {
+                return availableNonHandRooms.Where(room =>
+                    room.HasAnyRoomTypes(_missionManager.UnfulfilledRoomTypeRequirements))
+                    .ToList();
             }
             
-            return _currentLevel.AvailableRooms
-                .Where(room => handRoomsList.All(handRoom => !handRoom.HasAnyRoomTypes(room.RoomTypes))).ToList();
+            return availableNonHandRooms;
+        }
+
+        private bool DoesContainRoomTypes(IEnumerable<RoomDto> handRooms, List<RoomType> roomTypes)
+        {
+            return handRooms.None(handRoom => handRoom.HasAnyRoomTypes(roomTypes));
         }
 
         public void BuryRoom(List<RoomDto> cardsToBury)

@@ -8,6 +8,12 @@ namespace _Scripts.Utils
 {
     public static class ListExtensions
     {
+
+        public static bool None<T>(this IEnumerable<T> list, Func<T, bool> predicate)
+        {
+            return !list.Any(predicate);    
+        }
+        
         public static void Shuffle<T>(this IList<T> ts) {
             var count = ts.Count;
             var last = count - 1;

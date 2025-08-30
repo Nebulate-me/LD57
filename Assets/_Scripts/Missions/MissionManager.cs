@@ -35,6 +35,7 @@ namespace _Scripts.Missions
         private string _lastCompletedMissionName;
         private List<DungeonRoomModel> _highlightedRooms = new();
         private Level _currentLevel;
+        private readonly HashSet<RoomType> _unfulfilledRoomTypeRequirements = new();
 
         private void OnEnable()
         {
@@ -92,10 +93,11 @@ namespace _Scripts.Missions
         }
 
         public int CompletableMissionsCount => _apartmentMissionCardViews.Count(mission => mission.Completable);
+        public List<RoomType> UnfulfilledRoomTypeRequirements => _unfulfilledRoomTypeRequirements.ToList();
 
         public void CompleteMission(ApartmentMissionCardView apartmentMissionCard)
         {
-            if (!IsApartmentMissionCompletable(apartmentMissionCard.Dto, out var roomsToUse)) return;
+            if (!IsApartmentMissionCompletable(apartmentMissionCard.Dto, out var roomsToUse, out _)) return;
 
             var apartmentFloorColor = _roomRegistry.TakeUnusedColor();
             var roomScore = apartmentMissionCard.Dto.RewardScore;
@@ -128,7 +130,7 @@ namespace _Scripts.Missions
 
         public void HighlightMission(ApartmentMissionCardView apartmentMissionCard)
         {
-            var isCompletable = IsApartmentMissionCompletable(apartmentMissionCard.Dto, out var roomsToUse);
+            var isCompletable = IsApartmentMissionCompletable(apartmentMissionCard.Dto, out var roomsToUse, out _);
             
             var apartmentFloorColor = _roomRegistry.HighlightColor;
             foreach (var dungeonRoomModel in roomsToUse)
@@ -159,11 +161,14 @@ namespace _Scripts.Missions
 
         private void UpdateMissions()
         {
+            _unfulfilledRoomTypeRequirements.Clear();
+            
             foreach (var missionCardView in _apartmentMissionCardViews)
             {
-                var isCompletable = IsApartmentMissionCompletable(missionCardView.Dto, out var usedRooms);
+                var isCompletable = IsApartmentMissionCompletable(missionCardView.Dto, out var usedRooms, out var unfulfilledRoomTypes);
                 missionCardView.Completable = isCompletable;
                 missionCardView.SetAchievedRequirements(usedRooms);
+                AddUnfulfilledRoomTypes(unfulfilledRoomTypes);
             }
 
             RefillMissionHand();
@@ -185,16 +190,31 @@ namespace _Scripts.Missions
                 var missionCardView = _prefabPool.Spawn(apartmentMissionCardPrefab, missionContainer)
                     .GetComponent<ApartmentMissionCardView>();
                 missionCardView.SetUp(missionDto);
-                missionCardView.Completable = IsApartmentMissionCompletable(missionCardView.Dto, out var usedRooms);
+                missionCardView.Completable = IsApartmentMissionCompletable(missionCardView.Dto, out var usedRooms, out var unfulfilledRoomTypes);
                 missionCardView.SetAchievedRequirements(usedRooms);
+                AddUnfulfilledRoomTypes(unfulfilledRoomTypes);
                 _apartmentMissionCardViews.Add(missionCardView);
             }
         }
 
-        private bool IsApartmentMissionCompletable(ApartmentMissionDto missionDto, out List<DungeonRoomModel> roomsToUse)
+        private void AddUnfulfilledRoomTypes(List<RoomType> unfulfilledRoomTypes)
+        {
+            foreach (var unfulfilledRoomType in unfulfilledRoomTypes)
+            { 
+                _unfulfilledRoomTypeRequirements.Add(unfulfilledRoomType);   
+            }
+        }
+
+        private bool IsApartmentMissionCompletable(ApartmentMissionDto missionDto, out List<DungeonRoomModel> roomsToUse, out List<RoomType> unfulfilledRoomTypes)
         {
             roomsToUse = new List<DungeonRoomModel>();
 
+            var missionRequirementRoomTypes = missionDto.Requirements
+                .Where(req => req.RoomType != RoomType.Window)
+                .Select(requirement => requirement.RoomType)
+                .ToList();
+            unfulfilledRoomTypes = missionRequirementRoomTypes;
+            
             var sharedRooms = _dungeonGridManager.Rooms.Where(room => room.HasType(RoomType.Shared));
             // We can start forming apartment from any of the required rooms or a hallway
             var startingRooms = sharedRooms.SelectMany(sharedRoom =>
@@ -210,12 +230,15 @@ namespace _Scripts.Missions
                 if (TrySearchApartmentMission(inputSearch, out var alternativeRoomsToUse))
                 {
                     roomsToUse = alternativeRoomsToUse;
+                    unfulfilledRoomTypes = new List<RoomType>();
                     return true;
                 }
 
                 if (alternativeRoomsToUse.Count > roomsToUse.Count) // TODO: Check the requirements in a better available way
                 {
                     roomsToUse = alternativeRoomsToUse;
+                    var usedRoomTypes = roomsToUse.SelectMany(room => room.RoomTypes);
+                    unfulfilledRoomTypes = missionRequirementRoomTypes.Except(usedRoomTypes).ToList();
                 }
             }
 
