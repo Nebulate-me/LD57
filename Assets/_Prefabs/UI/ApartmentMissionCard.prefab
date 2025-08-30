@@ -74,8 +74,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4286336329
-  m_fontColor: {r: 0.28627452, g: 0.3019608, b: 0.48627454, a: 1}
+    rgba: 4283707155
+  m_fontColor: {r: 0.07450981, g: 0.18431373, b: 0.32941177, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -310,8 +310,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282722344
-  m_fontColor: {r: 0.15686275, g: 0.15686275, b: 0.27058825, a: 1}
+    rgba: 4283707155
+  m_fontColor: {r: 0.07450981, g: 0.18431373, b: 0.32941177, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -514,8 +514,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4286336585
-  m_fontColor: {r: 0.28627452, g: 0.30588236, b: 0.48627454, a: 1}
+    rgba: 4283707155
+  m_fontColor: {r: 0.07450981, g: 0.18431373, b: 0.32941177, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -668,6 +668,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RoomTypeIcon (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3719742290885232191, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
+      propertyPath: m_fontSize
+      value: 16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -769,6 +773,10 @@ PrefabInstance:
     - target: {fileID: 1184246537861061770, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
       propertyPath: m_Name
       value: RoomTypeIcon (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3719742290885232191, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
+      propertyPath: m_fontSize
+      value: 16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -872,6 +880,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RoomTypeIcon
       objectReference: {fileID: 0}
+    - target: {fileID: 3719742290885232191, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
+      propertyPath: m_fontSize
+      value: 16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -973,6 +985,10 @@ PrefabInstance:
     - target: {fileID: 1184246537861061770, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
       propertyPath: m_Name
       value: RoomTypeIcon (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3719742290885232191, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
+      propertyPath: m_fontSize
+      value: 16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1076,6 +1092,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RoomTypeIcon (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3719742290885232191, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
+      propertyPath: m_fontSize
+      value: 16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1177,6 +1197,10 @@ PrefabInstance:
     - target: {fileID: 1184246537861061770, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
       propertyPath: m_Name
       value: RoomTypeIcon (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3719742290885232191, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
+      propertyPath: m_fontSize
+      value: 16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1280,6 +1304,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RoomTypeIcon (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 3719742290885232191, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
+      propertyPath: m_fontSize
+      value: 16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1381,6 +1409,10 @@ PrefabInstance:
     - target: {fileID: 1184246537861061770, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
       propertyPath: m_Name
       value: RoomTypeIcon (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3719742290885232191, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
+      propertyPath: m_fontSize
+      value: 16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
