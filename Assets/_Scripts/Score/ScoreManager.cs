@@ -35,14 +35,17 @@ namespace _Scripts.Score
 
         public int Score => _currentScore;
         public int CompletedMissionsCount => _completedMissionsCount;
-        public string PlayerName => _currentPlayerName;
+        public string PlayerName
+        {
+            get => _currentPlayerName;
+            set => _currentPlayerName = value;
+        }
 
-        public void StartGame(string playerName)
+        public void StartGame()
         {
             _currentScore = 0;
             _completedMissionsCount = 0;
-            _currentPlayerName = playerName;
-            _gameTimerController.StartTimer();
+            _gameTimerController.StartTimer(); // TODO: Do it after the initial tutorial is done
         }
 
         public void FinishLevel(int emptyRoomTilesCount)

@@ -1,4 +1,5 @@
 using _Scripts.Missions;
+using Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,8 +38,10 @@ namespace _Scripts.Popups.StartGame
         
         private void StartGame()
         {
-            _scoreManager.StartGame(playerNameField.text);
+            // _scoreManager.StartGame(playerNameField.text); // TODO: only do this if there is no tutorial
+            _scoreManager.PlayerName = playerNameField.text;
             HidePopup();
+            SignalsHub.DispatchAsync(new StartGamePopupClosedSignal());
         }
 
         private void UpdateStartGameButton(string playerName)

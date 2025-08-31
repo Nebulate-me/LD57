@@ -6,8 +6,8 @@ namespace _Scripts.Missions
     {
         int Score { get; }
         int CompletedMissionsCount { get; }
-        string PlayerName { get; }
-        void StartGame(string playerName);
+        string PlayerName { get; set;  }
+        void StartGame();
         void FinishLevel(int emptyRoomTilesCount);
         ScoreRank GetCurrentRank();
     }
