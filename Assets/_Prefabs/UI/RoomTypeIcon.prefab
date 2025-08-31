@@ -53,8 +53,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundImage: {fileID: 2505827699289640954}
-  unfulfilledBackgroundSprite: {fileID: -1651583167, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
-  fulfilledBackgroundSprite: {fileID: -999526757, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
+  unfulfilledBackgroundSprite: {fileID: 570555453, guid: dbefdcd3dc83e3043a30561a65e5f41c, type: 3}
+  fulfilledBackgroundSprite: {fileID: 1456403084, guid: dbefdcd3dc83e3043a30561a65e5f41c, type: 3}
   roomTypeIcon: {fileID: 5762613649661815238}
   roomCountText: {fileID: 3719742290885232191}
 --- !u!222 &6933376559325570771
@@ -341,7 +341,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1651583167, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
+  m_Sprite: {fileID: 570555453, guid: dbefdcd3dc83e3043a30561a65e5f41c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

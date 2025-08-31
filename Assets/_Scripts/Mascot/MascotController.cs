@@ -59,10 +59,14 @@ namespace _Scripts.Mascot
             if (clickCatcher) clickCatcher.onClick.RemoveListener(OnClicked);
         }
 
-        private void OnGameStarted(StartGamePopupClosedSignal signalk)
+        private void OnGameStarted(StartGamePopupClosedSignal signal)
         {
+            #if SKIP_TUTORIAL
+            _scoreManager.StartGame();
+            #else
             string msg = startGameMessage;
             Show(msg);
+            #endif
         }
 
         public void Show(string message)
