@@ -4,7 +4,6 @@ using _Scripts.Game;
 using _Scripts.Missions;
 using _Scripts.Rooms;
 using _Scripts.Utils;
-using ModestTree;
 using Signals;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -56,7 +55,7 @@ namespace _Scripts.Cards
         public bool TryDrawRoom(IEnumerable<RoomDto> handRooms, out RoomDto roomDto)
         {
             roomDto = null;
-            if (RoomCardAmount <= 0 || !_currentLevel) return false;
+            if (!_currentLevel) return false;
             
             var preferredAvailableRooms = GetPreferredAvailableRooms(handRooms);
 
@@ -64,7 +63,7 @@ namespace _Scripts.Cards
                 ? _randomService.Sample(_currentLevel.AvailableRooms).ToDto() 
                 : _randomService.Sample(preferredAvailableRooms).ToDto();
             
-            _remainingRoomCards--;
+            // _remainingRoomCards--;
             UpdateRemainingCardsText();
             return true;
         }
