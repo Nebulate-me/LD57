@@ -1,10 +1,8 @@
 using System;
-using _Scripts.Missions;
 using Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using Zenject;
 
 namespace _Scripts.Game.Timer
 {

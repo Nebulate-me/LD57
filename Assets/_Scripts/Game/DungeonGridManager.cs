@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
+using _Scripts.Game.Timer;
 using _Scripts.Rooms;
 using _Scripts.RoomTiles;
 using _Scripts.Utils;

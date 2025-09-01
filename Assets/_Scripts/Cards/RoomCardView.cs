@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
+using _Scripts.Game.Timer;
 using _Scripts.Rooms;
 using _Scripts.RoomTiles;
+using Signals;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -29,13 +33,47 @@ namespace _Scripts.Cards
 
         [Inject] private IHandManager _handManager;
         [Inject] private IPrefabPool _prefabPool;
-        
+
+        [ShowInInspector, ReadOnly] private bool _isEnabled;
         private RoomDto _roomDto;
         private readonly List<RoomTileCellView> _roomTilCellViews = new();
         public RoomDto RoomDto => _roomDto;
-        
+
+        private void OnEnable()
+        { 
+            SignalsHub.AddListener<GameTimerStartedSignal>(OnGameTimerStarted);
+            SignalsHub.AddListener<GameTimerPausedSignal>(OnGameTimerPaused);   
+        }
+
+        private void OnDisable()
+        {
+            SignalsHub.RemoveListener<GameTimerStartedSignal>(OnGameTimerStarted);
+            SignalsHub.RemoveListener<GameTimerPausedSignal>(OnGameTimerPaused);
+        }
+
+        private void OnGameTimerPaused(GameTimerPausedSignal obj)
+        {
+            SetIsEnabled(false);
+        }
+
+        private void OnGameTimerStarted(GameTimerStartedSignal obj)
+        {
+            SetIsEnabled(true);
+        }
+
+        private void SetIsEnabled(bool isEnabled)
+        {
+            _isEnabled = isEnabled;
+            // TODO: Disabled button background
+            if (!isEnabled)
+            {
+                _handManager.DeselectRoomCard();
+            }
+        }
+
         public void SetUp(RoomDto roomDto)
         {
+            _isEnabled = true;
             _roomDto = roomDto;
             roomName.text = roomDto.Name;
             
@@ -60,6 +98,7 @@ namespace _Scripts.Cards
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            if (!_isEnabled) return;
             _handManager.SelectRoomCard(_roomDto);
         }
 
