@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using _Scripts.Missions;
 using _Scripts.Popups.StartGame;
 using Signals;
@@ -23,22 +24,25 @@ namespace _Scripts.Mascot
         [SerializeField] private float fadeDuration = 0.18f;
         [SerializeField] private bool useTypewriter = true;
         [SerializeField] private float charsPerSecond = 55f;
-        
+
         [Header("Messages")]
-        [SerializeField, TextArea(3, 5)] private string startGameMessage = @"Добро пожаловать в игру СибТехПроект. 
-СибТехПроект - это Сибирские Технологии Проектирования. 
-Мы уже 17 лет быстро и качественно 
-проектируем многоквартирные дома
- и гордимся каждым своим объектом.
-Предлагаем тебе почувствовать себя частью 
-команды СибТехПроекта и 
-попробовать спроектировать свой многоквартирный дом.
-";
+        [Tooltip("Phrases will be shown one after another on each click.")]
+        [SerializeField, TextArea(2, 5)]
+        private string[] startGamePhrases = {
+            "Добро пожаловать в игру СибТехПроект.",
+            "СибТехПроект — это Сибирские Технологии Проектирования.",
+            "Мы уже 17 лет быстро и качественно проектируем многоквартирные дома и гордимся каждым своим объектом.",
+            "Предлагаем тебе почувствовать себя частью команды и попробовать спроектировать свой дом."
+        };
 
         [Inject] private IScoreManager _scoreManager;
-        
+
         private Coroutine showRoutine;
         private Coroutine typeRoutine;
+
+        // sequence state
+        private readonly List<string> _activePhrases = new List<string>();
+        private int _phraseIndex = 0;
 
         void Awake()
         {
@@ -54,23 +58,36 @@ namespace _Scripts.Mascot
 
         void OnDisable()
         {
-            
             SignalsHub.RemoveListener<StartGamePopupClosedSignal>(OnGameStarted);
             if (clickCatcher) clickCatcher.onClick.RemoveListener(OnClicked);
         }
 
         private void OnGameStarted(StartGamePopupClosedSignal signal)
         {
-            #if SKIP_TUTORIAL
+#if SKIP_TUTORIAL
             _scoreManager.StartGame();
-            #else
-            string msg = startGameMessage;
-            Show(msg);
-            #endif
+#else
+            // Use configured phrases
+            ShowSequence(startGamePhrases);
+#endif
         }
 
-        public void Show(string message)
+        /// <summary>
+        /// Starts showing a sequence of phrases (fades in once, then click-through).
+        /// </summary>
+        public void ShowSequence(IEnumerable<string> phrases)
         {
+            _activePhrases.Clear();
+            if (phrases != null) _activePhrases.AddRange(phrases);
+            if (_activePhrases.Count == 0)
+            {
+                // nothing to show, just continue
+                _scoreManager.StartGame();
+                return;
+            }
+
+            _phraseIndex = 0;
+
             if (showRoutine != null) StopCoroutine(showRoutine);
             if (typeRoutine != null) StopCoroutine(typeRoutine);
 
@@ -79,12 +96,18 @@ namespace _Scripts.Mascot
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
 
-            // Prepare text
-            contentBubbleText.text = message;
-            shownBubbleText.maxVisibleCharacters = 0;
-            shownBubbleText.text = message;
+            // prime first phrase
+            SetPhrase(_activePhrases[_phraseIndex], resetVisible: true);
 
             showRoutine = StartCoroutine(FadeInThenType());
+        }
+
+        /// <summary>
+        /// Keeps the old API around — shows a single message as a 1-phrase sequence.
+        /// </summary>
+        public void Show(string message)
+        {
+            ShowSequence(new[] { message });
         }
 
         public void Hide()
@@ -96,15 +119,36 @@ namespace _Scripts.Mascot
 
         private void OnClicked()
         {
-            // If typewriter hasn’t finished, finish instantly. Else, hide.
+            // If typewriter hasn’t finished, complete immediately.
             if (useTypewriter && shownBubbleText.maxVisibleCharacters < shownBubbleText.text.Length)
             {
                 shownBubbleText.maxVisibleCharacters = shownBubbleText.text.Length;
+                return;
+            }
+
+            // Otherwise go to next phrase, or finish if this was the last.
+            if (_phraseIndex < _activePhrases.Count - 1)
+            {
+                _phraseIndex++;
+                // stop any previous typing coroutine
+                if (typeRoutine != null) StopCoroutine(typeRoutine);
+                SetPhrase(_activePhrases[_phraseIndex], resetVisible: true);
+
+                if (useTypewriter)
+                    typeRoutine = StartCoroutine(Typewriter(shownBubbleText, charsPerSecond));
             }
             else
             {
+                // Last phrase → fade out and start the game
                 Hide();
             }
+        }
+
+        private void SetPhrase(string phrase, bool resetVisible)
+        {
+            contentBubbleText.text = phrase;
+            shownBubbleText.text = phrase;
+            if (resetVisible) shownBubbleText.maxVisibleCharacters = 0;
         }
 
         private IEnumerator FadeInThenType()
@@ -121,7 +165,7 @@ namespace _Scripts.Mascot
             canvasGroup.interactable = true;
             canvasGroup.blocksRaycasts = true;
 
-            // Typewriter
+            // Typewriter for first phrase
             if (useTypewriter)
             {
                 typeRoutine = StartCoroutine(Typewriter(shownBubbleText, charsPerSecond));
@@ -141,6 +185,10 @@ namespace _Scripts.Mascot
             canvasGroup.alpha = 0f;
             canvasGroup.blocksRaycasts = false;
             mascotPopup.SetActive(false);
+
+            _activePhrases.Clear();
+            _phraseIndex = 0;
+
             _scoreManager.StartGame();
         }
 

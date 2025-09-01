@@ -41,6 +41,12 @@ namespace _Scripts.Score
             set => _currentPlayerName = value;
         }
 
+        public void SubtractScore(int score)
+        {
+            _currentScore -= score;
+            UpdateScoreText();
+        }
+
         public void StartGame()
         {
             _currentScore = 0;

@@ -7569,18 +7569,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1780569381200463938}
     m_Modifications:
-    - target: {fileID: 4525969585652413188, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 1411.21
-      objectReference: {fileID: 0}
-    - target: {fileID: 4525969585652413188, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 412.36
-      objectReference: {fileID: 0}
-    - target: {fileID: 4696470718598346002, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8827970398212110682, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
       propertyPath: m_Name
       value: MascotController

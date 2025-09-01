@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Missions;
+using Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -65,16 +66,22 @@ namespace _Scripts.Game.Timer
             if (RemainingSeconds <= 0f) RemainingSeconds = startSeconds;
             IsRunning = true;
             UpdateLabel();
+            SignalsHub.DispatchAsync(new GameTimerStartedSignal());
         }
 
         public void PauseTimer()
         {
             IsRunning = false;
+            SignalsHub.DispatchAsync(new GameTimerPausedSignal());
         }
 
         public void ResumeTimer()
         {
-            if (RemainingSeconds > 0f) IsRunning = true;
+            if (RemainingSeconds > 0f)
+            {
+                IsRunning = true;
+                SignalsHub.DispatchAsync(new GameTimerStartedSignal());
+            }
         }
 
         public void ResetTimer()
