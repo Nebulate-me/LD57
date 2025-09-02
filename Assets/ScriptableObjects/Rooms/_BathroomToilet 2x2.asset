@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7a12f5410f346f29790ec35b19e1147, type: 3}
-  m_Name: BathroomToilet 2x2
+  m_Name: _BathroomToilet 2x2
   m_EditorClassIdentifier: 
   roomName: "\u0421\u0430\u043D\u0443\u0437\u0435\u043B"
   roomTypes: 0100000004000000

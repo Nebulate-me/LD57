@@ -15,7 +15,6 @@ namespace _Scripts.Missions.Apartment
     public class ApartmentMissionCardView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private TextMeshProUGUI missionNameText;
-        [SerializeField] private TextMeshProUGUI rewardCountText;
         [SerializeField] private TextMeshProUGUI rewardScoreText;
 
         [Header("Room Type Icon")]
@@ -51,7 +50,6 @@ namespace _Scripts.Missions.Apartment
         {
             _dto = missionDto;
             missionNameText.text = missionDto.Name;
-            rewardCountText.text = $"{missionDto.RewardRooms.Count} карт";
             rewardScoreText.text = $"{missionDto.RewardScore} очков";
 
             SetUpRequirements(missionDto);

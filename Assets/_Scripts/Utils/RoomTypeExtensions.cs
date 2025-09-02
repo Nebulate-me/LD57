@@ -21,6 +21,7 @@ namespace _Scripts.Utils
                 RoomType.Balcony => "Балкон",
                 RoomType.Shared => "Общее пространство",
                 RoomType.Childrens => "Детская",
+                RoomType.Shower => "Дущ",
                 RoomType.Window => "Окно",
                 _ => throw new ArgumentOutOfRangeException(nameof(roomType), roomType, null)
             };

@@ -12,6 +12,7 @@ namespace _Scripts.Rooms
         Hallway = 7,
         Balcony = 8,
         Childrens = 9,
+        Shower = 10,
         Shared = 20,
         Window = 21,
     }

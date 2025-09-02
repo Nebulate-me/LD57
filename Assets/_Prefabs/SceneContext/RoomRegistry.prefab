@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultRoomTypeIcon: {fileID: -60880189, guid: 6b5e35026fec2404fb71033473826b06, type: 3}
   roomTypeSprites:
-    keyData: 01000000040000000500000002000000030000001500000009000000
+    keyData: 010000000400000005000000020000000300000015000000090000000a000000
     valueData:
     - {fileID: -640081696, guid: dbefdcd3dc83e3043a30561a65e5f41c, type: 3}
     - {fileID: -1802209975, guid: dbefdcd3dc83e3043a30561a65e5f41c, type: 3}
@@ -55,6 +55,7 @@ MonoBehaviour:
     - {fileID: -877367645, guid: dbefdcd3dc83e3043a30561a65e5f41c, type: 3}
     - {fileID: 1369638577, guid: dbefdcd3dc83e3043a30561a65e5f41c, type: 3}
     - {fileID: 1404431818, guid: dbefdcd3dc83e3043a30561a65e5f41c, type: 3}
+    - {fileID: 529442472, guid: dbefdcd3dc83e3043a30561a65e5f41c, type: 3}
   unusedRoomFloorColor: 0
   sharedRoomFloorColor: 1
   highlightFloorColor: 12

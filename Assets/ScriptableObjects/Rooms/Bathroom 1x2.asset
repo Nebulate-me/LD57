@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7a12f5410f346f29790ec35b19e1147, type: 3}
   m_Name: Bathroom 1x2
   m_EditorClassIdentifier: 
-  roomName: "\u0412\u0430\u043D\u043D\u0430\u044F II"
-  roomTypes: 04000000
+  roomName: "\u0414\u0443\u0448"
+  roomTypes: 0a000000
   tiles:
   - position: {x: 0, y: 0}
     direction: 1

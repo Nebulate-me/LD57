@@ -105,15 +105,9 @@ namespace _Scripts.Missions
             {
                 dungeonRoomModel.IsUsed = true;
                 dungeonRoomModel.SetFloorColor(apartmentFloorColor);
-                // if (apartmentMissionCard.Dto.Requirements.Any(requirement =>
-                //         dungeonRoomModel.HasType(requirement.RoomType)))
-                // {
                 roomScore += dungeonRoomModel.Score;
-                // }
             }
             
-            var shuffledMissionRewards = _randomService.Shuffle(apartmentMissionCard.Dto.RewardRooms).ToList();
-            _deckManager.BuryRoom(shuffledMissionRewards);
             _prefabPool.Despawn(apartmentMissionCard.gameObject);
             _apartmentMissionCardViews.Remove(apartmentMissionCard);
 
