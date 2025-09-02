@@ -50,9 +50,15 @@ namespace _Scripts.Missions.Apartment
         {
             _dto = missionDto;
             missionNameText.text = missionDto.Name;
-            rewardScoreText.text = $"{missionDto.RewardScore} очков";
-
+            
+            SeUpRewardScore(missionDto);
             SetUpRequirements(missionDto);
+        }
+
+        private void SeUpRewardScore(ApartmentMissionDto missionDto)
+        {
+            var currentRewardScore = _roomsToUse.Any() ? (missionDto.RewardScore + _roomsToUse.Sum(room => room.Score)) : missionDto.RewardScore;
+            rewardScoreText.text = $"{currentRewardScore} очков";
         }
 
         private void SetUpRequirements(ApartmentMissionDto missionDto)
@@ -93,6 +99,7 @@ namespace _Scripts.Missions.Apartment
         {
             _roomsToUse = roomsToUse;
             SetUpRequirements(_dto);
+            SeUpRewardScore(_dto);
         }
 
         public void OnSpawn()
