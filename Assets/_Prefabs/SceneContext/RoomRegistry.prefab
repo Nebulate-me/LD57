@@ -58,19 +58,14 @@ MonoBehaviour:
     - {fileID: 529442472, guid: dbefdcd3dc83e3043a30561a65e5f41c, type: 3}
   unusedRoomFloorColor: 0
   sharedRoomFloorColor: 1
-  highlightFloorColor: 12
+  highlightFloorColor: 11
   floorColorSprites:
-    keyData: 0000000001000000020000000300000004000000050000000600000007000000080000000a0000000b0000000c000000
+    keyData: 0000000001000000020000000300000008000000070000000b000000
     valueData:
     - {fileID: 1625352318, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
     - {fileID: -1700980749, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
     - {fileID: -815332830, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
     - {fileID: 1635575430, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
     - {fileID: -1990259583, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
-    - {fileID: 667951688, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
-    - {fileID: -1938796046, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
     - {fileID: 1269558959, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
     - {fileID: 1969821803, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
-    - {fileID: -1911756444, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
-    - {fileID: -1529466858, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
-    - {fileID: -71258625, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
