@@ -63,7 +63,6 @@ namespace _Scripts.Cards
                 ? _randomService.Sample(_currentLevel.AvailableRooms).ToDto() 
                 : _randomService.Sample(preferredAvailableRooms).ToDto();
             
-            // _remainingRoomCards--;
             UpdateRemainingCardsText();
             return true;
         }
@@ -71,9 +70,19 @@ namespace _Scripts.Cards
         private List<Room> GetPreferredAvailableRooms(IEnumerable<RoomDto> handRooms)
         {
             var handRoomsList = handRooms.ToList();
-            if (DoesContainRoomTypes(handRoomsList, RoomTypeExtensions.ApartmentStartingRoomTypes))
+
+            const RoomType livingRoomType = RoomType.LivingRoom;
+            if (DoesNotContainRoomTypes(handRoomsList, new List<RoomType>{ livingRoomType }) && 
+                _missionManager.UnfulfilledRoomTypeRequirements.TryGetFirst(roomType =>
+                    roomType == livingRoomType, out var unfulfilledRequirement))
             {
-                return _currentLevel.AvailableRooms.Where(room => room.HasAnyRoomTypes(RoomTypeExtensions.ApartmentStartingRoomTypes)).ToList();
+                return _currentLevel.AvailableRooms.Where(room => room.HasRoomType(unfulfilledRequirement)).ToList();
+            }
+            
+            const RoomType hallwayRoomType = RoomType.Hallway;
+            if (DoesNotContainRoomTypes(handRoomsList, new List<RoomType>{ hallwayRoomType }))
+            {
+                return _currentLevel.AvailableRooms.Where(room => room.HasRoomType(hallwayRoomType)).ToList();
             }
 
             var availableNonHandRooms = _currentLevel.AvailableRooms
@@ -90,7 +99,7 @@ namespace _Scripts.Cards
             return availableNonHandRooms;
         }
 
-        private bool DoesContainRoomTypes(IEnumerable<RoomDto> handRooms, List<RoomType> roomTypes)
+        private bool DoesNotContainRoomTypes(IEnumerable<RoomDto> handRooms, List<RoomType> roomTypes)
         {
             return handRooms.None(handRoom => handRoom.HasAnyRoomTypes(roomTypes));
         }

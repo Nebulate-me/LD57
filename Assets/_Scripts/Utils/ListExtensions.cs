@@ -27,8 +27,16 @@ namespace _Scripts.Utils
 
         public static bool TryGetFirst<T>(this IList<T> list, Func<T, bool> predicate, out T match)
         {
-            var first = list.FirstOrEmpty(predicate);
-            return first.TryGetValue(out match);
+            foreach (var element in list)
+            {
+                if (predicate(element))
+                {
+                    match = element;
+                    return true;
+                }
+            }
+            match = default;
+            return false;
         }
 
         public static float GetCenter(this List<int> coordinates)

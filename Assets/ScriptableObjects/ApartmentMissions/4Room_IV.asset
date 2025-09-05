@@ -10,21 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7e34455138f4488803d4bb341ad27fe, type: 3}
-  m_Name: 4Room_II
+  m_Name: 4Room_IV
   m_EditorClassIdentifier: 
   missionName: "\u0427\u0435\u0442\u044B\u0440\u0435\u0445\u043A\u043E\u043C\u043D\u0430\u0442\u043D\u0430\u044F
-    II"
+    IV"
   requirements:
   - roomType: 2
   - roomType: 3
   - roomType: 5
   - roomType: 4
-  - roomType: 2
-  - roomType: 3
   - roomType: 1
-  - roomType: 4
+  - roomType: 9
+  - roomType: 9
+  - roomType: 10
+  - roomType: 1
   requiredWindows: 8
-  minCompletedMissions: 0
+  minCompletedMissions: 3
   maxCompletedMissions: 0
-  rewardScore: 45
+  rewardScore: 50
   roomCount: 4

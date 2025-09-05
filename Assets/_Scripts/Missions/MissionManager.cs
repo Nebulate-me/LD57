@@ -174,8 +174,8 @@ namespace _Scripts.Missions
             if (!_currentLevel) return;
             
             var unlockedMissions = _currentLevel.AvailableMissions
-                .Where(mission => _completedMissionCount >= mission.MinCompletedMissions &&
-                                  mission.MissionName != _lastCompletedMissionName)
+                .Where(mission => mission.MissionName != _lastCompletedMissionName &&
+                                  _apartmentMissionCardViews.None(view => view.Dto.RoomCount == mission.RoomCount))
                 .ToList();
             while (_apartmentMissionCardViews.Count < missionHandSize)
             {
@@ -232,11 +232,22 @@ namespace _Scripts.Missions
                 {
                     roomsToUse = alternativeRoomsToUse;
                     var usedRoomTypes = roomsToUse.SelectMany(room => room.RoomTypes);
-                    unfulfilledRoomTypes = missionRequirementRoomTypes.Except(usedRoomTypes).ToList();
+                    unfulfilledRoomTypes = SubtractRoomTypes(missionRequirementRoomTypes, usedRoomTypes);
                 }
             }
 
             return false;
+        }
+
+        private List<RoomType> SubtractRoomTypes(List<RoomType> missionRequirementRoomTypes, IEnumerable<RoomType> usedRoomTypes)
+        {
+            var result = new List<RoomType>(missionRequirementRoomTypes);
+            foreach (var usedRoomType in usedRoomTypes)
+            {
+                result.TryRemoveFirst(rType => rType == usedRoomType, out _);
+            }
+            
+            return result;
         }
 
         private bool TrySearchApartmentMission(ApartmentMissionSearchDto inputSearch, out List<DungeonRoomModel> roomsToUse)

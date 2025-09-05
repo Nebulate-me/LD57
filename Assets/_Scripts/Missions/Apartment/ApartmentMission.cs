@@ -14,6 +14,7 @@ namespace _Scripts.Missions.Apartment
         [SerializeField] private int minCompletedMissions = 0;
         [SerializeField] private int maxCompletedMissions = 0; // 0 = no max value here
         [SerializeField] private int rewardScore = 1;
+        [SerializeField] private int roomCount = 1; // used for type identification
 
         public string MissionName => missionName;
         public List<RoomRequirement> Requirements => requirements;
@@ -21,6 +22,7 @@ namespace _Scripts.Missions.Apartment
         public int MinCompletedMissions => minCompletedMissions;
         public int MaxCompletedMissions => maxCompletedMissions;
         public int RewardScore => rewardScore;
+        public int RoomCount => roomCount;
 
         public ApartmentMissionDto ToDto()
         {

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Game;
@@ -48,10 +49,16 @@ namespace _Scripts.Cards
 
         private void OnDeckUpdated(DeckUpdatedSignal signal)
         {
-            // RefillRoomTileHand();
-            RefillRoomHand();
+            StartCoroutine(RefillRoomHandCoroutine());
         }
-        
+
+        private IEnumerator RefillRoomHandCoroutine()
+        {
+            // waiting until unfulfilled requirements will get fulfilled
+            yield return new WaitForSeconds(0.1f);
+            RefillRoomHandImmediate();
+        }
+
         private void OnLevelSetupCompleted(LevelSetupCompletedSignal signal)
         {
             _currentLevel = signal.Level;
@@ -175,6 +182,11 @@ namespace _Scripts.Cards
         }
         
         public void RefillRoomHand()
+        {
+            StartCoroutine(RefillRoomHandCoroutine());
+        }
+
+        private void RefillRoomHandImmediate()
         {
             while (_roomCardViews.Count < handSize)
             {

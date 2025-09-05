@@ -32,7 +32,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 410ba308f0f4a7d4cad3825490e4c23e, type: 2}
   - {fileID: 11400000, guid: 6d99150bdd486e7469b65fcff52195c2, type: 2}
   - {fileID: 11400000, guid: 3bc6891088cbc6c46bffff1ac34fa676, type: 2}
+  - {fileID: 11400000, guid: dadccfd7f559a4e4ba55c206c849802f, type: 2}
+  - {fileID: 11400000, guid: 2a11c69818aed154e96a1df175e00992, type: 2}
   - {fileID: 11400000, guid: 9305dbcc952176246840aecce1396141, type: 2}
+  - {fileID: 11400000, guid: 0cae37975fb078d4793ea18f2e2fe3f5, type: 2}
   - {fileID: 11400000, guid: c743531fc59900541bf3454550ac4192, type: 2}
   - {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
   - {fileID: 11400000, guid: 52a5e13b1fe2a904c9901388e6e751d3, type: 2}
@@ -42,7 +45,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
   - {fileID: 11400000, guid: 410ba308f0f4a7d4cad3825490e4c23e, type: 2}
   - {fileID: 11400000, guid: 6d99150bdd486e7469b65fcff52195c2, type: 2}
-  - {fileID: 11400000, guid: 9305dbcc952176246840aecce1396141, type: 2}
+  - {fileID: 11400000, guid: 2a11c69818aed154e96a1df175e00992, type: 2}
   initialRemainingRoomCards: 20
   availableMissions:
   - {fileID: 11400000, guid: 7a0b1d15e5737924d805c5507e0d64e4, type: 2}

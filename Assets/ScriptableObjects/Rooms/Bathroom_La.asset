@@ -10,20 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7a12f5410f346f29790ec35b19e1147, type: 3}
-  m_Name: _BathroomToilet 2x2
+  m_Name: Bathroom_La
   m_EditorClassIdentifier: 
-  roomName: "\u0421\u0430\u043D\u0443\u0437\u0435\u043B"
-  roomTypes: 0100000004000000
+  roomName: "\u0412\u0430\u043D\u043D\u0430\u044F \u0410"
+  roomTypes: 04000000
   tiles:
   - position: {x: -1, y: 0}
     direction: 0
-    tile: {fileID: 11400000, guid: fa6ffc1f9cffe0b49809850a0e98b562, type: 2}
+    tile: {fileID: 11400000, guid: f1695824af97223449e6d74fdbbd0dbf, type: 2}
     furnitureSprite: {fileID: -2037453264, guid: b639034da6e497a4da8701589f57a36b, type: 3}
-    furnitureDirection: 0
-  - position: {x: 0, y: 0}
-    direction: 1
-    tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
-    furnitureSprite: {fileID: 675397310, guid: b639034da6e497a4da8701589f57a36b, type: 3}
     furnitureDirection: 0
   - position: {x: -1, y: 1}
     direction: 3
@@ -31,7 +26,7 @@ MonoBehaviour:
     furnitureSprite: {fileID: -1385338190, guid: b639034da6e497a4da8701589f57a36b, type: 3}
     furnitureDirection: 1
   - position: {x: 0, y: 1}
-    direction: 2
-    tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
+    direction: 1
+    tile: {fileID: 11400000, guid: 5508fae8670650147a92d30f3d1ed607, type: 2}
     furnitureSprite: {fileID: 27076399, guid: b639034da6e497a4da8701589f57a36b, type: 3}
-    furnitureDirection: 2
+    furnitureDirection: 3

@@ -12,25 +12,22 @@ namespace _Scripts.Missions.Apartment
         [SerializeField] private string missionName;
         [SerializeField] private List<RoomRequirement> requirements;
         [SerializeField] private int requiredWindows = 1;
-        [SerializeField] private int minCompletedMissions = 0;
-        [SerializeField] private int maxCompletedMissions = 0; // 0 => no max value here
         [SerializeField] private int rewardScore;
-        
+        [SerializeField] private int roomCount = 1;
+
         public string Name => missionName;
         public List<RoomRequirement> Requirements => requirements;
         public int RequiredWindows => requiredWindows;
-        public int MinCompletedMissions => minCompletedMissions;
-        public int MaxCompletedMissions => maxCompletedMissions;
         public int RewardScore => rewardScore;
+        public int RoomCount => roomCount;
         
         public ApartmentMissionDto(ApartmentMission apartmentMission)
         {
             missionName = apartmentMission.MissionName;
             requirements = apartmentMission.Requirements;
             requiredWindows = apartmentMission.RequiredWindows;
-            minCompletedMissions = apartmentMission.MinCompletedMissions;
-            maxCompletedMissions = apartmentMission.MaxCompletedMissions;
             rewardScore = apartmentMission.RewardScore;
+            roomCount = apartmentMission.RoomCount;
         }
     }
 }

@@ -26,33 +26,36 @@ MonoBehaviour:
     room: {fileID: 11400000, guid: b85f20c18ce21d84c820fe1db7706fcc, type: 2}
   availableRooms:
   - {fileID: 11400000, guid: 410ba308f0f4a7d4cad3825490e4c23e, type: 2}
+  - {fileID: 11400000, guid: 1a57416dddc35b74c8a01dbe802cb300, type: 2}
   - {fileID: 11400000, guid: 63443ac3f43f7a647b38c7a5e1b451e5, type: 2}
   - {fileID: 11400000, guid: dddedef53aab9824c93fc14a93d6b664, type: 2}
+  - {fileID: 11400000, guid: 6d99150bdd486e7469b65fcff52195c2, type: 2}
   - {fileID: 11400000, guid: 3bc6891088cbc6c46bffff1ac34fa676, type: 2}
   - {fileID: 11400000, guid: 9305dbcc952176246840aecce1396141, type: 2}
-  - {fileID: 11400000, guid: 6358b267919d8224db6cc7ba2e75cfc8, type: 2}
-  - {fileID: 11400000, guid: c743531fc59900541bf3454550ac4192, type: 2}
+  - {fileID: 11400000, guid: 0cae37975fb078d4793ea18f2e2fe3f5, type: 2}
+  - {fileID: 11400000, guid: dadccfd7f559a4e4ba55c206c849802f, type: 2}
+  - {fileID: 11400000, guid: 2a11c69818aed154e96a1df175e00992, type: 2}
   - {fileID: 11400000, guid: 0bf08c4aa28010043be1aed7092fd0b4, type: 2}
   - {fileID: 11400000, guid: e982d24cd887b4e44aaecdef34b622c7, type: 2}
   - {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
   - {fileID: 11400000, guid: cf20cf8a37bd50444aa98ebd6bd8398d, type: 2}
   - {fileID: 11400000, guid: e6ab93a5429c8154fb5754e65699c776, type: 2}
-  - {fileID: 11400000, guid: 3bc6891088cbc6c46bffff1ac34fa676, type: 2}
-  - {fileID: 0}
   initialRooms:
   - {fileID: 11400000, guid: e982d24cd887b4e44aaecdef34b622c7, type: 2}
   - {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
   - {fileID: 11400000, guid: 1a57416dddc35b74c8a01dbe802cb300, type: 2}
-  - {fileID: 11400000, guid: 6358b267919d8224db6cc7ba2e75cfc8, type: 2}
+  - {fileID: 11400000, guid: 6d99150bdd486e7469b65fcff52195c2, type: 2}
   - {fileID: 11400000, guid: cf20cf8a37bd50444aa98ebd6bd8398d, type: 2}
   initialRemainingRoomCards: 15
   availableMissions:
-  - {fileID: 11400000, guid: d6ed78f5435d5264baea8cdc6acdfe80, type: 2}
-  - {fileID: 11400000, guid: 1662047b0c92cfc42af781058777194f, type: 2}
   - {fileID: 11400000, guid: bca220e77c58b384db04b6b2f1b2c6cd, type: 2}
   - {fileID: 11400000, guid: 3c7f8043f3eecc8418ae12b4b0e96411, type: 2}
+  - {fileID: 11400000, guid: 1f9880325df08354f965a71294b52322, type: 2}
+  - {fileID: 11400000, guid: e42365757aabc8c45a1fe4f1273c3fb9, type: 2}
   - {fileID: 11400000, guid: 1677988671daf334b998e7e506df6a50, type: 2}
   - {fileID: 11400000, guid: 82827f3efef31d54b8f719793083f539, type: 2}
+  - {fileID: 11400000, guid: a78e16d43c9c42c47b72489cebe978c2, type: 2}
+  - {fileID: 11400000, guid: 292aba9d5e3b62a468fce3a20ab5572f, type: 2}
   initialMissions:
   - {fileID: 11400000, guid: d6ed78f5435d5264baea8cdc6acdfe80, type: 2}
   missionsToComplete: 6
