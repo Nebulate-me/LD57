@@ -55,7 +55,8 @@ namespace _Scripts.Cards
         private IEnumerator RefillRoomHandCoroutine()
         {
             // waiting until unfulfilled requirements will get fulfilled
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
             RefillRoomHandImmediate();
         }
 

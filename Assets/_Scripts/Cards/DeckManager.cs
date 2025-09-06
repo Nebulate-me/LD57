@@ -70,14 +70,6 @@ namespace _Scripts.Cards
         private List<Room> GetPreferredAvailableRooms(IEnumerable<RoomDto> handRooms)
         {
             var handRoomsList = handRooms.ToList();
-
-            const RoomType livingRoomType = RoomType.LivingRoom;
-            if (DoesNotContainRoomTypes(handRoomsList, new List<RoomType>{ livingRoomType }) && 
-                _missionManager.UnfulfilledRoomTypeRequirements.TryGetFirst(roomType =>
-                    roomType == livingRoomType, out var unfulfilledRequirement))
-            {
-                return _currentLevel.AvailableRooms.Where(room => room.HasRoomType(unfulfilledRequirement)).ToList();
-            }
             
             const RoomType hallwayRoomType = RoomType.Hallway;
             if (DoesNotContainRoomTypes(handRoomsList, new List<RoomType>{ hallwayRoomType }))

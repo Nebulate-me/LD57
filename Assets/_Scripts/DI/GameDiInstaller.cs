@@ -15,7 +15,7 @@ using Zenject;
 
 namespace _Scripts.DI
 {
-    public class DiInstaller : MonoInstaller
+    public class GameDiInstaller : MonoInstaller
     {
         [SerializeField] private PrefabPool prefabPool;
         
