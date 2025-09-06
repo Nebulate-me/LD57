@@ -9,45 +9,59 @@ namespace _Scripts.Player
 {
     public class PlayerProfileService : IPlayerProfileService
     {
-        [Header("Persistence")] 
-        [SerializeField] private readonly string fileName = "players.json";
-        [SerializeField] private string playerPrefsKey = "PLAYER_PROFILES_JSON_v1";
+        private const string FILE_NAME = "players.json";
+        private const string PLAYER_PREFS_KEY = "PLAYER_PROFILES_JSON_v1";
 
-        public IReadOnlyList<PlayerProfile> Players => _data.players;
+        public IReadOnlyList<PlayerProfile> Players => _players;
 
-        private PlayerProfilesData _data = new PlayerProfilesData();
+        public PlayerProfile CurrentPlayer { get; set; }
 
-        private string JsonPath => Path.Combine(Application.persistentDataPath, fileName);
+        private List<PlayerProfile> _players = new List<PlayerProfile>();
 
-        private void Awake()
+        private string JsonPath => Path.Combine(Application.persistentDataPath, FILE_NAME);
+
+        public PlayerProfileService()
         {
             Load();
         }
-        
-        public bool TryGetPlayer(string id, out PlayerProfile player)
+
+        public bool TrySetCurrentPlayerById(string existingPlayerId, out PlayerProfile currentPlayer)
         {
-            return _data.players.TryGetFirst(p => string.Equals(p.Id, id, StringComparison.Ordinal), out player);
+            if (!TryGetPlayerById(existingPlayerId, out currentPlayer)) return false;
+            
+            CurrentPlayer = currentPlayer;
+            return true;
+        }
+
+        public bool TryGetPlayerById(string id, out PlayerProfile player)
+        {
+            return _players.TryGetFirst(p => string.Equals(p.Id, id, StringComparison.Ordinal), out player);
+        }
+
+        public bool TryGetPlayerByName(string playerName, out PlayerProfile player)
+        {
+            return _players.TryGetFirst(p => string.Equals(p.Name, playerName, StringComparison.Ordinal), out player);
         }
 
         /// <summary>
         ///     Creates a new player with the given id+name. Returns false if id already exists.
         /// </summary>
-        public bool TryCreatePlayer(string id, string name, out PlayerProfile player)
+        public bool TryCreatePlayer(string name, out PlayerProfile player)
         {
-            id = (id ?? "").Trim();
+            var id = Guid.NewGuid().ToString();
             name = string.IsNullOrWhiteSpace(name) ? "Player" : name.Trim();
 
             if (string.IsNullOrEmpty(id))
                 id = Guid.NewGuid().ToString("N"); // fallback
             
-            if (TryGetPlayer(id, out PlayerProfile existingPlayer))
+            if (TryGetPlayerById(id, out PlayerProfile existingPlayer))
             {
                 player = existingPlayer;
                 return false;
             }
 
             var profile = new PlayerProfile(id, name);
-            _data.players.Add(profile);
+            _players.Add(profile);
             Save();
             player = profile;
             return true;
@@ -55,7 +69,7 @@ namespace _Scripts.Player
 
         public bool TrySetPlayerScore(string playerId, int score)
         {
-            if (!TryGetPlayer(playerId, out var player))
+            if (!TryGetPlayerById(playerId, out var player))
             {
                 return false;
             }
@@ -71,14 +85,14 @@ namespace _Scripts.Player
         
         public List<PlayerProfile> GetPlayersSortedByScore()
         {
-            return _data.players.OrderByDescending(p => p.Score)
+            return _players.OrderByDescending(p => p.Score)
                 .ThenBy(p => p.CreatedUtc)
                 .ToList();
         }
         
         public void ClearAll()
         {
-            _data.players.Clear();
+            _players.Clear();
             Save(true);
         }
 
@@ -86,20 +100,20 @@ namespace _Scripts.Player
 
         private void Load()
         {
+            _players = new List<PlayerProfile>();
 #if UNITY_WEBGL && !UNITY_EDITOR
         try
         {
-            if (PlayerPrefs.HasKey(playerPrefsKey))
+            if (PlayerPrefs.HasKey(PLAYER_PREFS_KEY))
             {
-                var json = PlayerPrefs.GetString(playerPrefsKey, "{}");
-                _data = JsonUtility.FromJson<PlayerProfilesData>(json) ?? new PlayerProfilesData();
+                var json = PlayerPrefs.GetString(PLAYER_PREFS_KEY, "{}");
+                var data = JsonUtility.FromJson<PlayerProfilesData>(json) ?? new PlayerProfilesData();
+                _players = data.Players;
             }
-            else _data = new PlayerProfilesData();
         }
         catch (Exception ex)
         {
             Debug.LogError($"[PlayerProfiles] WebGL load failed: {ex}");
-            _data = new PlayerProfilesData();
         }
 #else
             try
@@ -107,35 +121,32 @@ namespace _Scripts.Player
                 if (File.Exists(JsonPath))
                 {
                     var json = File.ReadAllText(JsonPath);
-                    _data = JsonUtility.FromJson<PlayerProfilesData>(json) ?? new PlayerProfilesData();
-                }
-                else
-                {
-                    _data = new PlayerProfilesData();
+                    var data = JsonUtility.FromJson<PlayerProfilesData>(json) ?? new PlayerProfilesData();
+                    _players = data.players;
                 }
             }
             catch (Exception ex)
             {
                 Debug.LogError($"[PlayerProfiles] Load failed: {ex}");
-                _data = new PlayerProfilesData();
             }
 #endif
-            DedupIds();
+            RemoveDuplicateIds();
         }
 
         private void Save(bool clear = false)
         {
-            var json = JsonUtility.ToJson(_data, prettyPrint: true);
+            var saveData = new PlayerProfilesData(_players);
+            var json = JsonUtility.ToJson(saveData, prettyPrint: true);
 #if UNITY_WEBGL && !UNITY_EDITOR
         try
         {
             if (clear)
             {
-                PlayerPrefs.DeleteKey(playerPrefsKey);
+                PlayerPrefs.DeleteKey(PLAYER_PREFS_KEY);
             }
             else
             {
-                PlayerPrefs.SetString(playerPrefsKey, json);
+                PlayerPrefs.SetString(PLAYER_PREFS_KEY, json);
             }
             PlayerPrefs.Save();
         }
@@ -164,14 +175,14 @@ namespace _Scripts.Player
         }
 
         // Make sure no duplicate IDs sneak in (e.g., from manual edits).
-        private void DedupIds()
+        private void RemoveDuplicateIds()
         {
             var seen = new HashSet<string>(StringComparer.Ordinal);
-            for (var i = _data.players.Count - 1; i >= 0; i--)
+            for (var i = _players.Count - 1; i >= 0; i--)
             {
-                var id = _data.players[i].Id;
+                var id = _players[i].Id;
                 if (string.IsNullOrEmpty(id) || !seen.Add(id))
-                    _data.players.RemoveAt(i);
+                    _players.RemoveAt(i);
             }
         }
     }
