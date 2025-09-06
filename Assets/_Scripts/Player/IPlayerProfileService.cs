@@ -11,6 +11,7 @@ namespace _Scripts.Player
         bool TryGetPlayerByName(string playerName, out PlayerProfile player);
         bool TryCreatePlayer(string name, out PlayerProfile player);
         bool TrySetPlayerScore(string playerId, int score);
+        bool TrySetCurrentPlayerScore(int score);
         
     }
 }

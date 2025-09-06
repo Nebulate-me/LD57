@@ -5,6 +5,7 @@ using _Scripts.Game;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Missions.Apartment;
+using _Scripts.Player;
 using _Scripts.Popups.GameFinished;
 using Signals;
 using Sirenix.OdinInspector;
@@ -22,12 +23,12 @@ namespace _Scripts.Score
         [FormerlySerializedAs("restartText")] [SerializeField] private TextMeshProUGUI defeatText;
         [SerializeField] private List<ScoreRank> scoreRanks = new ();
 
-        [Inject] private IDeckManager deckManager;
-        [Inject] private IHandManager handManager;
-        [Inject] private IMissionManager missionManager;
-        [Inject] private ISoundManager soundManager;
+        [Inject] private IDeckManager _deckManager;
+        [Inject] private IHandManager _handManager;
+        [Inject] private IMissionManager _missionManager;
+        [Inject] private ISoundManager _soundManager;
         [Inject] private IGameTimerController _gameTimerController;
-        [Inject] private IScoreSaver _scoreSaver;
+        [Inject] private IPlayerProfileService _playerProfileService;
         
         [ShowInInspector, ReadOnly] private int _currentScore = 0;
         [ShowInInspector, ReadOnly] private int _completedMissionsCount = 0;
@@ -96,16 +97,16 @@ namespace _Scripts.Score
         
         private void OnTimerFinished()
         {
-            _scoreSaver.SubmitScore(_currentScore, _currentPlayerName);
+            _playerProfileService.TrySetCurrentPlayerScore(_currentScore);
             SignalsHub.DispatchAsync(new ShowGameFinishedPopupSignal(GameFinishedReason.TimeOut));
         }
 
         private void CheckDefeat()
         {
             // TODO: Improve this check to test whether there is no way to place any of the hand cards on the map
-            if (deckManager.RoomCardAmount <= 0 && handManager.CardAmount <= 0 && missionManager.CompletableMissionsCount <= 0)
+            if (_deckManager.RoomCardAmount <= 0 && _handManager.CardAmount <= 0 && _missionManager.CompletableMissionsCount <= 0)
             {
-                soundManager.PlaySound(SoundType.Defeat);
+                _soundManager.PlaySound(SoundType.Defeat);
                 ShowRestartButton();
             }
         }

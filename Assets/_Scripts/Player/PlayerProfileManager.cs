@@ -10,8 +10,10 @@ namespace _Scripts.Player
     public class PlayerProfileService : IPlayerProfileService
     {
         private const string FILE_NAME = "players.json";
+        #if UNITY_WEBGL && !UNITY_EDITOR
         private const string PLAYER_PREFS_KEY = "PLAYER_PROFILES_JSON_v1";
-
+        #endif
+        
         public IReadOnlyList<PlayerProfile> Players => _players;
 
         public PlayerProfile CurrentPlayer { get; set; }
@@ -82,7 +84,12 @@ namespace _Scripts.Player
             Save();
             return true;
         }
-        
+
+        public bool TrySetCurrentPlayerScore(int score)
+        {
+            return CurrentPlayer != null && TrySetPlayerScore(CurrentPlayer.Id, score);
+        }
+
         public List<PlayerProfile> GetPlayersSortedByScore()
         {
             return _players.OrderByDescending(p => p.Score)

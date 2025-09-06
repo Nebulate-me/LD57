@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Missions;
+using _Scripts.Player;
 using Signals;
 using TMPro;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace _Scripts.Popups.GameFinished
         [SerializeField] private Button restartGameButton;
 
         [Inject] private IScoreManager _scoreManager;
+        [Inject] private IPlayerProfileService _playerProfileService;
 
         protected override PopupType Type => PopupType.GameFinished;
 
@@ -52,7 +54,7 @@ namespace _Scripts.Popups.GameFinished
         private void OnShowGameFinishedPopup(ShowGameFinishedPopupSignal signal)
         {
             gameFinishedReason.text = GetGameFinishedText(signal.Reason);
-            playerNameText.text = _scoreManager.PlayerName;
+            playerNameText.text = _playerProfileService.CurrentPlayer.Name;
             scoreText.text = _scoreManager.Score.ToString();
             var rank = _scoreManager.GetCurrentRank();
             rankNameText.text = rank.RankName;

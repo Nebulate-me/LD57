@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using _Scripts.Game;
 using _Scripts.Player;
-using _Scripts.Score;
 using DITools;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -16,7 +15,6 @@ namespace _Scripts.DI
     {
         [SerializeField] private PrefabPool prefabPool;
         [SerializeField] private SoundManager soundManager;
-        [SerializeField] private ScoreSaver scoreSaver;
         
          [ShowInInspector, ReadOnly] private Camera _uiCamera;
 

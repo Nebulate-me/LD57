@@ -11,7 +11,7 @@ namespace _Scripts.Popups.StartGame
     {
         [SerializeField] private TMP_InputField playerNameField;
         [SerializeField] private Button startGameButton;
-
+        
         [Inject] private IScoreManager _scoreManager;
 
         protected override PopupType Type => PopupType.StartGame;
@@ -38,8 +38,6 @@ namespace _Scripts.Popups.StartGame
         
         private void StartGame()
         {
-            // _scoreManager.StartGame(playerNameField.text); // TODO: only do this if there is no tutorial
-            _scoreManager.PlayerName = playerNameField.text;
             HidePopup();
             SignalsHub.DispatchAsync(new StartGamePopupClosedSignal());
         }
@@ -53,6 +51,8 @@ namespace _Scripts.Popups.StartGame
         {
             OnStart();
             UpdateStartGameButton(playerNameField.text);
+
+            StartGame();
         }
     }
 }

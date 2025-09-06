@@ -2085,7 +2085,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5882709957558526225, guid: 3e23e730c728f924aa2942ff699deeda, type: 3}
       propertyPath: m_Name
-      value: SceneContext
+      value: GameSceneContext
       objectReference: {fileID: 0}
     - target: {fileID: 6615508697474527659, guid: 3e23e730c728f924aa2942ff699deeda, type: 3}
       propertyPath: gameTimer

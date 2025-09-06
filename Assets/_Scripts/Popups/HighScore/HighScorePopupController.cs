@@ -1,5 +1,6 @@
 using _Scripts.Game;
 using _Scripts.Missions;
+using _Scripts.Player;
 using _Scripts.Score;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,10 +15,9 @@ namespace _Scripts.Popups.HighScore
         [SerializeField] private Transform contentParent;
         [SerializeField] private GameObject highScoreEntryRowPrefab;
         [SerializeField] private Button restartGameButton;
-        [SerializeField] private int maxScoreRows = 10;
-
-        [Inject] private IScoreManager _scoreManager;
-        [Inject] private IScoreSaver _scoreSaver;
+        [SerializeField] private int maxScoreRows = 10; // TODO: Scrollable view
+        
+        [Inject] private IPlayerProfileService _playerProfileService;
         [Inject] private IPrefabPool _prefabPool;
 
         protected override PopupType Type => PopupType.HighScore;
@@ -58,25 +58,13 @@ namespace _Scripts.Popups.HighScore
         {
             foreach (Transform c in contentParent) Destroy(c.gameObject);
 
-            var entries = _scoreSaver.Entries;
-            var entryCount = Mathf.Min(entries.Count, maxScoreRows);
+            var players = _playerProfileService.Players;
+            var entryCount = Mathf.Min(players.Count, maxScoreRows);
             for (var i = 0; i < entryCount; i++)
             {
                 var row = _prefabPool.Spawn(highScoreEntryRowPrefab, contentParent).GetComponent<HighScoreEntryRow>();
-                row.SetUp(i + 1, entries[i], entries[i].playerName == _scoreManager.PlayerName);
+                row.SetUp(i + 1, players[i], players[i].Name == _playerProfileService.CurrentPlayer.Name);
             }
-        }
-
-        // Buttons
-        public void ClearAll()
-        {
-            _scoreSaver.ClearAll();
-            Refresh();
-        }
-
-        public void ExportTxt()
-        {
-            _scoreSaver.SaveToTextFile();
         }
     }
 }

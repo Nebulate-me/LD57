@@ -3,6 +3,7 @@ using _Scripts.Cards;
 using _Scripts.Game;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
+using _Scripts.Player;
 using _Scripts.Rooms;
 using _Scripts.Score;
 using DITools;
@@ -27,7 +28,6 @@ namespace _Scripts.DI
         [SerializeField] private MissionManager missionManager;
         [SerializeField] private ScoreManager scoreManager;
         [SerializeField] private GameTimerController gameTimer;
-        [SerializeField] private ScoreSaver scoreSaver;
         [SerializeField] private GameManager gameManager;
 
         [Header("Prefabs")]
@@ -50,6 +50,7 @@ namespace _Scripts.DI
 
             Container.Bind<IPrefabPool>().FromInstance(prefabPool).AsSingle().NonLazy();
             Container.Bind<IRandomService>().To<RandomService>().AsSingle().NonLazy();
+            Container.Bind<IPlayerProfileService>().To<PlayerProfileService>().AsSingle().NonLazy();
 
             _uiCamera = GameObject.Find("UICamera").GetComponent<Camera>();
             Container.Bind<Camera>().WithId("uiCamera").FromInstance(_uiCamera).AsSingle();
@@ -62,7 +63,6 @@ namespace _Scripts.DI
             Container.BindInterfacesTo<DungeonGridManager>().FromInstance(dungeonGridManager).AsSingle();
             Container.BindInterfacesTo<MissionManager>().FromInstance(missionManager).AsSingle();
             Container.BindInterfacesTo<ScoreManager>().FromInstance(scoreManager).AsSingle();
-            Container.BindInterfacesTo<ScoreSaver>().FromInstance(scoreSaver).AsSingle();
             Container.BindInterfacesTo<GameTimerController>().FromInstance(gameTimer).AsSingle();
             Container.BindInterfacesTo<GameManager>().FromInstance(gameManager).AsSingle();
 
