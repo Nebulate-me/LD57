@@ -151,13 +151,13 @@ namespace _Scripts.Popups.LevelFinished
             var sunglassesMove = sunglassesTransform.DOAnchorPos(sunglassesFinalPosition, sunglassesMoveDuration)
                 .AsyncWaitForCompletion();
             await Task.Delay(TimeSpan.FromSeconds(halfOctopusMoveDuration));
-            var medalFade = medalCanvaGroup.DOFade(1f, sunglassesMoveDuration - halfOctopusMoveDuration)
-                .AsyncWaitForCompletion();
             var popupFade = popupCanvasGroup.DOFade(1f, sunglassesMoveDuration - halfOctopusMoveDuration)
                 .AsyncWaitForCompletion();
             fireworksAnimator.gameObject.SetActive(false);
 
-            await Task.WhenAll(new List<Task> {octopusMove, sunglassesMove, medalFade, popupFade});
+            await Task.WhenAll(new List<Task> {octopusMove, sunglassesMove, popupFade});
+            await medalCanvaGroup.DOFade(1f, sunglassesMoveDuration - halfOctopusMoveDuration)
+                .AsyncWaitForCompletion();
         }
     }
 }
