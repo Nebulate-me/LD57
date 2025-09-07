@@ -11,7 +11,7 @@ using Zenject;
 
 namespace _Scripts.DI
 {
-    public class MainMenuDiInstaller : MonoInstaller
+    public class BasicScreenDiInstaller : MonoInstaller
     {
         [SerializeField] private PrefabPool prefabPool;
         [SerializeField] private SoundManager soundManager;

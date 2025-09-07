@@ -3,28 +3,48 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using _Scripts.Utils;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace _Scripts.Player
 {
     public class PlayerProfileService : IPlayerProfileService
     {
-        private const string FILE_NAME = "players.json";
-        #if UNITY_WEBGL && !UNITY_EDITOR
-        private const string PLAYER_PREFS_KEY = "PLAYER_PROFILES_JSON_v1";
-        #endif
-        
         public IReadOnlyList<PlayerProfile> Players => _players;
-
         public PlayerProfile CurrentPlayer { get; set; }
 
-        private List<PlayerProfile> _players = new List<PlayerProfile>();
-
+        private List<PlayerProfile> _players = new();
         private string JsonPath => Path.Combine(Application.persistentDataPath, FILE_NAME);
-
+        
+        private const string DEFAULT_PLAYER_NAME = "Аноним";
+        private const string FILE_NAME = "players.json";
+#if UNITY_WEBGL && !UNITY_EDITOR
+        private const string PLAYER_PREFS_KEY = "PLAYER_PROFILES_JSON_v1";
+#endif
         public PlayerProfileService()
         {
             Load();
+        }
+        
+        private void SetCurrentPlayerDefault()
+        {
+            if (TryGetPlayerById(DEFAULT_PLAYER_NAME, out var existingDefaultPlayer))
+            {
+                CurrentPlayer = existingDefaultPlayer;
+                return;
+            }
+
+            if (TryCreatePlayer(DEFAULT_PLAYER_NAME, out var newDefaultPlayer))
+            {
+                CurrentPlayer = newDefaultPlayer;
+            }
+        }
+
+        public void SetCurrentPlayer(PlayerProfile player)
+        {
+            CurrentPlayer = player;
+            Save();
+            
         }
 
         public bool TrySetCurrentPlayerById(string existingPlayerId, out PlayerProfile currentPlayer)
@@ -32,11 +52,17 @@ namespace _Scripts.Player
             if (!TryGetPlayerById(existingPlayerId, out currentPlayer)) return false;
             
             CurrentPlayer = currentPlayer;
+            Save();
             return true;
         }
 
         public bool TryGetPlayerById(string id, out PlayerProfile player)
         {
+            if (id.IsNullOrWhitespace())
+            {
+                player = null;
+                return false;
+            }
             return _players.TryGetFirst(p => string.Equals(p.Id, id, StringComparison.Ordinal), out player);
         }
 
@@ -64,6 +90,7 @@ namespace _Scripts.Player
 
             var profile = new PlayerProfile(id, name);
             _players.Add(profile);
+            CurrentPlayer ??= profile;
             Save();
             player = profile;
             return true;
@@ -108,41 +135,60 @@ namespace _Scripts.Player
         private void Load()
         {
             _players = new List<PlayerProfile>();
+            string json = string.Empty;
 #if UNITY_WEBGL && !UNITY_EDITOR
-        try
-        {
-            if (PlayerPrefs.HasKey(PLAYER_PREFS_KEY))
+            try
             {
-                var json = PlayerPrefs.GetString(PLAYER_PREFS_KEY, "{}");
-                var data = JsonUtility.FromJson<PlayerProfilesData>(json) ?? new PlayerProfilesData();
-                _players = data.Players;
+                if (PlayerPrefs.HasKey(PLAYER_PREFS_KEY))
+                {
+                    json = PlayerPrefs.GetString(PLAYER_PREFS_KEY, "{}");
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"[PlayerProfiles] WebGL load failed: {ex}");
-        }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[PlayerProfiles] WebGL load failed: {ex}");
+                return;
+            }
 #else
             try
             {
                 if (File.Exists(JsonPath))
                 {
-                    var json = File.ReadAllText(JsonPath);
-                    var data = JsonUtility.FromJson<PlayerProfilesData>(json) ?? new PlayerProfilesData();
-                    _players = data.players;
+                    json = File.ReadAllText(JsonPath);
                 }
             }
             catch (Exception ex)
             {
                 Debug.LogError($"[PlayerProfiles] Load failed: {ex}");
+                return;
             }
 #endif
+            var data = JsonUtility.FromJson<PlayerProfilesData>(json) ?? new PlayerProfilesData();
+            _players = data.players;
+                    
+            if (TryGetPlayerById(data.currentPlayerId, out var currentPlayer))
+            {
+                CurrentPlayer = currentPlayer;
+            }
+            else
+            {
+                Debug.LogError($"[PlayerProfiles] Could not get the current player by id: [{data.currentPlayerId}]");
+                SetCurrentPlayerDefault();
+            }
+            
             RemoveDuplicateIds();
         }
 
+        
+
         private void Save(bool clear = false)
         {
-            var saveData = new PlayerProfilesData(_players);
+            if (CurrentPlayer == null)
+            {
+                Debug.LogWarning("[PlayerProfileService] Current player is null, cannot save!");
+                return;
+            }
+            var saveData = new PlayerProfilesData(CurrentPlayer.Id, _players);
             var json = JsonUtility.ToJson(saveData, prettyPrint: true);
 #if UNITY_WEBGL && !UNITY_EDITOR
         try

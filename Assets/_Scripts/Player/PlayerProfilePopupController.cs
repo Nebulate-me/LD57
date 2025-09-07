@@ -159,8 +159,7 @@ namespace _Scripts.Player
                 // Create & set current
                 if (_playerProfileService.TryCreatePlayer(typedName, out var created))
                 {
-                    _playerProfileService.CurrentPlayer = created;
-                    // update UI & exit
+                    _playerProfileService.SetCurrentPlayer(created);
                     RefreshUI();
                     if (closeOnConfirm) Close();
                     return;

@@ -29,47 +29,20 @@ namespace _Scripts.Screens
         [SerializeField] private PlayerProfilePopupController playerProfilePopupController;
 
         [Inject] private IPlayerProfileService _playerProfileService;
-
-        private const string ANONYMOUS_PLAYER_NAME = "Аноним";
         private void OnEnable()
         {
-            playerProfileButton.onClick.AddListener(ShowPlayerProfilePopup);
             tutorialScreenButton.onClick.AddListener(GoToTutorialScreen);
             gameScreenButton.onClick.AddListener(GoToGameScreen);
             highScoreScreenButton.onClick.AddListener(GoToHighScoreScreen);
             exitButton.onClick.AddListener(ExitGame);
-            
-            SignalsHub.AddListener<PlayerProfilePopupClosedSignal>(OnPlayerProfilePopupClosed);
         }
 
         private void OnDisable()
         {
-            playerProfileButton.onClick.RemoveListener(ShowPlayerProfilePopup);
             tutorialScreenButton.onClick.RemoveListener(GoToTutorialScreen);
             gameScreenButton.onClick.RemoveListener(GoToGameScreen);
             highScoreScreenButton.onClick.RemoveListener(GoToHighScoreScreen);
             exitButton.onClick.RemoveListener(ExitGame);
-            
-            SignalsHub.RemoveListener<PlayerProfilePopupClosedSignal>(OnPlayerProfilePopupClosed);
-        }
-
-        private void Start()
-        {
-            if (_playerProfileService.TryGetPlayerByName(ANONYMOUS_PLAYER_NAME, out var existingAnonymousPlayer))
-            {
-                _playerProfileService.TrySetCurrentPlayerById(existingAnonymousPlayer.Id, out _);
-            }
-            else
-            {
-                _playerProfileService.TryCreatePlayer(ANONYMOUS_PLAYER_NAME, out var newAnonymousPlayer);
-                _playerProfileService.TrySetCurrentPlayerById(newAnonymousPlayer.Id, out _);
-            }
-            UpdatePlayerProfileName();
-        }
-
-        private void ShowPlayerProfilePopup()
-        {
-            playerProfilePopupController.Open();
         }
 
         private void GoToTutorialScreen()
@@ -94,16 +67,6 @@ namespace _Scripts.Screens
 #elif UNITY_STANDALONE_WIN
             Application.Quit();
 #endif
-        }
-        
-        private void OnPlayerProfilePopupClosed(PlayerProfilePopupClosedSignal signal)
-        {
-            UpdatePlayerProfileName();
-        }
-
-        private void UpdatePlayerProfileName()
-        {
-            playerProfileName.text = _playerProfileService.CurrentPlayer.Name;
         }
 
         private void GoToScreen(string screenName)
