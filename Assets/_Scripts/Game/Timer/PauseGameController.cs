@@ -1,5 +1,3 @@
-using System;
-using _Scripts.Popups.StartGame;
 using Signals;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -14,6 +12,8 @@ namespace _Scripts.Game.Timer
         [SerializeField] private Image pauseButtonImage;
         [SerializeField] private Sprite pauseSprite;
         [SerializeField] private Sprite resumeSprite;
+        
+        [SerializeField] private bool isEnabledOnStart = true;
 
         [ShowInInspector, ReadOnly] private bool _isEnabled = false;
         [ShowInInspector, ReadOnly] private bool _isPaused = false;
@@ -22,7 +22,6 @@ namespace _Scripts.Game.Timer
 
         private void OnEnable()
         {
-            SignalsHub.AddListener<StartGamePopupClosedSignal>(OnStartGamePopupClosed);
             SignalsHub.AddListener<GameTimerPausedSignal>(OnTimerPaused);
             SignalsHub.AddListener<GameTimerStartedSignal>(OnTimerStarted);
             
@@ -31,7 +30,6 @@ namespace _Scripts.Game.Timer
 
         private void OnDisable()
         {
-            SignalsHub.RemoveListener<StartGamePopupClosedSignal>(OnStartGamePopupClosed);
             SignalsHub.RemoveListener<GameTimerPausedSignal>(OnTimerPaused);
             SignalsHub.RemoveListener<GameTimerStartedSignal>(OnTimerStarted);
             
@@ -40,13 +38,8 @@ namespace _Scripts.Game.Timer
 
         private void Start()
         {
-            SetIsEnabled(false);
+            SetIsEnabled(isEnabledOnStart);
             SetIsPaused(!_gameTimerController.IsRunning);
-        }
-
-        private void OnStartGamePopupClosed(StartGamePopupClosedSignal obj)
-        {
-            SetIsEnabled(true);
         }
 
         private void OnTimerPaused(GameTimerPausedSignal obj)

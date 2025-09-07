@@ -14,6 +14,7 @@ namespace _Scripts.Popups
 
         protected void OnStart()
         {
+            IsShown = popup.activeSelf;
             if (showOnStartUp)
             {
                 ShowPopup();
@@ -83,8 +84,9 @@ namespace _Scripts.Popups
         {
             if (!IsShown) return;
             IsShown = false;
+            
             popup.SetActive(false);
-            // TODO: Animation
+            
             OnHidePopup();
         }
         

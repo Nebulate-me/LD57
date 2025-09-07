@@ -64,7 +64,8 @@ namespace _Scripts.Game
         {
             if (!TryGetCurrentLevel(out var level))
             {
-                SignalsHub.DispatchAsync(new ShowGameFinishedPopupSignal(GameFinishedReason.AllLevelsCompleted));
+                _scoreManager.FinishGame(GameFinishedReason.AllLevelsCompleted);
+                // SignalsHub.DispatchAsync(new ShowGameFinishedPopupSignal(GameFinishedReason.AllLevelsCompleted));
                 return;
             }
             

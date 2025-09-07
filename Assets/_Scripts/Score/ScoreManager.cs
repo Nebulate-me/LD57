@@ -6,6 +6,7 @@ using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Missions.Apartment;
 using _Scripts.Player;
+using _Scripts.Popups;
 using _Scripts.Popups.GameFinished;
 using Signals;
 using Sirenix.OdinInspector;
@@ -35,6 +36,8 @@ namespace _Scripts.Score
         [ShowInInspector, ReadOnly] private string _currentPlayerName = string.Empty; 
 
         public int Score => _currentScore;
+        public bool IsGameFinished { get; private set; } = false;
+        public GameFinishedReason GameFinishedReason { get; private set; } = GameFinishedReason.TimeOut;
         public int CompletedMissionsCount => _completedMissionsCount;
         public string PlayerName
         {
@@ -47,13 +50,7 @@ namespace _Scripts.Score
             _currentScore -= score;
             UpdateScoreText();
         }
-
-        public void StartGame()
-        {
-            _currentScore = 0;
-            _completedMissionsCount = 0;
-            _gameTimerController.StartTimer(); // TODO: Do it after the initial tutorial is done
-        }
+        
 
         public void FinishLevel(int emptyRoomTilesCount)
         {
@@ -99,7 +96,7 @@ namespace _Scripts.Score
         private void OnTimerFinished()
         {
             _playerProfileService.TrySetCurrentPlayerScore(_currentScore);
-            SignalsHub.DispatchAsync(new ShowGameFinishedPopupSignal(GameFinishedReason.TimeOut));
+            FinishGame(GameFinishedReason.TimeOut);
         }
 
         private void CheckDefeat()
@@ -126,6 +123,8 @@ namespace _Scripts.Score
         {
             defeatText.gameObject.SetActive(false);
             UpdateScoreText();
+            
+            StartGame();
         }
 
         private void Update()
@@ -159,6 +158,23 @@ namespace _Scripts.Score
             // TODO: Ask in a popup whether Player really wants to restart
             string currentSceneName = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(currentSceneName);
+        }
+        
+        public void StartGame()
+        {
+            IsGameFinished = false;
+            GameFinishedReason = GameFinishedReason.TimeOut;
+            _currentScore = 0;
+            _completedMissionsCount = 0;
+            _gameTimerController.StartTimer(); // TODO: Do it after the initial tutorial is done
+        }
+        
+        public void FinishGame(GameFinishedReason reason)
+        {
+            IsGameFinished = true;
+            GameFinishedReason = reason;
+            SignalsHub.DispatchAsync(new ShowPopupSignal(PopupType.LevelFinished));
+            // SignalsHub.DispatchAsync(new ShowGameFinishedPopupSignal(reason));
         }
     }
 }

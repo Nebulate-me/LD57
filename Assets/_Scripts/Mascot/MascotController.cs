@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using _Scripts.Missions;
-using _Scripts.Popups.StartGame;
-using Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -52,24 +50,17 @@ namespace _Scripts.Mascot
 
         void OnEnable()
         {
-            SignalsHub.AddListener<StartGamePopupClosedSignal>(OnGameStarted);
             if (clickCatcher) clickCatcher.onClick.AddListener(OnClicked);
         }
 
         void OnDisable()
         {
-            SignalsHub.RemoveListener<StartGamePopupClosedSignal>(OnGameStarted);
             if (clickCatcher) clickCatcher.onClick.RemoveListener(OnClicked);
         }
 
-        private void OnGameStarted(StartGamePopupClosedSignal signal)
+        private void Start()
         {
-#if SKIP_TUTORIAL
-            _scoreManager.StartGame();
-#else
-            // Use configured phrases
             ShowSequence(startGamePhrases);
-#endif
         }
 
         /// <summary>
