@@ -6,6 +6,7 @@ using _Scripts.Missions;
 using _Scripts.Player;
 using _Scripts.Rooms;
 using _Scripts.Score;
+using _Scripts.Screens;
 using DITools;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -51,6 +52,7 @@ namespace _Scripts.DI
             Container.Bind<IPrefabPool>().FromInstance(prefabPool).AsSingle().NonLazy();
             Container.Bind<IRandomService>().To<RandomService>().AsSingle().NonLazy();
             Container.Bind<IPlayerProfileService>().To<PlayerProfileService>().AsSingle().NonLazy();
+            Container.Bind<IScreenManager>().To<ScreenManager>().AsSingle();
 
             _uiCamera = GameObject.Find("UICamera").GetComponent<Camera>();
             Container.Bind<Camera>().WithId("uiCamera").FromInstance(_uiCamera).AsSingle();

@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
 using System.Linq;
 using _Scripts.Screens;
 using Signals;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -83,13 +81,10 @@ namespace _Scripts.Player
                 gameObject.SetActive(false);
             }
         }
-
-        // ---- UI logic ----
+        
         private void RefreshUI()
         {
-            // Label
-            var current = _playerProfileService.CurrentPlayer;
-            currentPlayerLabel.text = $"Игрок:\n {current?.Name ?? "—"}";
+            var currentPlayer = _playerProfileService.CurrentPlayer;
 
             // Dropdown
             if (existingPlayersDropdown)
@@ -98,7 +93,7 @@ namespace _Scripts.Player
                 var opts = _playerProfileService.Players.Select(p => new TMP_Dropdown.OptionData(p.Name)).ToList();
                 existingPlayersDropdown.AddOptions(opts);
 
-                _selectedPlayerId = current?.Id;
+                _selectedPlayerId = currentPlayer?.Id;
                 var index = Mathf.Max(0, _playerProfileService.Players.ToList().FindIndex(p => p.Id == _selectedPlayerId));
                 if (_playerProfileService.Players.Count > 0)
                     existingPlayersDropdown.SetValueWithoutNotify(index);

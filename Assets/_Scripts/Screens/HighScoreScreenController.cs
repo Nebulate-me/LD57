@@ -3,7 +3,6 @@ using _Scripts.Player;
 using _Scripts.Popups.HighScore;
 using Signals;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utilities.Prefabs;
 using Zenject;
@@ -16,11 +15,9 @@ namespace _Scripts.Screens
         [SerializeField] private GameObject rowPrefab;
         [SerializeField] private Button returnButton;
 
-        [Header("Flow")] 
-        [SerializeField] private string mainMenuSceneName = "MainMenuScene"; 
-
         [Inject] private IPrefabPool _prefabPool;
         [Inject] private IPlayerProfileService _playerProfileService;
+        [Inject] private IScreenManager _screenManager;
 
         private void Awake()
         {
@@ -30,14 +27,14 @@ namespace _Scripts.Screens
 
         private void OnEnable()
         {
-            if (returnButton) returnButton.onClick.AddListener(OnReturnClicked);
+            if (returnButton) returnButton.onClick.AddListener(OnReturnToMainMenuButtonClicked);
             
             SignalsHub.AddListener<PlayerProfilePopupClosedSignal>(OnPlayerProfilePopupClosed);
         }
 
         private void OnDisable()
         {
-            if (returnButton) returnButton.onClick.RemoveListener(OnReturnClicked);
+            if (returnButton) returnButton.onClick.RemoveListener(OnReturnToMainMenuButtonClicked);
             
             SignalsHub.RemoveListener<PlayerProfilePopupClosedSignal>(OnPlayerProfilePopupClosed);
         }
@@ -79,9 +76,9 @@ namespace _Scripts.Screens
             Refresh();
         }
 
-        private void OnReturnClicked()
+        private void OnReturnToMainMenuButtonClicked()
         {
-            SceneManager.LoadScene(mainMenuSceneName);
+            _screenManager.GoToMainMenuScreen();
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using _Scripts.Missions;
 using _Scripts.Player;
+using _Scripts.Screens;
 using Signals;
 using TMPro;
 using UnityEngine;
@@ -25,6 +26,7 @@ namespace _Scripts.Popups.GameFinished
 
         [Inject] private IScoreManager _scoreManager;
         [Inject] private IPlayerProfileService _playerProfileService;
+        [Inject] private IScreenManager _screenManager;
 
         protected override PopupType Type => PopupType.GameFinished;
 
@@ -76,7 +78,7 @@ namespace _Scripts.Popups.GameFinished
         private void OnHighScoreButtonClicked()
         {
             HidePopup();
-            SignalsHub.DispatchAsync(new ShowPopupSignal(PopupType.HighScore));
+            _screenManager.GoToHighScoreScreen();
         }
         
         private void OnRestartGameButtonClicked()

@@ -60,6 +60,7 @@ namespace _Scripts.Score
             Debug.Log(
                 $"Reducing the current score {_currentScore} by {emptyRoomTilesCount} for every empty or unused tile");
             _currentScore -= emptyRoomTilesCount;
+            _playerProfileService.TrySetCurrentPlayerScore(_currentScore);
         }
 
         private void OnEnable()

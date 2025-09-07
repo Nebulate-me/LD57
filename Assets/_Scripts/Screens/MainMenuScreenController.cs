@@ -1,10 +1,7 @@
-using System;
 using _Scripts.Player;
-using Signals;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
 
@@ -19,16 +16,12 @@ namespace _Scripts.Screens
         [SerializeField] private Button highScoreScreenButton;
         [SerializeField] private Button exitButton;
         
-        [Header("Scene Names")]
-        [SerializeField] private string tutorialSceneName = "TutorialScene";
-        [SerializeField] private string gameSceneName = "GameScene";
-        [SerializeField] private string highScoreSceneName = "HighScoreScene";
-        
         [Header("Player Profile")]
         [SerializeField] private TextMeshProUGUI playerProfileName;
         [SerializeField] private PlayerProfilePopupController playerProfilePopupController;
 
         [Inject] private IPlayerProfileService _playerProfileService;
+        [Inject] private IScreenManager _screenManager;
         private void OnEnable()
         {
             tutorialScreenButton.onClick.AddListener(GoToTutorialScreen);
@@ -47,17 +40,17 @@ namespace _Scripts.Screens
 
         private void GoToTutorialScreen()
         {
-            GoToScreen(tutorialSceneName);
+            _screenManager.GoToTutorialScreen();
         }
         
         private void GoToGameScreen()
         {
-            GoToScreen(gameSceneName);
+            _screenManager.GoToGameScreen();
         }
         
         private void GoToHighScoreScreen()
         {
-            GoToScreen(highScoreSceneName);
+            _screenManager.GoToHighScoreScreen();
         }
         
         private void ExitGame()
@@ -67,11 +60,6 @@ namespace _Scripts.Screens
 #elif UNITY_STANDALONE_WIN
             Application.Quit();
 #endif
-        }
-
-        private void GoToScreen(string screenName)
-        {
-            SceneManager.LoadScene(screenName);
         }
     }
 }

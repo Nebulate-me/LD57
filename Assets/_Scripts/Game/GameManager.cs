@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Scripts.Missions;
 using _Scripts.Missions.Apartment;
+using _Scripts.Player;
 using _Scripts.Popups;
 using _Scripts.Popups.GameFinished;
 using _Scripts.Popups.LevelFinished;
@@ -42,7 +43,7 @@ namespace _Scripts.Game
             _currentLevelCompletedMissionsCount++;
             if (_currentLevelCompletedMissionsCount < currentLevel.MissionsToComplete) return;
             
-            _scoreManager.FinishLevel(_dungeonGridManager.EmptyRoomTilesCount); 
+            _scoreManager.FinishLevel(_dungeonGridManager.EmptyRoomTilesCount);
             // TODO: Some animation to show how every empty or unused tile contributes to negative score
             SignalsHub.DispatchAsync(new ShowPopupSignal(PopupType.LevelFinished));
         }
