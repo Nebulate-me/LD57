@@ -22,6 +22,7 @@ namespace _Scripts.Popups.LevelFinished
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private TextMeshProUGUI currentPointsText;
         [SerializeField] private TextMeshProUGUI currentRankText;
+        [SerializeField] private TextMeshProUGUI currentRankDescriptionText;
 
         [SerializeField] private Button continueButton;
         [SerializeField] private TextMeshProUGUI continueButtonText;
@@ -69,7 +70,9 @@ namespace _Scripts.Popups.LevelFinished
             _gameTimerController.PauseTimer();
             
             currentPointsText.text = $"Очки: {_scoreManager.Score}";
-            currentRankText.text = _scoreManager.GetCurrentRank().RankName;
+            var currentRank = _scoreManager.GetCurrentRank();
+            currentRankText.text = currentRank.RankName;
+            currentRankDescriptionText.text = currentRank.RankDescription;
 
             if (_scoreManager.IsGameFinished)
             {
