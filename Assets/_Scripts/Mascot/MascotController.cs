@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _Scripts.Missions;
 using TMPro;
 using UnityEngine;
@@ -23,15 +24,8 @@ namespace _Scripts.Mascot
         [SerializeField] private bool useTypewriter = true;
         [SerializeField] private float charsPerSecond = 55f;
 
-        [Header("Messages")]
-        [Tooltip("Phrases will be shown one after another on each click.")]
-        [SerializeField, TextArea(2, 5)]
-        private string[] startGamePhrases = {
-            "Добро пожаловать в игру СибТехПроект.",
-            "СибТехПроект — это Сибирские Технологии Проектирования.",
-            "Мы уже 17 лет быстро и качественно проектируем многоквартирные дома и гордимся каждым своим объектом.",
-            "Предлагаем тебе почувствовать себя частью команды и попробовать спроектировать свой дом."
-        };
+        [Header("Messages")] 
+        [SerializeField] private MascotTutorialConfig tutorialConfig;
 
         [Inject] private IScoreManager _scoreManager;
 
@@ -60,7 +54,7 @@ namespace _Scripts.Mascot
 
         private void Start()
         {
-            ShowSequence(startGamePhrases);
+            ShowSequence(tutorialConfig.Steps.Select(step => step.Phrase));
         }
 
         /// <summary>
