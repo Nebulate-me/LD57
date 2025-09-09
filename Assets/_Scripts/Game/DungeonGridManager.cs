@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
-using _Scripts.Game.Timer;
 using _Scripts.Rooms;
 using _Scripts.RoomTiles;
 using _Scripts.Utils;
@@ -26,7 +24,6 @@ namespace _Scripts.Game
         [SerializeField] private Vector2 mousePositionOffset;
         [SerializeField] private List<RectTransform> unclickableScreenAreas;
         [SerializeField] private SpriteRenderer levelBuildingBackground;
-        [SerializeField] private GameObject levelBuildingPorch;
 
         [Inject] private IRoomRegistry roomRegistry;
         [Inject] private IHandManager handManager;
@@ -232,8 +229,6 @@ namespace _Scripts.Game
             }
             
             levelBuildingBackground.size = level.LevelSize;
-            levelBuildingPorch.transform.position = new Vector3(0, -level.HalfLevelSize.y - 1.5f, 0);
-            levelBuildingPorch.SetActive(level.ShowPorch);
             SignalsHub.DispatchAsync(new LevelSetupCompletedSignal(level));
         }
 
