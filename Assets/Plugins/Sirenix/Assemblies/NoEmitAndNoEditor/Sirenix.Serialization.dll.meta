@@ -48,7 +48,7 @@ PluginImporter:
       settings:
         CPU: 
     OSXUniversal:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: 
     WebGL:

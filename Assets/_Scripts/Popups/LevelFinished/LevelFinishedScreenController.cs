@@ -5,6 +5,7 @@ using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Popups.GameFinished;
 using _Scripts.Screens;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Signals;
 using TMPro;
@@ -134,7 +135,7 @@ namespace _Scripts.Popups.LevelFinished
             _screenManager.GoToMainMenuScreen();
         }
 
-        private async Task AnimateShowPopup()
+        private async UniTask AnimateShowPopup()
         {
             var halfOctopusMoveDuration = octopusMoveDuration / 2f;
 
@@ -148,19 +149,19 @@ namespace _Scripts.Popups.LevelFinished
 
             await bodyCanvasGroup.DOFade(1f, bodyFadeDuration).AsyncWaitForCompletion();
             var octopusMove = octopusTransform.DOAnchorPos(octopusFinalPosition, octopusMoveDuration)
-                .AsyncWaitForCompletion();
-            await Task.Delay(TimeSpan.FromSeconds(halfOctopusMoveDuration));
+                .AsyncWaitForCompletion().AsUniTask();
+            await UniTask.Delay(TimeSpan.FromSeconds(halfOctopusMoveDuration));
             octopusAnimator.SetBool(OctopusHasTurnedAnimationKey, true);
             var sunglassesMove = sunglassesTransform.DOAnchorPos(sunglassesFinalPosition, sunglassesMoveDuration)
-                .AsyncWaitForCompletion();
-            await Task.Delay(TimeSpan.FromSeconds(halfOctopusMoveDuration));
+                .AsyncWaitForCompletion().AsUniTask();
+            await UniTask.Delay(TimeSpan.FromSeconds(halfOctopusMoveDuration));
             var popupFade = popupCanvasGroup.DOFade(1f, sunglassesMoveDuration - halfOctopusMoveDuration)
-                .AsyncWaitForCompletion();
+                .AsyncWaitForCompletion().AsUniTask();
             fireworksAnimator.gameObject.SetActive(false);
 
-            await Task.WhenAll(new List<Task> {octopusMove, sunglassesMove, popupFade});
+            await UniTask.WhenAll(new List<UniTask> {octopusMove, sunglassesMove, popupFade});
             await medalCanvaGroup.DOFade(1f, sunglassesMoveDuration - halfOctopusMoveDuration)
-                .AsyncWaitForCompletion();
+                .AsyncWaitForCompletion().AsUniTask();
         }
     }
 }
