@@ -4,7 +4,6 @@ using Signals;
 using UnityEngine;
 using Utilities;
 using Utilities.Prefabs;
-using Utilities.RandomService;
 using Zenject;
 
 namespace _Scripts.Visuals
@@ -17,15 +16,13 @@ namespace _Scripts.Visuals
         [SerializeField] private GameObject bushPrefab;
         [SerializeField] private GameObject treePrefab;
         
-        [SerializeField] private float levelOffset = 1.5f;
+        [SerializeField] private Vector2 levelOffset = new Vector2(1f, 1.5f);
 
         [Header("Plant generation")]
-        [SerializeField] private int generatedPlantAmount = 20;
-        [SerializeField] private Vector2 generationRadius = new(10, 10);
-        [SerializeField] private float treeSpawnChance = .75f;
+        [SerializeField] private float treeGenerationInterval = 1;
+        [SerializeField] private Vector2 treeGenerationDistance = new Vector2(10, 10);
 
         [Inject] private IPrefabPool _prefabPool;
-        [Inject] private IRandomService _randomService;
         
         private Level _level;
         private List<GameObject> _plants = new();
@@ -44,7 +41,8 @@ namespace _Scripts.Visuals
         {
             foreach (var plant in _plants)
             {
-                _prefabPool.Despawn(plant);
+                if (plant != null)
+                    _prefabPool.Despawn(plant);
             }
             _plants.Clear();
         }
@@ -52,46 +50,38 @@ namespace _Scripts.Visuals
         private void OnLevelSetupCompleted(LevelSetupCompletedSignal signal)
         {
             _level = signal.Level;
-            levelBuildingPorch.transform.position = new Vector3(0, -_level.HalfLevelSize.y - levelOffset, 0);
+            levelBuildingPorch.transform.position = new Vector3(0, -_level.HalfLevelSize.y - levelOffset.y, 0);
             levelBuildingPorch.SetActive(_level.ShowPorch);
             
             levelPlantParent.DestroyChildren();
             _plants = new List<GameObject>();
-            var levelRadiusX = _level.HalfLevelSize.x + levelOffset;
-            var levelRadiusY = _level.HalfLevelSize.y + levelOffset;
-            for (var i = 0; i < generatedPlantAmount; i++)
+            
+            var treeGenerationBounds = new Vector2(_level.HalfLevelSize.x + levelOffset.x + treeGenerationDistance.x, _level.HalfLevelSize.y + levelOffset.y + treeGenerationDistance.y);
+            var isXOdd = false;
+            for (var treeX = -treeGenerationBounds.x; treeX < treeGenerationBounds.x; treeX += treeGenerationInterval)
             {
-                var point = GetRandomRingPoint(levelRadiusX, levelRadiusY);
-                var prefab = _randomService.Float(0, 1) <= treeSpawnChance ? treePrefab : bushPrefab;
-                prefab.transform.position = point;
-                var plant = _prefabPool.Spawn(prefab, levelPlantParent);
-                _plants.Add(plant);
+                isXOdd = !isXOdd;
+                var isYOdd = false;
+                for (var treeY = -treeGenerationBounds.y; treeY < treeGenerationBounds.y; treeY += treeGenerationInterval)
+                {
+                    isYOdd = !isYOdd;
+                    var treePosition =  new Vector3(treeX, treeY, 0);
+                    if (IsPositionWithinLevel(treePosition)) continue;
+                    if ((isXOdd && !isYOdd) || (!isXOdd && isYOdd)) continue;
+                    
+                    var tree = _prefabPool.Spawn(treePrefab);
+                    tree.transform.position = treePosition;
+                    _plants.Add(tree);
+                }
             }
         }
 
-        private Vector2 GetRandomRingPoint(float levelRadiusX, float levelRadiusY)
+        private bool IsPositionWithinLevel(Vector3 treePosition)
         {
-            return GetRandomBool()
-                ? new Vector2(
-                    GetRandomRingCoordinate(0, generationRadius.x),
-                    GetRandomRingCoordinate(levelRadiusY, generationRadius.y)
-                )
-                : new Vector2(
-                    GetRandomRingCoordinate(levelRadiusX, generationRadius.x),
-                    GetRandomRingCoordinate(0, generationRadius.y)
-                );
-        }
-
-        private float GetRandomRingCoordinate(float innerRingRadius, float outerRingRadius)
-        {
-            return GetRandomBool() 
-                ? _randomService.Float(innerRingRadius, outerRingRadius)
-                : -_randomService.Float(innerRingRadius, outerRingRadius);
-        }
-
-        private bool GetRandomBool()
-        {
-            return _randomService.Float(0, 1) >= 0.5f;
+            return treePosition.x >= -_level.HalfLevelSize.x - levelOffset.x 
+                   && treePosition.x <= _level.HalfLevelSize.x + levelOffset.x 
+                   // && treePosition.y >= -_level.HalfLevelSize.y - levelOffset.y 
+                   && treePosition.y <= _level.HalfLevelSize.y + levelOffset.y;
         }
     }
 }
