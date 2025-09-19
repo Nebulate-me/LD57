@@ -100,12 +100,11 @@ namespace _Scripts.Missions
             if (!IsApartmentMissionCompletable(apartmentMissionCard.Dto, out var roomsToUse, out _)) return;
 
             var apartmentFloorColor = _roomRegistry.TakeUnusedColor();
-            var roomScore = apartmentMissionCard.Dto.RewardScore;
+            var roomScore = apartmentMissionCard.Dto.CalculateScore(roomsToUse);
             foreach (var dungeonRoomModel in roomsToUse)
             {
                 dungeonRoomModel.IsUsed = true;
                 dungeonRoomModel.SetFloorColor(apartmentFloorColor);
-                roomScore += dungeonRoomModel.Score;
             }
             
             _prefabPool.Despawn(apartmentMissionCard.gameObject);

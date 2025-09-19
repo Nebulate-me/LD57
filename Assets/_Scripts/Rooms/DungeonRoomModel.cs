@@ -39,12 +39,15 @@ namespace _Scripts.Rooms
         }
 
         public int WindowCount => _roomTiles.Sum(roomTile => roomTile.WindowCount);
+        public int TileCount => _roomTiles.Count;
 
         [ShowInInspector, ReadOnly] public string RoomName => _roomDto.Name;
         [ShowInInspector, ReadOnly] public List<RoomType> RoomTypes => _roomDto.RoomTypes;
         [ShowInInspector, ReadOnly] public int AdjacentRoomCount => _adjacentRooms.Count;
         [HideInInspector] public List<DungeonRoomModel> AdjacentRooms => _adjacentRooms;
-        public int Score => _roomTiles.Count;
+        public int Score => HasType(RoomTypeExtensions.ConnectingRoomType) 
+            ? 0 
+            : _roomTiles.Count;
 
         public bool IsAdjacent(List<DungeonRoomTileView> otherRoomTiles)
         {
