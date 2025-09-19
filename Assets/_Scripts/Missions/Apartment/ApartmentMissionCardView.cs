@@ -70,7 +70,7 @@ namespace _Scripts.Missions.Apartment
         private void SeUpRewardScore(ApartmentMissionDto missionDto)
         {
             var currentRewardScore = _roomsToUse.Any() ? (missionDto.RewardScore + _roomsToUse.Sum(room => room.Score)) : missionDto.RewardScore;
-            rewardScoreText.text = $"{currentRewardScore} очков";
+            rewardScoreText.text = $"{currentRewardScore} {currentRewardScore.DeclinePoints()}";
         }
 
         private void SetUpRequirements(ApartmentMissionDto missionDto)

@@ -22,7 +22,7 @@ namespace _Scripts.Utils
             foreach (var mission in missions)
             {
                 sb.AppendLine($"Миссия: {mission.MissionName}");
-                sb.AppendLine($"Награда: {mission.RewardScore} очков");
+                sb.AppendLine($"Награда: {mission.RewardScore} {mission.RewardScore.DeclinePoints()}");
 
                 // ✅ Room requirements
                 if (mission.Requirements.Count > 0)
