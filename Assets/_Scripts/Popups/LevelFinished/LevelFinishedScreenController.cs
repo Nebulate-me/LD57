@@ -47,6 +47,7 @@ namespace _Scripts.Popups.LevelFinished
         [SerializeField] private Vector3 octopusInitialPosition;
         [SerializeField] private Vector3 octopusFinalPosition;
         [SerializeField] private float octopusMoveDuration = 1f;
+        [SerializeField] private float octopusTurnDuration = 1.25f;
         [SerializeField] private RectTransform sunglassesTransform;
         [SerializeField] private Vector3 sunglassesInitialPosition;
         [SerializeField] private Vector3 sunglassesFinalPosition;
@@ -137,7 +138,7 @@ namespace _Scripts.Popups.LevelFinished
 
         private async UniTask AnimateShowPopup()
         {
-            var halfOctopusMoveDuration = octopusMoveDuration / 2f;
+            var halfOctopusMoveDuration = Mathf.Min(0, octopusMoveDuration - octopusTurnDuration);
 
             bodyCanvasGroup.alpha = 0;
             popupCanvasGroup.alpha = 0;
