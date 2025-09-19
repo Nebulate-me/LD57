@@ -15,7 +15,7 @@ using Zenject;
 
 namespace _Scripts.Cards
 {
-    public class RoomCardView : MonoBehaviour, IPointerClickHandler, IPoolableResource
+    public class RoomCardView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPoolableResource
     {
         [SerializeField] private TextMeshProUGUI roomName;
         [Header("Room Icons")]
@@ -29,14 +29,19 @@ namespace _Scripts.Cards
         [Space] 
         [SerializeField] private Image cardBackgroundImage;
         [SerializeField] private Sprite deselectedCardBackgroundSprite;
+        [SerializeField] private Sprite hoveredCardBackgroundSprite;
         [SerializeField] private Sprite selectedCardBackgroundSprite;
 
         [Inject] private IHandManager _handManager;
         [Inject] private IPrefabPool _prefabPool;
 
         [ShowInInspector, ReadOnly] private bool _isEnabled;
+        [ShowInInspector, ReadOnly] private bool _isSelected;
+        [ShowInInspector, ReadOnly] private bool _isHovered;
+        
         private RoomDto _roomDto;
         private readonly List<RoomTileCellView> _roomTilCellViews = new();
+        
         public RoomDto RoomDto => _roomDto;
 
         private void OnEnable()
@@ -101,14 +106,39 @@ namespace _Scripts.Cards
             if (!_isEnabled) return;
             _handManager.SelectRoomCard(_roomDto);
         }
+        
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (!_isEnabled) return;
+            _isHovered = true;
+            UpdateCardBackground();
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (!_isEnabled) return;
+            _isHovered = false;
+            UpdateCardBackground();
+        }
 
         public void Select()
         {
-            cardBackgroundImage.sprite = selectedCardBackgroundSprite;
+            _isSelected = true;
+            UpdateCardBackground();
         }
         public void Deselect()
         {
-            cardBackgroundImage.sprite = deselectedCardBackgroundSprite;
+            _isSelected = false;
+            UpdateCardBackground();
+        }
+
+        private void UpdateCardBackground()
+        {
+            cardBackgroundImage.sprite = _isSelected 
+                ? selectedCardBackgroundSprite 
+                : _isHovered 
+                    ? hoveredCardBackgroundSprite
+                    : deselectedCardBackgroundSprite;
         }
 
         public void OnDespawn()

@@ -3,6 +3,7 @@ using System.Linq;
 using _Scripts.Cards;
 using _Scripts.Rooms;
 using _Scripts.Utils;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,7 +13,7 @@ using Zenject;
 
 namespace _Scripts.Missions.Apartment
 {
-    public class ApartmentMissionCardView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    public class ApartmentMissionCardView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPoolableResource
     {
         [SerializeField] private TextMeshProUGUI missionNameText;
         [SerializeField] private TextMeshProUGUI rewardScoreText;
@@ -24,15 +25,18 @@ namespace _Scripts.Missions.Apartment
         [Header("Mission Background")]
         [SerializeField] private Image missionBackgroundImage;
         [Space] [SerializeField] private Sprite uncompletableMissionBackgroundSprite;
-        [Space] [SerializeField] private Sprite completableMissionBackgroundSprite;
+        [SerializeField] private Sprite hoveredMissionBackgroundSprite;
+        [SerializeField] private Sprite completableMissionBackgroundSprite;
 
         [Inject] private IMissionManager _missionManager;
         [Inject] private IPrefabPool _prefabPool;
         
         private ApartmentMissionDto _dto;
-        private bool _isCompletable;
         private List<DungeonRoomModel> _roomsToUse = new();
-
+        
+        [ShowInInspector, ReadOnly] private bool _isCompletable;
+        [ShowInInspector, ReadOnly] private bool _isHovered;
+        
         public ApartmentMissionDto Dto => _dto;
         
         public bool Completable
@@ -41,9 +45,17 @@ namespace _Scripts.Missions.Apartment
             set
             {
                 _isCompletable = value;
-                missionBackgroundImage.sprite =
-                    value ? completableMissionBackgroundSprite : uncompletableMissionBackgroundSprite;
+                UpdateCardBackground();
             }
+        }
+
+        private void UpdateCardBackground()
+        {
+            missionBackgroundImage.sprite = _isCompletable 
+                ? completableMissionBackgroundSprite 
+                : _isHovered 
+                    ? hoveredMissionBackgroundSprite 
+                    : uncompletableMissionBackgroundSprite; 
         }
 
         public void SetUp(ApartmentMissionDto missionDto)
@@ -110,6 +122,7 @@ namespace _Scripts.Missions.Apartment
         public void OnDespawn()
         {
             _isCompletable = false;
+            _isHovered = false;
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -122,11 +135,15 @@ namespace _Scripts.Missions.Apartment
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            _isHovered = true;
+            UpdateCardBackground();
             _missionManager.HighlightMission(this);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            _isHovered = false;
+            UpdateCardBackground();
             _missionManager.UnhighlightMission(this);
         }
     }

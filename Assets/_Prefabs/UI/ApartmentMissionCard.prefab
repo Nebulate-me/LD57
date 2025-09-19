@@ -195,8 +195,9 @@ MonoBehaviour:
   roomTypeIconViewPrefab: {fileID: 1184246537861061770, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
   roomTypeIconContainer: {fileID: 1942266045114246310}
   missionBackgroundImage: {fileID: 6829015442281912610}
-  uncompletableMissionBackgroundSprite: {fileID: 21300000, guid: 03b158df9938bcb4189fdbee42207b6d, type: 3}
-  completableMissionBackgroundSprite: {fileID: 21300000, guid: ac744d7db070b644ca152ead77aab7f1, type: 3}
+  uncompletableMissionBackgroundSprite: {fileID: 994635006, guid: d1a7d9b4e8f6b414e982d4cc2a28627a, type: 3}
+  hoveredMissionBackgroundSprite: {fileID: 945790616, guid: d1a7d9b4e8f6b414e982d4cc2a28627a, type: 3}
+  completableMissionBackgroundSprite: {fileID: 539744729, guid: d1a7d9b4e8f6b414e982d4cc2a28627a, type: 3}
 --- !u!222 &8225200337979613953
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -225,7 +226,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 03b158df9938bcb4189fdbee42207b6d, type: 3}
+  m_Sprite: {fileID: 994635006, guid: d1a7d9b4e8f6b414e982d4cc2a28627a, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
