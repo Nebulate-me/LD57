@@ -7,5 +7,6 @@ namespace _Scripts.Popups
         LevelFinished = 2,
         GameFinished = 3,
         HighScore = 4,
+        GamePaused = 5,
     }
 }

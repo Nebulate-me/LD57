@@ -1,3 +1,5 @@
+using _Scripts.Popups;
+using _Scripts.Popups.GamePaused;
 using Signals;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -22,6 +24,7 @@ namespace _Scripts.Game.Timer
 
         private void OnEnable()
         {
+            SignalsHub.AddListener<KeyPressedSignal>(OnKeyPressed);
             SignalsHub.AddListener<GameTimerPausedSignal>(OnTimerPaused);
             SignalsHub.AddListener<GameTimerStartedSignal>(OnTimerStarted);
             
@@ -30,6 +33,7 @@ namespace _Scripts.Game.Timer
 
         private void OnDisable()
         {
+            SignalsHub.RemoveListener<KeyPressedSignal>(OnKeyPressed);
             SignalsHub.RemoveListener<GameTimerPausedSignal>(OnTimerPaused);
             SignalsHub.RemoveListener<GameTimerStartedSignal>(OnTimerStarted);
             
@@ -40,6 +44,14 @@ namespace _Scripts.Game.Timer
         {
             SetIsEnabled(isEnabledOnStart);
             SetIsPaused(!_gameTimerController.IsRunning);
+        }
+        
+        private void OnKeyPressed(KeyPressedSignal signal)
+        {
+            if (signal.KeyCode == KeyCode.Escape)
+            {
+                OnPauseButtonClicked();
+            }
         }
 
         private void OnTimerPaused(GameTimerPausedSignal obj)
@@ -57,11 +69,13 @@ namespace _Scripts.Game.Timer
             if (!_isEnabled) return;
             if (!_isPaused)
             {
-                _gameTimerController.PauseTimer();
+                // _gameTimerController.PauseTimer();
+                SignalsHub.DispatchAsync(new ShowPopupSignal(PopupType.GamePaused));
             }
             else
             {
-                _gameTimerController.StartTimer();
+                // _gameTimerController.StartTimer();
+                SignalsHub.DispatchAsync(new HidePopupSignal());
             }
         }
 

@@ -117,7 +117,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 5247671051094077273}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -175,6 +175,7 @@ MonoBehaviour:
   pauseButtonImage: {fileID: 683125750376411086}
   pauseSprite: {fileID: -863808091, guid: c86ee164c64f51f4687acc657b300698, type: 3}
   resumeSprite: {fileID: 1231354857, guid: c86ee164c64f51f4687acc657b300698, type: 3}
+  isEnabledOnStart: 1
 --- !u!114 &616868031253720556
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ using _Scripts.Missions.Apartment;
 using _Scripts.Player;
 using _Scripts.Popups;
 using _Scripts.Popups.GameFinished;
+using _Scripts.Popups.GamePaused;
 using _Scripts.Popups.LevelFinished;
 using _Scripts.Rooms;
 using ModestTree;
@@ -58,6 +59,15 @@ namespace _Scripts.Game
         {
             if (levels.IsEmpty()) throw new Exception("Levels array must not be empty!");
             LoadCurrentLevel();
+        }
+
+        public void Update()
+        {
+            // TODO: Implement proper key tracking instead
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SignalsHub.DispatchAsync(new KeyPressedSignal(KeyCode.Escape));
+            }
         }
 
         private void LoadCurrentLevel()

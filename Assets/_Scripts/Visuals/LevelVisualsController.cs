@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using _Scripts.Game;
 using Signals;
 using UnityEngine;
@@ -16,11 +17,12 @@ namespace _Scripts.Visuals
         [SerializeField] private GameObject bushPrefab;
         [SerializeField] private GameObject treePrefab;
         
-        [SerializeField] private Vector2 levelOffset = new Vector2(1f, 1.5f);
+        [SerializeField] private Vector3 generationOffset = new(0.5f, 0f, 0f);
+        [SerializeField] private Vector2 levelOffset = new(1f, 1.5f);
 
         [Header("Plant generation")]
         [SerializeField] private float treeGenerationInterval = 1;
-        [SerializeField] private Vector2 treeGenerationDistance = new Vector2(10, 10);
+        [SerializeField] private Vector2 treeGenerationDistance = new(10, 10);
 
         [Inject] private IPrefabPool _prefabPool;
         
@@ -39,6 +41,11 @@ namespace _Scripts.Visuals
 
         private void OnDestroy()
         {
+            DespawnPlants();
+        }
+
+        private void DespawnPlants()
+        {
             foreach (var plant in _plants)
             {
                 if (plant != null)
@@ -52,7 +59,8 @@ namespace _Scripts.Visuals
             _level = signal.Level;
             levelBuildingPorch.transform.position = new Vector3(0, -_level.HalfLevelSize.y - levelOffset.y, 0);
             levelBuildingPorch.SetActive(_level.ShowPorch);
-            
+
+            DespawnPlants();
             levelPlantParent.DestroyChildren();
             _plants = new List<GameObject>();
             
@@ -65,7 +73,7 @@ namespace _Scripts.Visuals
                 for (var treeY = -treeGenerationBounds.y; treeY < treeGenerationBounds.y; treeY += treeGenerationInterval)
                 {
                     isYOdd = !isYOdd;
-                    var treePosition =  new Vector3(treeX, treeY, 0);
+                    var treePosition =  new Vector3(treeX, treeY, 0) + generationOffset;
                     if (IsPositionWithinLevel(treePosition)) continue;
                     if ((isXOdd && !isYOdd) || (!isXOdd && isYOdd)) continue;
                     
