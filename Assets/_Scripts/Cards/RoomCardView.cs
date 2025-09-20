@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _Scripts.Game.Timer;
 using _Scripts.Rooms;
 using _Scripts.RoomTiles;
+using _Scripts.Utils;
 using Signals;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -85,6 +86,7 @@ namespace _Scripts.Cards
             roomIconContainer.DestroyChildren();
             foreach (var roomType in roomDto.RoomTypes)
             {
+                if (roomType == RoomTypeExtensions.ConnectingRoomType) continue;
                 var roomTypeIcon = _prefabPool.Spawn(roomIconPrefab, roomIconContainer).GetComponent<RoomTypeIconView>();
                 roomTypeIcon.SetUp(roomType);
             }
