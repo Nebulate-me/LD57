@@ -26,6 +26,7 @@ namespace _Scripts.Cards
         bool TryPlaySelectRoomCard();
         void RefillRoomHand();
         void RedrawRoomHand();
+        bool TryUnplayLastCard();
         
         #endregion
     }

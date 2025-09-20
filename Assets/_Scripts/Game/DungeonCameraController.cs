@@ -29,19 +29,12 @@ namespace _Scripts.Rooms
 
         private void OnEnable()
         {
-            // SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
             SignalsHub.AddListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
         }
 
         private void OnDisable()
         {
-            // SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
             SignalsHub.RemoveListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
-        }
-
-        private void OnRoomTilePlaced(RoomTilePlacedSignal signal)
-        {
-            // dungeonBounds = dungeonGridManager.GetRoomBoundsBasedOnTiles();
         }
         
         private void OnLevelSetupCompleted(LevelSetupCompletedSignal signal)
@@ -80,7 +73,7 @@ namespace _Scripts.Rooms
             if (isDragging)
             {
                 Vector3 delta = Input.mousePosition - lastMousePosition;
-                Vector3 move = -delta * panSpeed * Time.deltaTime;
+                Vector3 move = -delta * (panSpeed * Time.deltaTime);
 
                 move *= mainCamera.orthographicSize / panZoomFactor;
 

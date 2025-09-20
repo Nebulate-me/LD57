@@ -9,6 +9,9 @@ namespace _Scripts.Rooms
         IReadOnlyList<DungeonRoomTileView> RoomTiles { get; }
         IReadOnlyList<DungeonRoomModel> Rooms { get; }
         int EmptyRoomTilesCount { get; }
+        bool CanUndoRoomPlacement { get; }
+        
+        bool UndoLastRoomPlacement();
         Bounds GetLevelBounds();
         Bounds GetRoomBoundsBasedOnTiles();
         bool IsTileAdjacentToLevelBounds(Vector2Int gridPosition, RoomDirection key);

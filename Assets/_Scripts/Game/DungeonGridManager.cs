@@ -36,25 +36,20 @@ namespace _Scripts.Game
         private DungeonRoomGhostView _roomGhostInstance;
         private List<DungeonRoomTileView> _roomTiles = new();
         [ShowInInspector, ReadOnly] private List<DungeonRoomModel> _rooms = new();
+        [ShowInInspector, ReadOnly] private Stack<DungeonRoomModel> _lastPlacedRooms = new();
         private RoomDirection _currentDirection = RoomDirectionExtensions.Default;
-        
-        private List<Bounds> _unclickableBounds;
+
         private IMaybe<Level> _maybeCurrentLevel = Maybe.Empty<Level>();
 
         public void Initialize()
         {
             _currentDirection = RoomDirectionExtensions.Default;
             _roomTiles = new List<DungeonRoomTileView>();
-            _unclickableBounds = unclickableScreenAreas.Select(RectTransformUtility.CalculateRelativeRectTransformBounds)
+            unclickableScreenAreas.Select(RectTransformUtility.CalculateRelativeRectTransformBounds)
                 .ToList();
             
             _roomGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
                 .GetComponent<DungeonRoomGhostView>();
-        }
-        
-        private void Start()
-        {
-            
         }
 
         private void Update()
@@ -208,6 +203,7 @@ namespace _Scripts.Game
 
         public void UnloadLevel()
         {
+            _lastPlacedRooms.Clear();
             foreach (var roomModel in _rooms)
             {
                 roomModel.ClearTiles(prefabPool);
@@ -272,6 +268,9 @@ namespace _Scripts.Game
                 adjacentRoom.AddAdjacentRoom(roomModel);
             }
             _rooms.Add(roomModel);
+            if (!roomModel.HasType(RoomType.Shared))
+                _lastPlacedRooms.Push(roomModel);
+            
             SignalsHub.DispatchAsync(new RoomPlacedSignal(roomModel));
             handManager.TryPlaySelectRoomCard();
             handManager.RefillRoomHand();
@@ -283,6 +282,7 @@ namespace _Scripts.Game
         public IReadOnlyList<DungeonRoomTileView> RoomTiles => _roomTiles;
         public IReadOnlyList<DungeonRoomModel> Rooms => _rooms;
         public int EmptyRoomTilesCount => _maybeCurrentLevel.TryGetValue(out var currentLevel) ? currentLevel.TileCount - _roomTiles.Count(tile => tile.IsUsed) : 0;
+        public bool CanUndoRoomPlacement => _lastPlacedRooms.TryPeek(out var  lastPlacedRoom) && !lastPlacedRoom.IsUsed;
 
         public Bounds GetRoomBoundsBasedOnTiles()
         {
@@ -310,6 +310,27 @@ namespace _Scripts.Game
                 return true;
 
             return adjacentTile.DoorDirections.Contains(direction.Invert());
+        }
+
+        public bool UndoLastRoomPlacement()
+        {
+            if (CanUndoRoomPlacement && _lastPlacedRooms.TryPop(out var lastPlacedRoom))
+            {
+                foreach (var adjacentRoom in lastPlacedRoom.AdjacentRooms)
+                {
+                    adjacentRoom.RemoveAdjacentRoom(lastPlacedRoom);
+                }
+                _rooms.Remove(lastPlacedRoom);
+                foreach (var tileView in lastPlacedRoom.Tiles)
+                {
+                    _roomTiles.Remove(tileView);    
+                }
+                lastPlacedRoom.ClearTiles(prefabPool);
+                handManager.TryUnplayLastCard();
+                return true;
+            }
+
+            return false;
         }
 
         public Bounds GetLevelBounds()

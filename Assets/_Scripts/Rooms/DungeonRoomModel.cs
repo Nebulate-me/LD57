@@ -49,6 +49,8 @@ namespace _Scripts.Rooms
             ? 0 
             : _roomTiles.Count;
 
+        public List<DungeonRoomTileView> Tiles => _roomTiles;
+
         public bool IsAdjacent(List<DungeonRoomTileView> otherRoomTiles)
         {
             foreach (var otherRoomTile in otherRoomTiles)
@@ -69,6 +71,11 @@ namespace _Scripts.Rooms
         public void AddAdjacentRoom(DungeonRoomModel room)
         {
             _adjacentRooms.Add(room);
+        }
+
+        public void RemoveAdjacentRoom(DungeonRoomModel room)
+        {
+            _adjacentRooms.Remove(room);    
         }
 
         public bool IsFulfilling(RoomRequirement requirement)

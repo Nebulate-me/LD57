@@ -24,11 +24,11 @@ namespace _Scripts.Cards
 
         private readonly List<RoomTileCardView> _roomTileCardViews = new();
         private readonly List<RoomCardView> _roomCardViews = new();
+        private readonly Stack<RoomDto> _playedRoomCards = new();
         private Level _currentLevel;
         
         [Inject] private IDeckManager _deckManager;
         [Inject] private IPrefabPool _prefabPool;
-        
 
         private void OnEnable()
         {
@@ -82,6 +82,7 @@ namespace _Scripts.Cards
             {
                 _prefabPool.Despawn(view.gameObject);
             }
+            _playedRoomCards.Clear();
         }
 
         public int CardAmount => _roomTileCardViews.Count;
@@ -175,6 +176,7 @@ namespace _Scripts.Cards
                 _roomCardViews.Remove(cardView);
                 _prefabPool.Despawn(cardView.gameObject);
                 SelectedRoomCardView = Maybe.Empty<RoomCardView>();
+                _playedRoomCards.Push(cardView.RoomDto);
 
                 return true;
             }
@@ -213,6 +215,21 @@ namespace _Scripts.Cards
                 _deckManager.BuryRoom(roomCard.RoomDto);
             }
             RefillRoomHand();
+        }
+
+        public bool TryUnplayLastCard()
+        {
+            if (!_playedRoomCards.TryPop(out var card)) return false;
+            
+            DeselectRoomCard();
+            var lastDrawnCard = _roomCardViews.Last();
+            _roomCardViews.Remove(lastDrawnCard);
+            _prefabPool.Despawn(lastDrawnCard.gameObject);
+            
+            var cardView = _prefabPool.Spawn(roomCardPrefab, roomCardContainer).GetComponent<RoomCardView>();
+            cardView.SetUp(card);
+            _roomCardViews.Insert(0, cardView);
+            return true;
         }
 
         #endregion
