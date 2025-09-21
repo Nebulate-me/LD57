@@ -19,26 +19,7 @@ namespace _Scripts.Mascot
         
         public string Phrase => phrase;
         public MascotTutorialTargetType TargetType => targetType;
+        public MascotTutorialTopPanelTargetType TopPanelTargetType => topPanelTargetType;
         public MascotTutorialActionType ActionType => actionType;
-    }
-
-    public enum MascotTutorialTopPanelTargetType
-    {
-        None = 0,
-        Timer = 1,
-        MissionCards = 2,
-        MissionCardName = 3,
-        MissionCardRoomIcons = 4,
-        MissionCardRoomWindows = 5,
-        MissionCardScore = 6,
-        Score = 7,
-        MissionCounter = 8,
-    }
-    
-    public enum MascotTutorialBottomPanelTargetType
-    {
-        None = 0,
-        RoomCards = 1,
-        RedrawCardsButton = 2,
     }
 }

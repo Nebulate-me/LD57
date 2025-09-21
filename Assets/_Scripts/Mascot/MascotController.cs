@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Missions;
+using ModestTree;
+using Plugins.Sirenix.Odin_Inspector.Modules;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -23,6 +25,9 @@ namespace _Scripts.Mascot
         [SerializeField] private float fadeDuration = 0.18f;
         [SerializeField] private bool useTypewriter = true;
         [SerializeField] private float charsPerSecond = 55f;
+        
+        [Header("Tutorial Targets")]
+        [SerializeField] private MascotTutorialTopPanelTargetToGameObjectDictionary topPanelTutorialTargets;
 
         [Header("Messages")] 
         [SerializeField] private MascotTutorialConfig tutorialConfig;
@@ -31,10 +36,10 @@ namespace _Scripts.Mascot
 
         private Coroutine showRoutine;
         private Coroutine typeRoutine;
-
-        // sequence state
-        private readonly List<string> _activePhrases = new List<string>();
-        private int _phraseIndex = 0;
+        
+        private readonly List<MascotTutorialStepConfig> _stepConfigs = new();
+        private int _activeStepIndex = 0;
+        
 
         void Awake()
         {
@@ -54,24 +59,25 @@ namespace _Scripts.Mascot
 
         private void Start()
         {
-            ShowSequence(tutorialConfig.Steps.Select(step => step.Phrase));
+            ShowSequence(tutorialConfig.Steps);
         }
 
         /// <summary>
         /// Starts showing a sequence of phrases (fades in once, then click-through).
         /// </summary>
-        public void ShowSequence(IEnumerable<string> phrases)
+        public void ShowSequence(List<MascotTutorialStepConfig> stepConfigs)
         {
-            _activePhrases.Clear();
-            if (phrases != null) _activePhrases.AddRange(phrases);
-            if (_activePhrases.Count == 0)
+            _stepConfigs.Clear();
+            if (stepConfigs == null) return;
+            
+            _stepConfigs.AddRange(stepConfigs);
+            if (_stepConfigs.IsEmpty())
             {
-                // nothing to show, just continue
                 _scoreManager.StartGame();
                 return;
             }
 
-            _phraseIndex = 0;
+            _activeStepIndex = 0;
 
             if (showRoutine != null) StopCoroutine(showRoutine);
             if (typeRoutine != null) StopCoroutine(typeRoutine);
@@ -80,19 +86,11 @@ namespace _Scripts.Mascot
             canvasGroup.alpha = 0f;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
-
-            // prime first phrase
-            SetPhrase(_activePhrases[_phraseIndex], resetVisible: true);
+            
+            SetPhrase(_stepConfigs[_activeStepIndex].Phrase, resetVisible: true);
+            SetTutorialTarget(stepConfigs[_activeStepIndex]);
 
             showRoutine = StartCoroutine(FadeInThenType());
-        }
-
-        /// <summary>
-        /// Keeps the old API around — shows a single message as a 1-phrase sequence.
-        /// </summary>
-        public void Show(string message)
-        {
-            ShowSequence(new[] { message });
         }
 
         public void Hide()
@@ -112,12 +110,13 @@ namespace _Scripts.Mascot
             }
 
             // Otherwise go to next phrase, or finish if this was the last.
-            if (_phraseIndex < _activePhrases.Count - 1)
+            if (_activeStepIndex < _stepConfigs.Count - 1)
             {
-                _phraseIndex++;
+                _activeStepIndex++;
                 // stop any previous typing coroutine
                 if (typeRoutine != null) StopCoroutine(typeRoutine);
-                SetPhrase(_activePhrases[_phraseIndex], resetVisible: true);
+                SetPhrase(_stepConfigs[_activeStepIndex].Phrase, resetVisible: true);
+                SetTutorialTarget(_stepConfigs[_activeStepIndex]);
 
                 if (useTypewriter)
                     typeRoutine = StartCoroutine(Typewriter(shownBubbleText, charsPerSecond));
@@ -134,6 +133,27 @@ namespace _Scripts.Mascot
             contentBubbleText.text = phrase;
             shownBubbleText.text = phrase;
             if (resetVisible) shownBubbleText.maxVisibleCharacters = 0;
+        }
+
+        private void ClearTutorialTarget()
+        {
+            foreach (var topPanelTutorialTarget in topPanelTutorialTargets.Values)
+            {
+                topPanelTutorialTarget.SetActive(false);
+            }
+        }
+        
+        private void SetTutorialTarget(MascotTutorialStepConfig stepConfig)
+        {
+            ClearTutorialTarget();
+            
+            if (stepConfig.TargetType == MascotTutorialTargetType.TopPanel)
+            {
+                if (topPanelTutorialTargets.TryGetValue(stepConfig.TopPanelTargetType, out var stepTarget))
+                {
+                    stepTarget.SetActive(true);
+                }
+            }
         }
 
         private IEnumerator FadeInThenType()
@@ -171,8 +191,8 @@ namespace _Scripts.Mascot
             canvasGroup.blocksRaycasts = false;
             mascotPopup.SetActive(false);
 
-            _activePhrases.Clear();
-            _phraseIndex = 0;
+            _stepConfigs.Clear();
+            _activeStepIndex = 0;
 
             _scoreManager.StartGame();
         }

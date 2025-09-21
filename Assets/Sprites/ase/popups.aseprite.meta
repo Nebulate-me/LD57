@@ -124,7 +124,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: popups
     originalName: 
-    pivot: {x: 0.4915254, y: -0.050847456}
+    pivot: {x: 0.4754098, y: -0.032258064}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -132,8 +132,8 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 59
-      height: 59
+      width: 61
+      height: 93
     spriteID: d53f94d8cd5d74440bfa4515f8e0c43d
     spriteBone: []
     spriteOutline: []
@@ -158,8 +158,8 @@ ScriptedImporter:
       cellRect:
         x: 3
         y: 3
-        width: 59
-        height: 59
+        width: 61
+        height: 93
       spriteId: d53f94d8cd5d74440bfa4515f8e0c43d
     linkedCells: []
     parentIndex: -1
