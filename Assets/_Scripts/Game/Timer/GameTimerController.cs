@@ -12,7 +12,7 @@ namespace _Scripts.Game.Timer
         public class IntEvent : UnityEvent<int>
         {
         }
-
+        
         [Header("Display")] [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private string format = "{0:00}:{1:00}";
 

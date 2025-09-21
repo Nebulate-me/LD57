@@ -33,7 +33,8 @@ namespace _Scripts.Score
         
         [ShowInInspector, ReadOnly] private int _currentScore = 0;
         [ShowInInspector, ReadOnly] private int _completedMissionsCount = 0;
-        [ShowInInspector, ReadOnly] private string _currentPlayerName = string.Empty; 
+        [ShowInInspector, ReadOnly] private string _currentPlayerName = string.Empty;
+        [SerializeField] private bool startTimerOnGameStart = true;
 
         public int Score => _currentScore;
         public bool IsGameFinished { get; private set; } = false;
@@ -166,7 +167,10 @@ namespace _Scripts.Score
             GameFinishedReason = GameFinishedReason.TimeOut;
             _currentScore = 0;
             _completedMissionsCount = 0;
-            _gameTimerController.StartTimer(); // TODO: Do it after the initial tutorial is done
+            if (startTimerOnGameStart)
+            {
+                _gameTimerController.StartTimer();    
+            }
         }
         
         public void FinishGame(GameFinishedReason reason)

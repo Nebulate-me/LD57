@@ -1,5 +1,6 @@
 using _Scripts.Cards;
 using _Scripts.Game;
+using _Scripts.Game.Timer;
 using _Scripts.RoomTiles;
 using Signals;
 using Unity.VisualScripting;
@@ -19,8 +20,9 @@ namespace _Scripts.Rooms
         [SerializeField] private float panSpeed = 1f;
         [SerializeField] private float panZoomFactor = 5f;
         
-        [Inject] private IHandManager handManager;
-        [Inject] private IDungeonGridManager dungeonGridManager;
+        [Inject] private IHandManager _handManager;
+        [Inject] private IDungeonGridManager _dungeonGridManager;
+        [Inject] private IGameTimerController _gameTimerController;
 
         private Bounds dungeonBounds;
         private Plane worldPlane;
@@ -39,7 +41,7 @@ namespace _Scripts.Rooms
         
         private void OnLevelSetupCompleted(LevelSetupCompletedSignal signal)
         {
-            dungeonBounds = dungeonGridManager.GetLevelBounds();
+            dungeonBounds = _dungeonGridManager.GetLevelBounds();
         }
 
         private void Start()
@@ -52,9 +54,12 @@ namespace _Scripts.Rooms
 
         private void LateUpdate()
         {
-            HandleCameraDrag();
+            if (_gameTimerController.IsRunning)
+            {
+                HandleCameraDrag();
 
-            HandleCameraZoom();
+                HandleCameraZoom();   
+            }
         }
 
         private void HandleCameraDrag()
@@ -65,7 +70,7 @@ namespace _Scripts.Rooms
                 lastMousePosition = Input.mousePosition;
             }
 
-            if (Input.GetMouseButtonUp(0) || handManager.SelectedRoomTileCardView.IsPresent)
+            if (Input.GetMouseButtonUp(0) || _handManager.SelectedRoomTileCardView.IsPresent)
             {
                 isDragging = false;
             }
@@ -85,7 +90,7 @@ namespace _Scripts.Rooms
         
         private void HandleCameraZoom()
         {
-            if (handManager.SelectedRoomCardView.IsNotPresent)
+            if (_handManager.SelectedRoomCardView.IsNotPresent)
             {
                 if (Input.mouseScrollDelta.y != 0)
                 {

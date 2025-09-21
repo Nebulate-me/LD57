@@ -1,12 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using ModestTree;
-using Plugins.Sirenix.Odin_Inspector.Modules;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -14,8 +13,9 @@ namespace _Scripts.Mascot
 {
     public class MascotPopupController : MonoBehaviour
     {
-        [SerializeField] private GameObject mascotPopup;
-        [FormerlySerializedAs("group")] [SerializeField] private CanvasGroup canvasGroup;
+        [SerializeField] private GameObject middleMascotPopup;
+        [SerializeField] private GameObject aboveMascotPopup;
+        [SerializeField] private List<CanvasGroup> canvasGroups = new();
         [SerializeField] private Image portrait;
         [SerializeField] private TextMeshProUGUI shownBubbleText;
         [SerializeField] private TextMeshProUGUI contentBubbleText;
@@ -28,11 +28,15 @@ namespace _Scripts.Mascot
         
         [Header("Tutorial Targets")]
         [SerializeField] private MascotTutorialTopPanelTargetToGameObjectDictionary topPanelTutorialTargets;
+        [SerializeField] private MascotTutorialBottomPanelTargetToGameObjectDictionary bottomPanelTutorialTargets;
+        [SerializeField] private MascotTutorialBuildingTargetToGameObjectDictionary buildingTutorialTargets;
+        
 
         [Header("Messages")] 
         [SerializeField] private MascotTutorialConfig tutorialConfig;
 
         [Inject] private IScoreManager _scoreManager;
+        [Inject] private IGameTimerController _gameTimerController;
 
         private Coroutine showRoutine;
         private Coroutine typeRoutine;
@@ -43,8 +47,8 @@ namespace _Scripts.Mascot
 
         void Awake()
         {
-            if (!canvasGroup) canvasGroup = GetComponent<CanvasGroup>();
-            mascotPopup.SetActive(false);
+            middleMascotPopup.SetActive(false);
+            aboveMascotPopup.SetActive(false);
         }
 
         void OnEnable()
@@ -82,13 +86,18 @@ namespace _Scripts.Mascot
             if (showRoutine != null) StopCoroutine(showRoutine);
             if (typeRoutine != null) StopCoroutine(typeRoutine);
 
-            mascotPopup.SetActive(true);
-            canvasGroup.alpha = 0f;
-            canvasGroup.interactable = false;
-            canvasGroup.blocksRaycasts = false;
+            middleMascotPopup.SetActive(true);
+            aboveMascotPopup.SetActive(true);
+            foreach (var canvasGroup in canvasGroups)
+            {
+                canvasGroup.alpha = 0f;
+                canvasGroup.interactable = false;
+                canvasGroup.blocksRaycasts = false;   
+            }
             
             SetPhrase(_stepConfigs[_activeStepIndex].Phrase, resetVisible: true);
             SetTutorialTarget(stepConfigs[_activeStepIndex]);
+            SetTutorialAction(stepConfigs[_activeStepIndex]);
 
             showRoutine = StartCoroutine(FadeInThenType());
         }
@@ -117,6 +126,7 @@ namespace _Scripts.Mascot
                 if (typeRoutine != null) StopCoroutine(typeRoutine);
                 SetPhrase(_stepConfigs[_activeStepIndex].Phrase, resetVisible: true);
                 SetTutorialTarget(_stepConfigs[_activeStepIndex]);
+                SetTutorialAction(_stepConfigs[_activeStepIndex]);
 
                 if (useTypewriter)
                     typeRoutine = StartCoroutine(Typewriter(shownBubbleText, charsPerSecond));
@@ -141,18 +151,70 @@ namespace _Scripts.Mascot
             {
                 topPanelTutorialTarget.SetActive(false);
             }
+            
+            foreach (var topPanelTutorialTarget in bottomPanelTutorialTargets.Values)
+            {
+                topPanelTutorialTarget.SetActive(false);
+            }
+            
+            foreach (var buildingTutorialTarget in buildingTutorialTargets.Values)
+            {
+                buildingTutorialTarget.SetActive(false);
+            }
         }
         
         private void SetTutorialTarget(MascotTutorialStepConfig stepConfig)
         {
             ClearTutorialTarget();
-            
-            if (stepConfig.TargetType == MascotTutorialTargetType.TopPanel)
+
+            switch (stepConfig.TargetType)
             {
-                if (topPanelTutorialTargets.TryGetValue(stepConfig.TopPanelTargetType, out var stepTarget))
+                case MascotTutorialTargetType.TopPanel:
                 {
-                    stepTarget.SetActive(true);
+                    if (topPanelTutorialTargets.TryGetValue(stepConfig.TopPanelTargetType, out var stepTarget))
+                    {
+                        stepTarget.SetActive(true);
+                    }
+                    break;
                 }
+                case MascotTutorialTargetType.BottomPanel:
+                {
+                    if (bottomPanelTutorialTargets.TryGetValue(stepConfig.BottomPanelTargetType, out var stepTarget))
+                    {
+                        stepTarget.SetActive(true);
+                    }
+                    break;
+                }
+                case MascotTutorialTargetType.Building:
+                {
+                    if (buildingTutorialTargets.TryGetValue(stepConfig.BuildingPanelTargetType, out var stepTarget))
+                    {
+                        stepTarget.SetActive(true);
+                    }
+                    break;
+                }
+                case MascotTutorialTargetType.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        
+        private void SetTutorialAction(MascotTutorialStepConfig stepConfig)
+        {
+            switch (stepConfig.ActionType)
+            {
+                case MascotTutorialActionType.None:
+                    break;
+                case MascotTutorialActionType.ClickAny:
+                    _gameTimerController.PauseTimer();
+                    break;
+                case MascotTutorialActionType.RoomCardSelected:
+                    break;
+                case MascotTutorialActionType.RoomPlaced:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -163,12 +225,19 @@ namespace _Scripts.Mascot
             while (t < fadeDuration)
             {
                 t += Time.unscaledDeltaTime;
-                canvasGroup.alpha = Mathf.SmoothStep(0f, 1f, t / fadeDuration);
+                foreach (var canvasGroup in canvasGroups)
+                {
+                    canvasGroup.alpha = Mathf.SmoothStep(0f, 1f, t / fadeDuration);   
+                }
                 yield return null;
             }
-            canvasGroup.alpha = 1f;
-            canvasGroup.interactable = true;
-            canvasGroup.blocksRaycasts = true;
+
+            foreach (var canvasGroup in canvasGroups)
+            {
+                canvasGroup.alpha = 1f;
+                canvasGroup.interactable = true;
+                canvasGroup.blocksRaycasts = true;   
+            }
 
             // Typewriter for first phrase
             if (useTypewriter)
@@ -179,17 +248,25 @@ namespace _Scripts.Mascot
 
         private IEnumerator FadeOutAndDisable()
         {
-            canvasGroup.interactable = false;
+            foreach (var canvasGroup in canvasGroups) 
+                canvasGroup.interactable = false;
+            
             float t = 0f;
             while (t < fadeDuration)
             {
                 t += Time.unscaledDeltaTime;
-                canvasGroup.alpha = Mathf.SmoothStep(1f, 0f, t / fadeDuration);
+                foreach (var canvasGroup in canvasGroups)
+                    canvasGroup.alpha = Mathf.SmoothStep(1f, 0f, t / fadeDuration);
                 yield return null;
             }
-            canvasGroup.alpha = 0f;
-            canvasGroup.blocksRaycasts = false;
-            mascotPopup.SetActive(false);
+
+            foreach (var canvasGroup in canvasGroups)
+            {
+                canvasGroup.alpha = 0f;
+                canvasGroup.blocksRaycasts = false;   
+            }
+            middleMascotPopup.SetActive(false);
+            aboveMascotPopup.SetActive(false);
 
             _stepConfigs.Clear();
             _activeStepIndex = 0;

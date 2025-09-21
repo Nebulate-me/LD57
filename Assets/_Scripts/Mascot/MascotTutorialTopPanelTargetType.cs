@@ -15,6 +15,7 @@ namespace _Scripts.Mascot
         MissionCardScore = 6,
         Score = 7,
         MissionCounter = 8,
+        UndoButton = 9
     }
 
     [Serializable]
