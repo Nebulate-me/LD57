@@ -11,6 +11,7 @@ namespace _Scripts.Mascot
         SharedRooms = 2,
         Windows = 3,
         Space = 4,
+        Doors = 5,
     }
     
     [Serializable]

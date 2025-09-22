@@ -27,6 +27,7 @@ namespace _Scripts.Cards
         void RefillRoomHand();
         void RedrawRoomHand();
         bool TryUnplayLastCard();
+        bool TryGetCardView(Room roomTargetType, out RoomCardView cardView);
         
         #endregion
     }

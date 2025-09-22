@@ -232,6 +232,11 @@ namespace _Scripts.Cards
             return true;
         }
 
+        public bool TryGetCardView(Room room, out RoomCardView cardView)
+        {
+            return _roomCardViews.TryGetFirst(view => view.RoomDto.Name == room.RoomName, out cardView);
+        }
+
         #endregion
     }
 }

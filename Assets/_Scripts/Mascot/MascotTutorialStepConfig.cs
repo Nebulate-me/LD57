@@ -16,6 +16,8 @@ namespace _Scripts.Mascot
         [ShowIf(nameof(IsBottomPanelTargetTypeRoomCard)), SerializeField] private Room bottomPanelTargetRoom;
         
         [ShowIf(nameof(IsTargetBuilding)), SerializeField] private MascotTutorialBuildingTargetType buildingTargetType;
+        [ShowIf(nameof(IsBuildingTargetTypeSpace)), SerializeField] private Vector2Int bottomLeftTargetCoordinate;
+        [ShowIf(nameof(IsBuildingTargetTypeSpace)), SerializeField] private Vector2Int topRightTargetCoordinate;
 
         [SerializeField] private MascotTutorialActionType actionType;
         
@@ -23,13 +25,14 @@ namespace _Scripts.Mascot
         private bool IsTargetBottomPanel => targetType == MascotTutorialTargetType.BottomPanel;
         private bool IsTargetBuilding => targetType == MascotTutorialTargetType.Building;
         private bool IsBottomPanelTargetTypeRoomCard => bottomPanelTargetType == MascotTutorialBottomPanelTargetType.RoomCard;
+        private bool IsBuildingTargetTypeSpace => buildingTargetType == MascotTutorialBuildingTargetType.Space;
         
         public string Phrase => phrase;
         public MascotTutorialTargetType TargetType => targetType;
         public MascotTutorialTopPanelTargetType TopPanelTargetType => topPanelTargetType;
         public MascotTutorialBottomPanelTargetType BottomPanelTargetType => bottomPanelTargetType;
-        public MascotTutorialBuildingTargetType BuildingPanelTargetType => buildingTargetType;
         public Room BottomPanelTargetRoom => bottomPanelTargetRoom;
+        public MascotTutorialBuildingTargetType BuildingPanelTargetType => buildingTargetType;
         public MascotTutorialActionType ActionType => actionType;
         
     }

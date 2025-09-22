@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Scripts.Cards;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using ModestTree;
@@ -37,6 +38,7 @@ namespace _Scripts.Mascot
 
         [Inject] private IScoreManager _scoreManager;
         [Inject] private IGameTimerController _gameTimerController;
+        [Inject] private IHandManager _handManager;
 
         private Coroutine showRoutine;
         private Coroutine typeRoutine;
@@ -118,6 +120,8 @@ namespace _Scripts.Mascot
                 return;
             }
 
+            // var currentStepConfig = _stepConfigs[_activeStepIndex];
+            // if (currentStepConfig.ActionType == MascotTutorialActionType.ClickAny)
             // Otherwise go to next phrase, or finish if this was the last.
             if (_activeStepIndex < _stepConfigs.Count - 1)
             {
@@ -182,7 +186,17 @@ namespace _Scripts.Mascot
                     if (bottomPanelTutorialTargets.TryGetValue(stepConfig.BottomPanelTargetType, out var stepTarget))
                     {
                         stepTarget.SetActive(true);
+                        if (stepConfig.BottomPanelTargetType == MascotTutorialBottomPanelTargetType.RoomCard && 
+                            _handManager.TryGetCardView(stepConfig.BottomPanelTargetRoom, out var handRoomCard))
+                        {
+                            stepTarget.transform.position = new Vector3(
+                                handRoomCard.transform.position.x,
+                                stepTarget.transform.position.y,
+                                stepTarget.transform.position.z
+                                );
+                        }
                     }
+                    
                     break;
                 }
                 case MascotTutorialTargetType.Building:
