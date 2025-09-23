@@ -1,3 +1,4 @@
+using _Scripts.Mascot;
 using _Scripts.Popups;
 using _Scripts.Popups.GamePaused;
 using Signals;
@@ -27,6 +28,7 @@ namespace _Scripts.Game.Timer
             SignalsHub.AddListener<KeyPressedSignal>(OnKeyPressed);
             SignalsHub.AddListener<GameTimerPausedSignal>(OnTimerPaused);
             SignalsHub.AddListener<GameTimerStartedSignal>(OnTimerStarted);
+            SignalsHub.AddListener<TutorialHiddenSignal>(OnTutorialHidden);
             
             pauseButton.onClick.AddListener(OnPauseButtonClicked);
         }
@@ -36,6 +38,7 @@ namespace _Scripts.Game.Timer
             SignalsHub.RemoveListener<KeyPressedSignal>(OnKeyPressed);
             SignalsHub.RemoveListener<GameTimerPausedSignal>(OnTimerPaused);
             SignalsHub.RemoveListener<GameTimerStartedSignal>(OnTimerStarted);
+            SignalsHub.RemoveListener<TutorialHiddenSignal>(OnTutorialHidden);
             
             pauseButton.onClick.RemoveListener(OnPauseButtonClicked);
         }
@@ -62,6 +65,11 @@ namespace _Scripts.Game.Timer
         private void OnTimerStarted(GameTimerStartedSignal obj)
         {
             SetIsPaused(false);
+        }
+        
+        private void OnTutorialHidden(TutorialHiddenSignal obj)
+        {
+            SetIsEnabled(true);
         }
         
         private void OnPauseButtonClicked()

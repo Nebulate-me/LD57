@@ -30,5 +30,15 @@ namespace _Scripts.Rooms
         {
             return requestedRoomTypes.Any(HasRoomType);
         }
+
+        public bool IsEqual(RoomDto dto)
+        {
+            return dto.Name == roomName;
+        }
+
+        public bool IsEqual(DungeonRoomModel roomModel)
+        {
+            return roomModel.RoomName == roomName;
+        }
     }
 }

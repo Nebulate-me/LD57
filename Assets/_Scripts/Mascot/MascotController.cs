@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using _Scripts.Cards;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
+using _Scripts.Rooms;
+using _Scripts.Screens;
 using ModestTree;
+using Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,44 +25,50 @@ namespace _Scripts.Mascot
         [SerializeField] private TextMeshProUGUI contentBubbleText;
         [SerializeField] private Button clickCatcher;
 
-        [Header("Behavior")]
-        [SerializeField] private float fadeDuration = 0.18f;
+        [Header("Behavior")] [SerializeField] private float fadeDuration = 0.18f;
         [SerializeField] private bool useTypewriter = true;
         [SerializeField] private float charsPerSecond = 55f;
-        
-        [Header("Tutorial Targets")]
-        [SerializeField] private MascotTutorialTopPanelTargetToGameObjectDictionary topPanelTutorialTargets;
+
+        [Header("Tutorial Targets")] [SerializeField]
+        private MascotTutorialTopPanelTargetToGameObjectDictionary topPanelTutorialTargets;
+
         [SerializeField] private MascotTutorialBottomPanelTargetToGameObjectDictionary bottomPanelTutorialTargets;
         [SerializeField] private MascotTutorialBuildingTargetToGameObjectDictionary buildingTutorialTargets;
-        
 
-        [Header("Messages")] 
-        [SerializeField] private MascotTutorialConfig tutorialConfig;
+
+        [Header("Messages")] [SerializeField] private MascotTutorialConfig tutorialConfig;
 
         [Inject] private IScoreManager _scoreManager;
         [Inject] private IGameTimerController _gameTimerController;
         [Inject] private IHandManager _handManager;
+        [Inject] private IScreenManager _screenManager;
 
         private Coroutine showRoutine;
         private Coroutine typeRoutine;
-        
-        private readonly List<MascotTutorialStepConfig> _stepConfigs = new();
-        private int _activeStepIndex = 0;
-        
 
-        void Awake()
+        private readonly List<MascotTutorialStepConfig> _stepConfigs = new();
+        private int _activeStepIndex;
+
+
+        private void Awake()
         {
             middleMascotPopup.SetActive(false);
             aboveMascotPopup.SetActive(false);
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
+            SignalsHub.AddListener<RoomCardSelectedSignal>(OnRoomCardSelected);
+            SignalsHub.AddListener<RoomPlacedSignal>(OnRoomPlaced);
+
             if (clickCatcher) clickCatcher.onClick.AddListener(OnClicked);
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
+            SignalsHub.RemoveListener<RoomCardSelectedSignal>(OnRoomCardSelected);
+            SignalsHub.RemoveListener<RoomPlacedSignal>(OnRoomPlaced);
+
             if (clickCatcher) clickCatcher.onClick.RemoveListener(OnClicked);
         }
 
@@ -69,13 +78,13 @@ namespace _Scripts.Mascot
         }
 
         /// <summary>
-        /// Starts showing a sequence of phrases (fades in once, then click-through).
+        ///     Starts showing a sequence of phrases (fades in once, then click-through).
         /// </summary>
         public void ShowSequence(List<MascotTutorialStepConfig> stepConfigs)
         {
             _stepConfigs.Clear();
             if (stepConfigs == null) return;
-            
+
             _stepConfigs.AddRange(stepConfigs);
             if (_stepConfigs.IsEmpty())
             {
@@ -85,21 +94,29 @@ namespace _Scripts.Mascot
 
             _activeStepIndex = 0;
 
+            ShowPopup();
+            
+            if (GetCurrentStepConfig(out var currentStepConfig))
+            {
+                SetPhrase(currentStepConfig.Phrase, true);
+                SetTutorialTarget(currentStepConfig);
+                SetTutorialAction(currentStepConfig);   
+            }
+        }
+
+        private void ShowPopup()
+        {
             if (showRoutine != null) StopCoroutine(showRoutine);
             if (typeRoutine != null) StopCoroutine(typeRoutine);
-
+            
             middleMascotPopup.SetActive(true);
             aboveMascotPopup.SetActive(true);
             foreach (var canvasGroup in canvasGroups)
             {
                 canvasGroup.alpha = 0f;
                 canvasGroup.interactable = false;
-                canvasGroup.blocksRaycasts = false;   
+                canvasGroup.blocksRaycasts = false;
             }
-            
-            SetPhrase(_stepConfigs[_activeStepIndex].Phrase, resetVisible: true);
-            SetTutorialTarget(stepConfigs[_activeStepIndex]);
-            SetTutorialAction(stepConfigs[_activeStepIndex]);
 
             showRoutine = StartCoroutine(FadeInThenType());
         }
@@ -109,6 +126,42 @@ namespace _Scripts.Mascot
             if (showRoutine != null) StopCoroutine(showRoutine);
             if (typeRoutine != null) StopCoroutine(typeRoutine);
             StartCoroutine(FadeOutAndDisable());
+            SignalsHub.DispatchAsync(new TutorialHiddenSignal());
+        }
+
+        private bool GetCurrentStepConfig(out MascotTutorialStepConfig stepConfig)
+        {
+            if (_activeStepIndex < 0 || _activeStepIndex >= _stepConfigs.Count)
+            {
+                stepConfig = null;
+                return false;
+            }
+
+            stepConfig = _stepConfigs[_activeStepIndex];
+            return true;
+        }
+
+        private void OnRoomCardSelected(RoomCardSelectedSignal signal)
+        {
+            if (!GetCurrentStepConfig(out var stepConfig) ||
+                stepConfig.ActionType != MascotTutorialActionType.RoomCardSelected ||
+                signal.RoomCard == null ||
+                !stepConfig.SelectedRoomCard.IsEqual(signal.RoomCard)) return;
+
+            ShowNextStep();
+            ShowPopup();
+        }
+
+        private void OnRoomPlaced(RoomPlacedSignal signal)
+        {
+            // TODO: Check if the correct room position is used
+            if (!GetCurrentStepConfig(out var stepConfig) ||
+                stepConfig.ActionType != MascotTutorialActionType.RoomPlaced ||
+                signal.Room == null ||
+                !stepConfig.SelectedRoomCard.IsEqual(signal.Room)) return;
+            
+            ShowNextStep();
+            ShowPopup();
         }
 
         private void OnClicked()
@@ -120,17 +173,41 @@ namespace _Scripts.Mascot
                 return;
             }
 
-            // var currentStepConfig = _stepConfigs[_activeStepIndex];
-            // if (currentStepConfig.ActionType == MascotTutorialActionType.ClickAny)
+            if (!GetCurrentStepConfig(out var stepConfig))
+            {
+                Hide();
+                return;
+            }
+
+            if (stepConfig.ActionType == MascotTutorialActionType.ClickAny)
+            {
+                ShowNextStep();
+                return;
+            }
+
+            if (stepConfig.ActionType == MascotTutorialActionType.FinishTutorial)
+            {
+                _screenManager.GoToMainMenuScreen();
+                return;
+            }
+
+            Hide();
+        }
+
+        private void ShowNextStep()
+        {
             // Otherwise go to next phrase, or finish if this was the last.
             if (_activeStepIndex < _stepConfigs.Count - 1)
             {
                 _activeStepIndex++;
                 // stop any previous typing coroutine
                 if (typeRoutine != null) StopCoroutine(typeRoutine);
-                SetPhrase(_stepConfigs[_activeStepIndex].Phrase, resetVisible: true);
-                SetTutorialTarget(_stepConfigs[_activeStepIndex]);
-                SetTutorialAction(_stepConfigs[_activeStepIndex]);
+                if (GetCurrentStepConfig(out var stepConfig))
+                {
+                    SetPhrase(stepConfig.Phrase, true);
+                    SetTutorialTarget(stepConfig);
+                    SetTutorialAction(stepConfig);
+                }
 
                 if (useTypewriter)
                     typeRoutine = StartCoroutine(Typewriter(shownBubbleText, charsPerSecond));
@@ -147,26 +224,21 @@ namespace _Scripts.Mascot
             contentBubbleText.text = phrase;
             shownBubbleText.text = phrase;
             if (resetVisible) shownBubbleText.maxVisibleCharacters = 0;
+            middleMascotPopup.SetActive(!phrase.Trim().IsEmpty());
         }
 
         private void ClearTutorialTarget()
         {
             foreach (var topPanelTutorialTarget in topPanelTutorialTargets.Values)
-            {
                 topPanelTutorialTarget.SetActive(false);
-            }
-            
+
             foreach (var topPanelTutorialTarget in bottomPanelTutorialTargets.Values)
-            {
                 topPanelTutorialTarget.SetActive(false);
-            }
-            
+
             foreach (var buildingTutorialTarget in buildingTutorialTargets.Values)
-            {
                 buildingTutorialTarget.SetActive(false);
-            }
         }
-        
+
         private void SetTutorialTarget(MascotTutorialStepConfig stepConfig)
         {
             ClearTutorialTarget();
@@ -176,9 +248,7 @@ namespace _Scripts.Mascot
                 case MascotTutorialTargetType.TopPanel:
                 {
                     if (topPanelTutorialTargets.TryGetValue(stepConfig.TopPanelTargetType, out var stepTarget))
-                    {
                         stepTarget.SetActive(true);
-                    }
                     break;
                 }
                 case MascotTutorialTargetType.BottomPanel:
@@ -186,25 +256,21 @@ namespace _Scripts.Mascot
                     if (bottomPanelTutorialTargets.TryGetValue(stepConfig.BottomPanelTargetType, out var stepTarget))
                     {
                         stepTarget.SetActive(true);
-                        if (stepConfig.BottomPanelTargetType == MascotTutorialBottomPanelTargetType.RoomCard && 
+                        if (stepConfig.BottomPanelTargetType == MascotTutorialBottomPanelTargetType.RoomCard &&
                             _handManager.TryGetCardView(stepConfig.BottomPanelTargetRoom, out var handRoomCard))
-                        {
                             stepTarget.transform.position = new Vector3(
                                 handRoomCard.transform.position.x,
                                 stepTarget.transform.position.y,
                                 stepTarget.transform.position.z
-                                );
-                        }
+                            );
                     }
-                    
+
                     break;
                 }
                 case MascotTutorialTargetType.Building:
                 {
                     if (buildingTutorialTargets.TryGetValue(stepConfig.BuildingPanelTargetType, out var stepTarget))
-                    {
                         stepTarget.SetActive(true);
-                    }
                     break;
                 }
                 case MascotTutorialTargetType.None:
@@ -213,7 +279,7 @@ namespace _Scripts.Mascot
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         private void SetTutorialAction(MascotTutorialStepConfig stepConfig)
         {
             switch (stepConfig.ActionType)
@@ -221,11 +287,13 @@ namespace _Scripts.Mascot
                 case MascotTutorialActionType.None:
                     break;
                 case MascotTutorialActionType.ClickAny:
+                case MascotTutorialActionType.FinishTutorial:
                     _gameTimerController.PauseTimer();
                     break;
                 case MascotTutorialActionType.RoomCardSelected:
-                    break;
                 case MascotTutorialActionType.RoomPlaced:
+                case MascotTutorialActionType.MissionCompleted:
+                    _gameTimerController.ResumeTimer();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -235,14 +303,12 @@ namespace _Scripts.Mascot
         private IEnumerator FadeInThenType()
         {
             // Fade in
-            float t = 0f;
+            var t = 0f;
             while (t < fadeDuration)
             {
                 t += Time.unscaledDeltaTime;
                 foreach (var canvasGroup in canvasGroups)
-                {
-                    canvasGroup.alpha = Mathf.SmoothStep(0f, 1f, t / fadeDuration);   
-                }
+                    canvasGroup.alpha = Mathf.SmoothStep(0f, 1f, t / fadeDuration);
                 yield return null;
             }
 
@@ -250,22 +316,19 @@ namespace _Scripts.Mascot
             {
                 canvasGroup.alpha = 1f;
                 canvasGroup.interactable = true;
-                canvasGroup.blocksRaycasts = true;   
+                canvasGroup.blocksRaycasts = true;
             }
 
             // Typewriter for first phrase
-            if (useTypewriter)
-            {
-                typeRoutine = StartCoroutine(Typewriter(shownBubbleText, charsPerSecond));
-            }
+            if (useTypewriter) typeRoutine = StartCoroutine(Typewriter(shownBubbleText, charsPerSecond));
         }
 
         private IEnumerator FadeOutAndDisable()
         {
-            foreach (var canvasGroup in canvasGroups) 
+            foreach (var canvasGroup in canvasGroups)
                 canvasGroup.interactable = false;
-            
-            float t = 0f;
+
+            var t = 0f;
             while (t < fadeDuration)
             {
                 t += Time.unscaledDeltaTime;
@@ -277,26 +340,27 @@ namespace _Scripts.Mascot
             foreach (var canvasGroup in canvasGroups)
             {
                 canvasGroup.alpha = 0f;
-                canvasGroup.blocksRaycasts = false;   
+                canvasGroup.blocksRaycasts = false;
             }
+
             middleMascotPopup.SetActive(false);
             aboveMascotPopup.SetActive(false);
 
-            _stepConfigs.Clear();
-            _activeStepIndex = 0;
-
-            _scoreManager.StartGame();
+            // _stepConfigs.Clear();
+            // _activeStepIndex = 0;
+            //
+            // _scoreManager.StartGame();
         }
 
         private static IEnumerator Typewriter(TMP_Text label, float cps)
         {
             label.maxVisibleCharacters = 0;
-            int total = label.text.Length;
-            float acc = 0f;
+            var total = label.text.Length;
+            var acc = 0f;
             while (label.maxVisibleCharacters < total)
             {
                 acc += Time.unscaledDeltaTime * cps;
-                int visible = Mathf.Min(total, Mathf.FloorToInt(acc));
+                var visible = Mathf.Min(total, Mathf.FloorToInt(acc));
                 if (visible != label.maxVisibleCharacters)
                     label.maxVisibleCharacters = visible;
                 yield return null;

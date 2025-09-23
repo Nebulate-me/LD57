@@ -70,10 +70,10 @@ namespace _Scripts.Cards
         private void SetIsEnabled(bool isEnabled)
         {
             _isEnabled = isEnabled;
-            // TODO: Disabled button background
+            
             if (!isEnabled)
             {
-                _handManager.DeselectRoomCard();
+                // _handManager.DeselectRoomCard();
             }
         }
 

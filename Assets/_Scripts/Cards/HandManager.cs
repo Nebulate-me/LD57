@@ -144,17 +144,19 @@ namespace _Scripts.Cards
         public void SelectRoomCard(RoomDto roomDto)
         {
             SelectedRoomCardView = Maybe.Empty<RoomCardView>();
+            RoomDto selectedRoomDto = null;
             foreach (var cardView in _roomCardViews)
                 if (cardView.RoomDto == roomDto)
                 {
                     cardView.Select();
                     SelectedRoomCardView = Maybe.Of(cardView);
+                    selectedRoomDto =  cardView.RoomDto;
                 }
                 else
                 {
                     cardView.Deselect();
                 }
-            SignalsHub.DispatchAsync(new RoomCardSelectedSignal());
+            SignalsHub.DispatchAsync(new RoomCardSelectedSignal(selectedRoomDto));
         }
         
         public bool DeselectRoomCard()
