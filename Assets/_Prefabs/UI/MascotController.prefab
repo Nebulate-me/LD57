@@ -2025,7 +2025,7 @@ GameObject:
   - component: {fileID: 8821261756071171178}
   - component: {fileID: 6840324459774712523}
   m_Layer: 5
-  m_Name: MiddleMascot
+  m_Name: MascotSpeech
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2463,7 +2463,7 @@ GameObject:
   - component: {fileID: 197154358910425234}
   - component: {fileID: 4156002101978624758}
   m_Layer: 5
-  m_Name: AboveMascot
+  m_Name: MascotCharacter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4355,10 +4355,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   middleMascotPopup: {fileID: 4696470718598346002}
+  mascotBubbleCanvasGroup: {fileID: 5348413863748619177}
   aboveMascotPopup: {fileID: 5244712458779341754}
-  canvasGroups:
-  - {fileID: 5348413863748619177}
-  - {fileID: 2995876923814846171}
+  mascotCharacterCanvasGroup: {fileID: 2995876923814846171}
   portrait: {fileID: 5817242765160616128}
   shownBubbleText: {fileID: 987407391995234148}
   contentBubbleText: {fileID: 789494452458150860}

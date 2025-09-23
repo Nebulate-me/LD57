@@ -504,6 +504,6 @@ MonoBehaviour:
     buildingTargetType: 0
     bottomLeftTargetCoordinate: {x: 0, y: 0}
     topRightTargetCoordinate: {x: 0, y: 0}
-    actionType: 1
+    actionType: 5
     selectedRoomCard: {fileID: 0}
     roomPosition: {x: 0, y: 0}

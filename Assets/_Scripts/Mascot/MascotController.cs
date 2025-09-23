@@ -1,15 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using _Scripts.Cards;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Rooms;
 using _Scripts.Screens;
+using Cysharp.Threading.Tasks;
 using ModestTree;
 using Signals;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -18,8 +21,9 @@ namespace _Scripts.Mascot
     public class MascotPopupController : MonoBehaviour
     {
         [SerializeField] private GameObject middleMascotPopup;
+        [SerializeField] private CanvasGroup mascotBubbleCanvasGroup;
         [SerializeField] private GameObject aboveMascotPopup;
-        [SerializeField] private List<CanvasGroup> canvasGroups = new();
+        [SerializeField] private CanvasGroup mascotCharacterCanvasGroup;
         [SerializeField] private Image portrait;
         [SerializeField] private TextMeshProUGUI shownBubbleText;
         [SerializeField] private TextMeshProUGUI contentBubbleText;
@@ -111,6 +115,7 @@ namespace _Scripts.Mascot
             
             middleMascotPopup.SetActive(true);
             aboveMascotPopup.SetActive(true);
+            var canvasGroups = new List<CanvasGroup> {mascotBubbleCanvasGroup, mascotCharacterCanvasGroup};
             foreach (var canvasGroup in canvasGroups)
             {
                 canvasGroup.alpha = 0f;
@@ -141,25 +146,30 @@ namespace _Scripts.Mascot
             return true;
         }
 
-        private void OnRoomCardSelected(RoomCardSelectedSignal signal)
+        private async void OnRoomCardSelected(RoomCardSelectedSignal signal)
         {
             if (!GetCurrentStepConfig(out var stepConfig) ||
                 stepConfig.ActionType != MascotTutorialActionType.RoomCardSelected ||
                 signal.RoomCard == null ||
                 !stepConfig.SelectedRoomCard.IsEqual(signal.RoomCard)) return;
 
-            ShowNextStep();
-            ShowPopup();
+            StartCoroutine(ShowPopupAndNextStepCoroutine());
         }
 
-        private void OnRoomPlaced(RoomPlacedSignal signal)
+        private async void OnRoomPlaced(RoomPlacedSignal signal)
         {
             // TODO: Check if the correct room position is used
             if (!GetCurrentStepConfig(out var stepConfig) ||
                 stepConfig.ActionType != MascotTutorialActionType.RoomPlaced ||
                 signal.Room == null ||
                 !stepConfig.SelectedRoomCard.IsEqual(signal.Room)) return;
-            
+
+            StartCoroutine(ShowPopupAndNextStepCoroutine());
+        }
+        
+        private IEnumerator ShowPopupAndNextStepCoroutine()
+        {
+            yield return new WaitForSeconds(0.05f);
             ShowNextStep();
             ShowPopup();
         }
@@ -224,7 +234,7 @@ namespace _Scripts.Mascot
             contentBubbleText.text = phrase;
             shownBubbleText.text = phrase;
             if (resetVisible) shownBubbleText.maxVisibleCharacters = 0;
-            middleMascotPopup.SetActive(!phrase.Trim().IsEmpty());
+            mascotBubbleCanvasGroup.alpha = phrase.Trim().IsEmpty() ? 0f : 1f;
         }
 
         private void ClearTutorialTarget()
@@ -302,6 +312,10 @@ namespace _Scripts.Mascot
 
         private IEnumerator FadeInThenType()
         {
+            var canvasGroups = new List<CanvasGroup> {mascotCharacterCanvasGroup};
+            if (GetCurrentStepConfig(out var stepConfig) && !stepConfig.Phrase.Trim().IsEmpty()) 
+                canvasGroups.Add(mascotBubbleCanvasGroup);
+            
             // Fade in
             var t = 0f;
             while (t < fadeDuration)
@@ -325,6 +339,7 @@ namespace _Scripts.Mascot
 
         private IEnumerator FadeOutAndDisable()
         {
+            var canvasGroups = new List<CanvasGroup> {mascotBubbleCanvasGroup, mascotCharacterCanvasGroup};
             foreach (var canvasGroup in canvasGroups)
                 canvasGroup.interactable = false;
 
