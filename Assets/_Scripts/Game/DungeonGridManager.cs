@@ -153,7 +153,7 @@ namespace _Scripts.Game
             if (!roomPositions.All(IsPositionEmpty) || !roomPositions.All(IsPositionInsideLevelBounds)) return false;
             
             var adjacentPositions = roomPositions.Where(IsPositionAdjacent).ToList();
-            if (adjacentPositions.IsEmpty()) return false;
+            // if (adjacentPositions.IsEmpty()) return false;
 
             return AreAllAdjacentPositionsValid(gridPosition, rotatedRoomDto, adjacentPositions);
         }
