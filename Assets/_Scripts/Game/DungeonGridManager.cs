@@ -37,7 +37,7 @@ namespace _Scripts.Game
         private List<DungeonRoomTileView> _roomTiles = new();
         [ShowInInspector, ReadOnly] private List<DungeonRoomModel> _rooms = new();
         [ShowInInspector, ReadOnly] private Stack<DungeonRoomModel> _lastPlacedRooms = new();
-        private RoomDirection _currentDirection = RoomDirectionExtensions.Default;
+        [ShowInInspector, ReadOnly] private RoomDirection _currentDirection = RoomDirectionExtensions.Default;
 
         private IMaybe<Level> _maybeCurrentLevel = Maybe.Empty<Level>();
 
