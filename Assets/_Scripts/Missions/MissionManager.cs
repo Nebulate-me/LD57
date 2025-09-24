@@ -5,6 +5,7 @@ using _Scripts.Cards;
 using _Scripts.Game;
 using _Scripts.Missions.Apartment;
 using _Scripts.Rooms;
+using _Scripts.RoomTiles;
 using _Scripts.Utils;
 using ModestTree;
 using Signals;
@@ -40,12 +41,14 @@ namespace _Scripts.Missions
         private void OnEnable()
         {
             SignalsHub.AddListener<RoomPlacedSignal>(OnRoomPlaced);
+            SignalsHub.AddListener<RoomTileRemovedSignal>(OnRoomTileRemoved);
             SignalsHub.AddListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
         }
 
         private void OnDisable()
         {
             SignalsHub.RemoveListener<RoomPlacedSignal>(OnRoomPlaced);
+            SignalsHub.RemoveListener<RoomTileRemovedSignal>(OnRoomTileRemoved);
             SignalsHub.RemoveListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
         }
 
@@ -55,6 +58,11 @@ namespace _Scripts.Missions
         }
 
         private void OnRoomPlaced(RoomPlacedSignal signal)
+        {
+            UpdateMissions();
+        }
+        
+        private void OnRoomTileRemoved(RoomTileRemovedSignal signal)
         {
             UpdateMissions();
         }
