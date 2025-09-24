@@ -30,7 +30,6 @@ namespace _Scripts.Player
             
             score = newScore;
             return true;
-
         }
     }
 }

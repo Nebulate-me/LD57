@@ -303,6 +303,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 848378752}
     m_Modifications:
+    - target: {fileID: 107481206056186806, guid: 5c7a60788affb6e42858556ff3a2c925, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 107481206056186806, guid: 5c7a60788affb6e42858556ff3a2c925, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 107481206056186806, guid: 5c7a60788affb6e42858556ff3a2c925, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 107481206056186806, guid: 5c7a60788affb6e42858556ff3a2c925, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 107481206056186806, guid: 5c7a60788affb6e42858556ff3a2c925, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 945022509340967814, guid: 5c7a60788affb6e42858556ff3a2c925, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1091,7 +1111,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 811928310}
   m_HandleRect: {fileID: 811928309}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1591,10 +1611,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68d37df500f44d588c4725d7b086ed89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fakePlayerProfiles:
+  - score: 0
+    playerName: "\u041D\u0435\u0443\u0434\u0430\u0447\u043D\u0438\u043A"
+  - score: 10
+    playerName: "\u041F\u0440\u043E\u0445\u0432\u043E\u0441\u0442"
+  - score: 20
+    playerName: "\u0411\u0440\u043E\u0434\u044F\u0433\u0430"
+  - score: 30
+    playerName: "\u041A\u0443\u0440\u044C\u0435\u0440"
+  - score: 40
+    playerName: "\u0420\u0430\u0431\u043E\u0442\u043D\u0438\u043A"
+  - score: 50
+    playerName: "\u0421\u0430\u043D\u0442\u0435\u0445\u043D\u0438\u043A"
+  - score: 60
+    playerName: "\u041F\u0440\u043E\u0440\u0430\u0431"
+  - score: 70
+    playerName: "\u041C\u043E\u043D\u0442\u0435\u0440"
+  - score: 80
+    playerName: "\u041F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0449\u0438\u043A"
+  - score: 90
+    playerName: "\u0421\u0430\u0431\u043E\u0442\u0430\u0436\u043D\u0438\u043A"
+  - score: 100
+    playerName: "\u0410\u0440\u0445\u0438\u0442\u0435\u043A\u0442\u043E\u0440"
+  - score: 200
+    playerName: "\u041E\u043F\u0442\u0438\u043C\u0438\u0437\u0430\u0442\u043E\u0440"
+  - score: 300
+    playerName: "\u041C\u0430\u0442\u0435\u043C\u0430\u0442\u0438\u043A"
+  - score: 400
+    playerName: "\u0413\u0435\u043D\u0438\u0439"
+  - score: 500
+    playerName: "\u041F\u0440\u043E\u0440\u0438\u0446\u0430\u0442\u0435\u043B\u044C"
+  - score: 600
+    playerName: "\u041D\u0430\u0447\u0430\u043B\u044C\u043D\u0438\u043A"
+  - score: 700
+    playerName: "\u0428\u0435\u0444"
+  - score: 800
+    playerName: "\u0413\u0443\u0431\u0435\u0440\u043D\u0430\u0442\u043E\u0440"
+  - score: 900
+    playerName: "\u041F\u0440\u0430\u0432\u0438\u0442\u0435\u043B\u044C"
+  - score: 950
+    playerName: "\u041F\u0435\u0440\u0444\u0435\u043A\u0446\u0438\u043E\u043D\u0438\u0441\u0442"
+  - score: 1000
+    playerName: "\u0427\u0438\u0442\u0435\u0440"
   contentParent: {fileID: 1588597131}
+  contentScrollRect: {fileID: 317277318}
   rowPrefab: {fileID: 1972814697934172541, guid: ecafa14cb833e9d48949554d1f5444b5, type: 3}
   returnButton: {fileID: 2003018015}
-  mainMenuSceneName: MainMenuScene
 --- !u!114 &848378755
 MonoBehaviour:
   m_ObjectHideFlags: 0
