@@ -29,6 +29,7 @@ namespace _Scripts.Rooms
             this.tiles = tiles;
         }
 
+        public string DisplayName => name.Split(" ").First();
         public string Name => name;
         public List<RoomType> RoomTypes => roomTypes;
         public List<RoomTileCellDto> Tiles => tiles;

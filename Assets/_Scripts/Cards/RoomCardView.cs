@@ -81,7 +81,7 @@ namespace _Scripts.Cards
         {
             _isEnabled = true;
             _roomDto = roomDto;
-            roomName.text = roomDto.Name;
+            roomName.text = roomDto.DisplayName;
             
             roomIconContainer.DestroyChildren();
             foreach (var roomType in roomDto.RoomTypes)
