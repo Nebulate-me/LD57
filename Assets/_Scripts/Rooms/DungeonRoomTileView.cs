@@ -196,6 +196,7 @@ namespace _Scripts.Rooms
             _windowCount = 0;
             
             SignalsHub.AddListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
+            SignalsHub.AddListener<RoomTileRemovedSignal>(OnRoomTileRemoved);
             SignalsHub.AddListener<DungeonRoomGhostViewMovedSignal>(OnGhostViewMoved);
             SignalsHub.AddListener<ApartmentMissionCompletedSignal>(OnMissionCompleted);
         }
@@ -208,6 +209,7 @@ namespace _Scripts.Rooms
             _adjacentGhostTiles = new RoomDirectionToDungeonRoomTileCellDtoDictionary();
 
             SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
+            SignalsHub.RemoveListener<RoomTileRemovedSignal>(OnRoomTileRemoved);
             SignalsHub.RemoveListener<DungeonRoomGhostViewMovedSignal>(OnGhostViewMoved);
             SignalsHub.RemoveListener<ApartmentMissionCompletedSignal>(OnMissionCompleted);
         }
@@ -222,6 +224,15 @@ namespace _Scripts.Rooms
             if (!signal.Room.GridPosition.IsAdjacent(GridPosition)) return;
 
             AddAdjacentTile(signal.Room);
+            UpdatePotentialGhostTileDirections();
+            UpdateDoors();
+        }
+        
+        private void OnRoomTileRemoved(RoomTileRemovedSignal signal)
+        {
+            if (!signal.Room.GridPosition.IsAdjacent(GridPosition)) return;
+
+            RemoveAdjacentTile(signal.Room);
             UpdatePotentialGhostTileDirections();
             UpdateDoors();
         }
@@ -256,6 +267,14 @@ namespace _Scripts.Rooms
         {
             var roomDirection = (dungeonRoomTileView.GridPosition - GridPosition).FromVector2Int();
             _adjacentTiles[roomDirection] = dungeonRoomTileView;
+            _adjacentGhostTiles.Remove(roomDirection);
+        }
+
+        private void RemoveAdjacentTile(DungeonRoomTileView dungeonRoomTileView)
+        {
+            var roomDirection = (dungeonRoomTileView.GridPosition - GridPosition).FromVector2Int();
+            _adjacentTiles.Remove(roomDirection);
+            _adjacentGhostTiles.Remove(roomDirection);
         }
     }
 

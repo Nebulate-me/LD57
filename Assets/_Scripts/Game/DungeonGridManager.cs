@@ -323,7 +323,8 @@ namespace _Scripts.Game
                 _rooms.Remove(lastPlacedRoom);
                 foreach (var tileView in lastPlacedRoom.Tiles)
                 {
-                    _roomTiles.Remove(tileView);    
+                    _roomTiles.Remove(tileView); 
+                    SignalsHub.DispatchAsync(new RoomTileRemovedSignal(tileView));
                 }
                 lastPlacedRoom.ClearTiles(prefabPool);
                 handManager.TryUnplayLastCard();
