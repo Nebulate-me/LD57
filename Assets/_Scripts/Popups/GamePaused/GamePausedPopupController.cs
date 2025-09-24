@@ -1,10 +1,12 @@
+using System;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Rooms;
 using _Scripts.Screens;
+using Plugins.Sirenix.Odin_Inspector.Modules;
 using Signals;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 namespace _Scripts.Popups.GamePaused
@@ -13,19 +15,20 @@ namespace _Scripts.Popups.GamePaused
     {
         protected override PopupType Type => PopupType.GamePaused;
         
-        [Header("Buttons")]
-        [SerializeField] private Button returnToGameButton;
-        [SerializeField] private Button exitToMainMenuButton;
-        [SerializeField] private Button finishLevelButton;
+        [Header("Button Tooltip")]
+        [SerializeField] private TextMeshProUGUI buttonTooltip;
+        [SerializeField] private GamePausedPopupButtonTypeToStringDictionary buttonTooltipTexts;
         
         [Inject] private IGameTimerController _gameTimerController;
         [Inject] private IScreenManager _screenManager;
         [Inject] private IScoreManager _scoreManager;
         [Inject] private IDungeonGridManager _dungeonGridManager;
-        
+
         private void Start()
         {
             OnStart();
+            
+            buttonTooltip.text = string.Empty;
         }
 
         protected override void SetupSubscriptions()
@@ -33,10 +36,7 @@ namespace _Scripts.Popups.GamePaused
             base.SetupSubscriptions();
             
             SignalsHub.AddListener<KeyPressedSignal>(OnKeyPressed);
-            
-            returnToGameButton.onClick.AddListener(OnReturnToGame);
-            exitToMainMenuButton.onClick.AddListener(OnExitToMainMenu);
-            finishLevelButton.onClick.AddListener(OnFinishLevel); 
+            SignalsHub.AddListener<GamePausedButtonEvent>(OnGamePausedButtonEvent);
         }
 
         protected override void DisposeSubscriptions()
@@ -44,10 +44,7 @@ namespace _Scripts.Popups.GamePaused
             base.DisposeSubscriptions();
             
             SignalsHub.RemoveListener<KeyPressedSignal>(OnKeyPressed);
-            
-            returnToGameButton.onClick.RemoveListener(OnReturnToGame);
-            exitToMainMenuButton.onClick.AddListener(OnExitToMainMenu);
-            finishLevelButton.onClick.AddListener(OnFinishLevel); 
+            SignalsHub.RemoveListener<GamePausedButtonEvent>(OnGamePausedButtonEvent);
         }
 
         protected override void OnShowPopup()
@@ -62,6 +59,41 @@ namespace _Scripts.Popups.GamePaused
             if (signal.KeyCode == KeyCode.Escape && IsShown)
             {
                 OnReturnToGame();
+            }
+        }
+        
+        private void OnGamePausedButtonEvent(GamePausedButtonEvent evt)
+        {
+            switch (evt.EventType)
+            {
+                case ButtonEventType.None:
+                    break;
+                case ButtonEventType.PointerClick:
+                    switch (evt.ButtonType)
+                    {
+                        case GamePausedPopupButtonType.None:
+                            break;
+                        case GamePausedPopupButtonType.Continue:
+                            OnReturnToGame();
+                            break;
+                        case GamePausedPopupButtonType.MainMenu:
+                            OnExitToMainMenu();
+                            break;
+                        case GamePausedPopupButtonType.NextLevel:
+                            OnFinishLevel();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    break;
+                case ButtonEventType.PointerEnter:
+                    buttonTooltip.text = buttonTooltipTexts.TryGetValue(evt.ButtonType, out var buttonText) ? buttonText : string.Empty;
+                    break;
+                case ButtonEventType.PointerExit:
+                    buttonTooltip.text = string.Empty;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -83,5 +115,10 @@ namespace _Scripts.Popups.GamePaused
             // TODO: Some animation to show how every empty or unused tile contributes to negative score
             SignalsHub.DispatchAsync(new ShowPopupSignal(PopupType.LevelFinished));
         }
+    }
+
+    [Serializable]
+    internal class GamePausedPopupButtonTypeToStringDictionary : UnitySerializedDictionary<GamePausedPopupButtonType, string>
+    {
     }
 }
