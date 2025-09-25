@@ -4,6 +4,7 @@ using _Scripts.Game;
 using _Scripts.Missions;
 using _Scripts.Rooms;
 using _Scripts.Utils;
+using ModestTree;
 using Signals;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -83,9 +84,11 @@ namespace _Scripts.Cards
 
             if (_missionManager.UnfulfilledRoomTypeRequirements.Any())
             {
-                return availableNonHandRooms.Where(room =>
-                    room.HasAnyRoomTypes(_missionManager.UnfulfilledRoomTypeRequirements))
+                var missionFulfillingNonHandCards = availableNonHandRooms
+                    .Where(room => room.HasAnyRoomTypes(_missionManager.UnfulfilledRoomTypeRequirements))
                     .ToList();
+                
+                return missionFulfillingNonHandCards.IsEmpty() ?  availableNonHandRooms : missionFulfillingNonHandCards;
             }
             
             return availableNonHandRooms;
