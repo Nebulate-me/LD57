@@ -1,3 +1,4 @@
+using System;
 using _Scripts.Player;
 using TMPro;
 using UnityEditor;
@@ -14,11 +15,15 @@ namespace _Scripts.Screens
         [SerializeField] private Button tutorialScreenButton;
         [SerializeField] private Button gameScreenButton;
         [SerializeField] private Button highScoreScreenButton;
+        [SerializeField] private Button creditsButton;
         [SerializeField] private Button exitButton;
         
         [Header("Player Profile")]
         [SerializeField] private TextMeshProUGUI playerProfileName;
         [SerializeField] private PlayerProfilePopupController playerProfilePopupController;
+        
+        [Header("Credits")]
+        [SerializeField] private GameObject creditsPopup;
 
         [Inject] private IPlayerProfileService _playerProfileService;
         [Inject] private IScreenManager _screenManager;
@@ -27,6 +32,7 @@ namespace _Scripts.Screens
             tutorialScreenButton.onClick.AddListener(GoToTutorialScreen);
             gameScreenButton.onClick.AddListener(GoToGameScreen);
             highScoreScreenButton.onClick.AddListener(GoToHighScoreScreen);
+            creditsButton.onClick.AddListener(ShowCredits);
             exitButton.onClick.AddListener(ExitGame);
         }
 
@@ -35,7 +41,13 @@ namespace _Scripts.Screens
             tutorialScreenButton.onClick.RemoveListener(GoToTutorialScreen);
             gameScreenButton.onClick.RemoveListener(GoToGameScreen);
             highScoreScreenButton.onClick.RemoveListener(GoToHighScoreScreen);
+            creditsButton.onClick.RemoveListener(ShowCredits);
             exitButton.onClick.RemoveListener(ExitGame);
+        }
+
+        private void Start()
+        {
+            creditsPopup.SetActive(false);
         }
 
         private void GoToTutorialScreen()
@@ -51,6 +63,16 @@ namespace _Scripts.Screens
         private void GoToHighScoreScreen()
         {
             _screenManager.GoToHighScoreScreen();
+        }
+        
+        private void ShowCredits()
+        {
+            creditsPopup.SetActive(true);
+        }
+
+        public void HideCredits()
+        {
+            creditsPopup.SetActive(false);
         }
         
         private void ExitGame()
