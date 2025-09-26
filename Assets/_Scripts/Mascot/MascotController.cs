@@ -1,18 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using _Scripts.Cards;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
+using _Scripts.Missions.Apartment;
 using _Scripts.Rooms;
 using _Scripts.Screens;
-using Cysharp.Threading.Tasks;
 using ModestTree;
 using Signals;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -39,7 +38,6 @@ namespace _Scripts.Mascot
         [SerializeField] private MascotTutorialBottomPanelTargetToGameObjectDictionary bottomPanelTutorialTargets;
         [SerializeField] private MascotTutorialBuildingTargetToGameObjectDictionary buildingTutorialTargets;
 
-
         [Header("Messages")] [SerializeField] private MascotTutorialConfig tutorialConfig;
 
         [Inject] private IScoreManager _scoreManager;
@@ -52,10 +50,11 @@ namespace _Scripts.Mascot
 
         private readonly List<MascotTutorialStepConfig> _stepConfigs = new();
         private int _activeStepIndex;
-
+        [ShowInInspector, ReadOnly] private bool _isHidden = true;
 
         private void Awake()
         {
+            _isHidden = true;
             middleMascotPopup.SetActive(false);
             aboveMascotPopup.SetActive(false);
         }
@@ -64,6 +63,7 @@ namespace _Scripts.Mascot
         {
             SignalsHub.AddListener<RoomCardSelectedSignal>(OnRoomCardSelected);
             SignalsHub.AddListener<RoomPlacedSignal>(OnRoomPlaced);
+            SignalsHub.AddListener<ApartmentMissionCompletedSignal>(OnMissionCompleted);
 
             if (clickCatcher) clickCatcher.onClick.AddListener(OnClicked);
         }
@@ -72,6 +72,7 @@ namespace _Scripts.Mascot
         {
             SignalsHub.RemoveListener<RoomCardSelectedSignal>(OnRoomCardSelected);
             SignalsHub.RemoveListener<RoomPlacedSignal>(OnRoomPlaced);
+            SignalsHub.RemoveListener<ApartmentMissionCompletedSignal>(OnMissionCompleted);
 
             if (clickCatcher) clickCatcher.onClick.RemoveListener(OnClicked);
         }
@@ -163,12 +164,25 @@ namespace _Scripts.Mascot
                 stepConfig.ActionType != MascotTutorialActionType.RoomPlaced ||
                 signal.Room == null ||
                 !stepConfig.SelectedRoomCard.IsEqual(signal.Room)) return;
-
+            
+            StartCoroutine(ShowPopupAndNextStepCoroutine());
+        }
+        
+        private void OnMissionCompleted(ApartmentMissionCompletedSignal obj)
+        {
+            if (!GetCurrentStepConfig(out var stepConfig) ||
+                stepConfig.ActionType != MascotTutorialActionType.MissionCompleted) return;
+            
             StartCoroutine(ShowPopupAndNextStepCoroutine());
         }
         
         private IEnumerator ShowPopupAndNextStepCoroutine()
         {
+            if (showRoutine != null) StopCoroutine(showRoutine);
+            if (typeRoutine != null) StopCoroutine(typeRoutine);
+            yield return StartCoroutine(FadeOutAndDisable());
+            SignalsHub.DispatchAsync(new TutorialHiddenSignal());
+            
             yield return new WaitForSeconds(0.05f);
             ShowNextStep();
             ShowPopup();
@@ -201,6 +215,7 @@ namespace _Scripts.Mascot
                 return;
             }
 
+            _gameTimerController.ResumeTimer();
             Hide();
         }
 
@@ -292,22 +307,7 @@ namespace _Scripts.Mascot
 
         private void SetTutorialAction(MascotTutorialStepConfig stepConfig)
         {
-            switch (stepConfig.ActionType)
-            {
-                case MascotTutorialActionType.None:
-                    break;
-                case MascotTutorialActionType.ClickAny:
-                case MascotTutorialActionType.FinishTutorial:
-                    _gameTimerController.PauseTimer();
-                    break;
-                case MascotTutorialActionType.RoomCardSelected:
-                case MascotTutorialActionType.RoomPlaced:
-                case MascotTutorialActionType.MissionCompleted:
-                    _gameTimerController.ResumeTimer();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            _gameTimerController.PauseTimer();
         }
 
         private IEnumerator FadeInThenType()
@@ -335,6 +335,7 @@ namespace _Scripts.Mascot
 
             // Typewriter for first phrase
             if (useTypewriter) typeRoutine = StartCoroutine(Typewriter(shownBubbleText, charsPerSecond));
+            _isHidden = false;
         }
 
         private IEnumerator FadeOutAndDisable()
@@ -360,11 +361,7 @@ namespace _Scripts.Mascot
 
             middleMascotPopup.SetActive(false);
             aboveMascotPopup.SetActive(false);
-
-            // _stepConfigs.Clear();
-            // _activeStepIndex = 0;
-            //
-            // _scoreManager.StartGame();
+            _isHidden = true;
         }
 
         private static IEnumerator Typewriter(TMP_Text label, float cps)

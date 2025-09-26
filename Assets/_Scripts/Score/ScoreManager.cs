@@ -128,16 +128,6 @@ namespace _Scripts.Score
             StartGame();
         }
 
-        private void Update()
-        {
-            
-            // if (Input.GetKeyDown(KeyCode.R))
-            //     RestartGame();
-            
-            if (Input.GetKeyDown(KeyCode.Escape))
-                Application.Quit();
-        }
-
         private void UpdateScoreText()
         {
             scoreText.text = $"Очки\n" +
