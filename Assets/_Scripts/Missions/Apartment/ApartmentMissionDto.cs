@@ -5,6 +5,7 @@ using _Scripts.Rooms;
 using _Scripts.Utils;
 using ModestTree;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Scripts.Missions.Apartment
 {
@@ -15,13 +16,13 @@ namespace _Scripts.Missions.Apartment
         [SerializeField] private List<RoomRequirement> requirements;
         [SerializeField] private int requiredWindows = 1;
         [SerializeField] private int rewardScore;
-        [SerializeField] private int roomCount = 1;
+        [FormerlySerializedAs("roomCount")] [SerializeField] private int apartmentRoomCountType = 1;
 
         public string Name => missionName;
         public List<RoomRequirement> Requirements => requirements;
         public int RequiredWindows => requiredWindows;
         public int RewardScore => rewardScore;
-        public int RoomCount => roomCount;
+        public int ApartmentRoomCountType => apartmentRoomCountType;
 
         private const int NO_HALLWAY_BONUS = 5;
         private const int FREE_HALLWAY_TILES_COUNT = 2;
@@ -32,7 +33,7 @@ namespace _Scripts.Missions.Apartment
             requirements = apartmentMission.Requirements;
             requiredWindows = apartmentMission.RequiredWindows;
             rewardScore = apartmentMission.RewardScore;
-            roomCount = apartmentMission.RoomCount;
+            apartmentRoomCountType = apartmentMission.RoomCount;
         }
 
         public int CalculateScore(List<DungeonRoomModel> roomsToUse)

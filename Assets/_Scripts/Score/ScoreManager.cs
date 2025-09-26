@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using _Scripts.Achievements;
 using _Scripts.Cards;
 using _Scripts.Game;
 using _Scripts.Game.Timer;
@@ -30,6 +31,7 @@ namespace _Scripts.Score
         [Inject] private ISoundManager _soundManager;
         [Inject] private IGameTimerController _gameTimerController;
         [Inject] private IPlayerProfileService _playerProfileService;
+        [Inject] private IAchievementManager _achievementManager;
         
         [ShowInInspector, ReadOnly] private int _currentScore = 0;
         [ShowInInspector, ReadOnly] private int _completedMissionsCount = 0;
@@ -55,9 +57,11 @@ namespace _Scripts.Score
 
         public void FinishLevel(int emptyRoomTilesCount)
         {
-            Debug.Log(
-                $"Reducing the current score {_currentScore} by {emptyRoomTilesCount} for every empty or unused tile");
+            Debug.Log($"Reducing the current score {_currentScore} by {emptyRoomTilesCount} for every empty or unused tile");
             _currentScore -= emptyRoomTilesCount;
+            var achievementScore = _achievementManager.GetUnlockedAchievements().Sum(a => a.Points);
+            Debug.Log($"Adding the achievement score: {achievementScore} to the current score");
+            _currentScore += achievementScore;
             _playerProfileService.TrySetCurrentPlayerScore(_currentScore);
         }
 

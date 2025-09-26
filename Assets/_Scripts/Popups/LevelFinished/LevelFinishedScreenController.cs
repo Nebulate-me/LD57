@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using _Scripts.Achievements;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Popups.GameFinished;
@@ -11,6 +11,8 @@ using Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Utilities;
+using Utilities.Prefabs;
 using Zenject;
 
 namespace _Scripts.Popups.LevelFinished
@@ -28,6 +30,9 @@ namespace _Scripts.Popups.LevelFinished
         [SerializeField] private Button continueButton;
         [SerializeField] private TextMeshProUGUI continueButtonText;
         [SerializeField] private Button backToMainMenuButton;
+
+        [SerializeField] private RectTransform achievementContainer;
+        [SerializeField] private GameObject achievementViewPrefab;
         
         [Header("Texts")]
         [SerializeField] private string levelCompleted = "Уровень пройден!";
@@ -57,6 +62,8 @@ namespace _Scripts.Popups.LevelFinished
         [Inject] private IScoreManager _scoreManager;
         [Inject] private IGameTimerController _gameTimerController;
         [Inject] private IScreenManager _screenManager;
+        [Inject] private IAchievementManager _achievementManager;
+        [Inject] private IPrefabPool _prefabPool;
 
         protected override PopupType Type => PopupType.LevelFinished;
 
@@ -90,6 +97,13 @@ namespace _Scripts.Popups.LevelFinished
             {
                 titleText.text = levelCompleted;
                 continueButtonText.text = "Продолжить";
+            }
+            
+            achievementContainer.DespawnChildren(_prefabPool);
+            foreach (var unlockedAchievement in _achievementManager.GetUnlockedAchievements())
+            {
+                var achievementView = _prefabPool.Spawn(achievementViewPrefab, achievementContainer).GetComponent<AchievementView>();
+                achievementView.SetUp(unlockedAchievement);
             }
             
             _ = AnimateShowPopup();

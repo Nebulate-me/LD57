@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Achievements;
 using _Scripts.Cards;
 using _Scripts.Game;
 using _Scripts.Game.Timer;
@@ -28,6 +29,7 @@ namespace _Scripts.DI
         [SerializeField] private DungeonGridManager dungeonGridManager;
         [SerializeField] private MissionManager missionManager;
         [SerializeField] private ScoreManager scoreManager;
+        [SerializeField] private AchievementManager achievementManager;
         [SerializeField] private GameTimerController gameTimer;
         [SerializeField] private GameManager gameManager;
 
@@ -65,6 +67,7 @@ namespace _Scripts.DI
             Container.BindInterfacesTo<DungeonGridManager>().FromInstance(dungeonGridManager).AsSingle();
             Container.BindInterfacesTo<MissionManager>().FromInstance(missionManager).AsSingle();
             Container.BindInterfacesTo<ScoreManager>().FromInstance(scoreManager).AsSingle();
+            Container.BindInterfacesTo<AchievementManager>().FromInstance(achievementManager).AsSingle();
             Container.BindInterfacesTo<GameTimerController>().FromInstance(gameTimer).AsSingle();
             Container.BindInterfacesTo<GameManager>().FromInstance(gameManager).AsSingle();
 

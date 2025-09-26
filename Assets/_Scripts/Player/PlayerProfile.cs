@@ -21,7 +21,7 @@ namespace _Scripts.Player
             this.id = id?.Trim();
             this.name = string.IsNullOrWhiteSpace(name) ? "Player" : name.Trim();
             score = 0;
-            this.createdUtcTicks = DateTime.UtcNow.Ticks;
+            createdUtcTicks = DateTime.UtcNow.Ticks;
         }
 
         public bool SetScore(int newScore)

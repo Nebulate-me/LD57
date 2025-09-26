@@ -191,6 +191,7 @@ MonoBehaviour:
   dungeonGridManager: {fileID: 0}
   missionManager: {fileID: 0}
   scoreManager: {fileID: 0}
+  achievementManager: {fileID: 0}
   gameTimer: {fileID: 0}
   gameManager: {fileID: 2183328048926976304}
   roomRegistryPrefab: {fileID: 6723496193173323576, guid: 555a6488959171748b6f31966c8107b0, type: 3}
@@ -530,10 +531,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levels:
   - {fileID: 11400000, guid: 1484bfd7c793de241be2fbccf5b604b9, type: 2}
-  - {fileID: 11400000, guid: 3112a79f198b9314e8b98f5483bbb755, type: 2}
-  - {fileID: 11400000, guid: 7f272f5bb9380144c9f372e2c438b0f2, type: 2}
-  - {fileID: 11400000, guid: 41b63649ef1f3f742bdc7a328cf92018, type: 2}
-  - {fileID: 11400000, guid: c2a6665d4049dfc47919952cd6e3e344, type: 2}
 --- !u!1 &5882709957558526225
 GameObject:
   m_ObjectHideFlags: 0

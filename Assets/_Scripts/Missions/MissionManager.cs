@@ -182,7 +182,7 @@ namespace _Scripts.Missions
             
             var unlockedMissions = _currentLevel.AvailableMissions
                 .Where(mission => mission.MissionName != _lastCompletedMissionName &&
-                                  _apartmentMissionCardViews.None(view => view.Dto.RoomCount == mission.RoomCount))
+                                  _apartmentMissionCardViews.None(view => view.Dto.ApartmentRoomCountType == mission.RoomCount))
                 .ToList();
             while (_apartmentMissionCardViews.Count < missionHandSize)
             {
