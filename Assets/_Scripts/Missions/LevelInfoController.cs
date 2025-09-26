@@ -3,13 +3,14 @@ using _Scripts.Missions.Apartment;
 using Signals;
 using TMPro;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
+
 
 namespace _Scripts.Missions
 {
-    public class MissionCounterController : MonoBehaviour
+    public class LevelInfoController : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI missionCounterText;
+        [SerializeField] private TextMeshProUGUI missionCountText;
+        [SerializeField] private TextMeshProUGUI levelNameText;
 
         private int _missionsToComplete = 0;
         private int _completedMissions = 0;
@@ -36,12 +37,13 @@ namespace _Scripts.Missions
         {
             _completedMissions = 0;
             _missionsToComplete = signal.Level.MissionsToComplete;
+            levelNameText.text = signal.Level.LevelName;
             UpdateMissionCounterText();
         }
 
         private void UpdateMissionCounterText()
         {
-            missionCounterText.text = $"{_completedMissions} / {_missionsToComplete}";
+            missionCountText.text = $"{_completedMissions} / {_missionsToComplete}";
         }
     }
 }

@@ -27,6 +27,7 @@ namespace _Scripts.Game
 
         public List<RoomPositionDto> StartingPlacedRooms => startingPlacedRooms;
 
+        public string LevelName => levelName;
         /// <summary>
         /// The real size in cells the Level would take <br/>
         /// 10 = 10 / 2 * 2 + 1 => 11 <br/>
