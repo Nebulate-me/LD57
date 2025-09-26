@@ -1,4 +1,5 @@
 using _Scripts.Game.Timer;
+using _Scripts.Missions;
 using _Scripts.Missions.Apartment;
 using _Scripts.Rooms;
 using Signals;
@@ -12,12 +13,14 @@ namespace _Scripts.Game
     public class UndoPlaceRoomController : MonoBehaviour
     {
         [SerializeField] private Button undoButton;
-
+        [SerializeField] private int redrawCostScore = 5;
+        
         [ShowInInspector, ReadOnly] private bool _isEnabled = false;
         [ShowInInspector, ReadOnly] private bool _isPaused = false;
         
         [Inject] private IDungeonGridManager _dungeonGridManager;
         [Inject] private IGameTimerController _gameTimerController;
+        [Inject] private IScoreManager _scoreManager;
 
         private void OnEnable()
         {
@@ -62,6 +65,7 @@ namespace _Scripts.Game
         private void OnUndo()
         {
             _dungeonGridManager.UndoLastRoomPlacement();
+            _scoreManager.SubtractScore(redrawCostScore);
             SetIsEnabled(_dungeonGridManager.CanUndoRoomPlacement);
         }
 
