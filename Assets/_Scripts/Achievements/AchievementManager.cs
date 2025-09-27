@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Missions.Apartment;
 using Signals;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Scripts.Achievements
@@ -10,6 +11,7 @@ namespace _Scripts.Achievements
     {
         [SerializeField] private List<Achievement> allAchievements;
 
+        private readonly List<Achievement> _scoredAchievements = new();
         private readonly List<Achievement> _unlockedAchievements = new();
         private readonly Dictionary<int, int> _completedApartmentRoomCounts = new();
 
@@ -50,6 +52,16 @@ namespace _Scripts.Achievements
         {
             return _unlockedAchievements;
         }
+
+        public int ScoreUnlockedAchievements()
+        {
+            var unscoredAchievements = _unlockedAchievements.Where(a => !_scoredAchievements.Contains(a)).ToList();
+            var unlockedSum = unscoredAchievements.Sum(a => a.Points);
+            _scoredAchievements.AddRange(unscoredAchievements);
+            
+            return unlockedSum;
+        }
+
         private bool IsUnlocked(Achievement a) => _unlockedAchievements.Any(unlockedAchievement => unlockedAchievement.Id == a.Id);
     }
 }

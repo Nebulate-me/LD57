@@ -59,7 +59,7 @@ namespace _Scripts.Score
         {
             Debug.Log($"Reducing the current score {_currentScore} by {emptyRoomTilesCount} for every empty or unused tile");
             _currentScore -= emptyRoomTilesCount;
-            var achievementScore = _achievementManager.GetUnlockedAchievements().Sum(a => a.Points);
+            var achievementScore = _achievementManager.ScoreUnlockedAchievements();
             Debug.Log($"Adding the achievement score: {achievementScore} to the current score");
             _currentScore += achievementScore;
             _playerProfileService.TrySetCurrentPlayerScore(_currentScore);

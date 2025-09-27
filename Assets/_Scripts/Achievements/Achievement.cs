@@ -9,6 +9,7 @@ namespace _Scripts.Achievements
         [Header("Display")]
         [SerializeField] private string title;           
         [TextArea, SerializeField] private string description;
+        [TextArea, SerializeField] private string conditionText;
         [SerializeField] private int points;
         
         [Header("Conditions")]
@@ -19,6 +20,7 @@ namespace _Scripts.Achievements
         public string Id => name;
         public string Title => title;
         public string Description => description;
+        public string ConditionText => conditionText;
         public int Points => points;
         public AchievementType AchievementType => achievementType;
         public int ApartmentRoomCountType => apartmentRoomCountType;
