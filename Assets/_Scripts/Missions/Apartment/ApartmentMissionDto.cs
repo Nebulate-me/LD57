@@ -19,6 +19,7 @@ namespace _Scripts.Missions.Apartment
         [FormerlySerializedAs("roomCount")] [SerializeField] private int apartmentRoomCountType = 1;
 
         public string Name => missionName;
+        public string DisplayName => missionName.Split(" ").First();
         public List<RoomRequirement> Requirements => requirements;
         public int RequiredWindows => requiredWindows;
         public int RewardScore => rewardScore;

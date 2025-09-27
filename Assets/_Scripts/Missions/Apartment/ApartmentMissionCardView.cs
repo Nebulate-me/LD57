@@ -61,7 +61,7 @@ namespace _Scripts.Missions.Apartment
         public void SetUp(ApartmentMissionDto missionDto)
         {
             _dto = missionDto;
-            missionNameText.text = missionDto.Name;
+            missionNameText.text = missionDto.DisplayName;
             
             SeUpRewardScore(missionDto);
             SetUpRequirements(missionDto);
