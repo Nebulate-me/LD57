@@ -23,8 +23,8 @@ MonoBehaviour:
   - position: {x: 0, y: 0}
     direction: 1
     tile: {fileID: 11400000, guid: 124e89d276441184a945bcc24294bbf2, type: 2}
-    furnitureSprite: {fileID: 0}
-    furnitureDirection: 0
+    furnitureSprite: {fileID: 174533972, guid: b639034da6e497a4da8701589f57a36b, type: 3}
+    furnitureDirection: 3
   - position: {x: -1, y: 1}
     direction: 3
     tile: {fileID: 11400000, guid: e161671a31735354bb7049481b7e4271, type: 2}
