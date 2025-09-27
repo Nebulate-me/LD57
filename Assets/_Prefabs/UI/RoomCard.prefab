@@ -212,7 +212,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 250}
+  m_SizeDelta: {x: 200, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9182191082719578008
 MonoBehaviour:
@@ -431,7 +431,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1145447462361342934, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 31.25
+      value: 39.86841
       objectReference: {fileID: 0}
     - target: {fileID: 1145447462361342934, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
       propertyPath: m_SizeDelta.y
@@ -491,7 +491,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3719742290885232191, guid: ff8f384e3ec9ae149a10136c6be47732, type: 3}
       propertyPath: m_fontSize
-      value: 11.45
+      value: 14.85
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
