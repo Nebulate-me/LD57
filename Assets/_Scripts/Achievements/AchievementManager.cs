@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Missions.Apartment;
 using _Scripts.Rooms;
 using Signals;
 using UnityEngine;
+using Utilities;
 
 namespace _Scripts.Achievements
 {
@@ -15,6 +17,8 @@ namespace _Scripts.Achievements
         private readonly List<Achievement> _unlockedAchievements = new();
         private readonly Dictionary<int, int> _completedApartmentRoomCounts = new();
         private readonly Dictionary<RoomType, int> _placedRoomCounts = new();
+        private readonly Dictionary<RoomType, int> _placedRoomsWithWindowsCounts = new();
+        private readonly Dictionary<RoomType, int> _placedRoomsWithoutWindowsCounts = new();
 
         private void OnEnable()
         {
@@ -28,6 +32,16 @@ namespace _Scripts.Achievements
             SignalsHub.RemoveListener<ApartmentMissionCompletedSignal>(OnApartmentMissionCompleted);
             SignalsHub.RemoveListener<RoomPlacedSignal>(OnRoomPlaced);
             SignalsHub.RemoveListener<RoomRemovedSignal>(OnRoomRemoved);
+        }
+
+        private void Start()
+        {
+            foreach (var roomType in EnumExtensions.GetAllItems<RoomType>())
+            {
+                _placedRoomCounts.Add(roomType, 0);
+                _placedRoomsWithWindowsCounts.Add(roomType, 0);
+                _placedRoomsWithoutWindowsCounts.Add(roomType, 0);
+            }
         }
 
         private void OnApartmentMissionCompleted(ApartmentMissionCompletedSignal signal)
@@ -57,46 +71,61 @@ namespace _Scripts.Achievements
         {
             foreach (var roomType in signal.Room.RoomTypes)
             {
-                if (_placedRoomCounts.TryGetValue(roomType, out var roomCount))
-                {
-                    _placedRoomCounts[roomType] = roomCount + 1;
-                }
-                else
-                {
-                    _placedRoomCounts.Add(roomType, 1);
-                }
+                IncrementTypeCount(_placedRoomCounts, roomType);
 
-                var completedAchievements = allAchievements
+                var completedRoomTypeAchievements = allAchievements
                     .Where(a => a.AchievementType == AchievementType.RoomTypeCount
                                 && !IsUnlocked(a)
                                 && a.RoomType == roomType
                                 && a.RequiredRooms <= _placedRoomCounts[roomType]);
-                foreach (var completedAchievement in completedAchievements)
+                foreach (var completedAchievement in completedRoomTypeAchievements)
+                {
+                    _unlockedAchievements.Add(completedAchievement);
+                }
+                
+                IncrementTypeCount(
+                    signal.Room.WindowCount == 0 ? _placedRoomsWithoutWindowsCounts : _placedRoomsWithWindowsCounts,
+                    roomType);
+                
+                var completedRoomWindowCountAchievements = allAchievements
+                    .Where(a => a.AchievementType == AchievementType.RoomTypeWindowCount
+                                && !IsUnlocked(a)
+                                && a.RoomType == roomType
+                                && (a.WithWindows && _placedRoomsWithWindowsCounts[roomType] > 0 || 
+                                    !a.WithWindows && _placedRoomsWithoutWindowsCounts[roomType] > 0));
+                foreach (var completedAchievement in completedRoomWindowCountAchievements)
                 {
                     _unlockedAchievements.Add(completedAchievement);
                 }
             }
         }
-        
+
         private void OnRoomRemoved(RoomRemovedSignal signal)
         {
             foreach (var roomType in signal.Room.RoomTypes)
             {
-                if (_placedRoomCounts.TryGetValue(roomType, out var roomCount))
-                {
-                    _placedRoomCounts[roomType] = roomCount - 1;
-                }
-                else
-                {
-                    _placedRoomCounts.Add(roomType, 0); // Should never happen
-                }
+                DecrementTypeCount(_placedRoomCounts, roomType);
 
-                var uncompletedAchievements = allAchievements
+                var uncompletedRoomTypeAchievements = _unlockedAchievements
                     .Where(a => a.AchievementType == AchievementType.RoomTypeCount
                                 && !IsUnlocked(a)
                                 && a.RoomType == roomType
                                 && a.RequiredRooms > _placedRoomCounts[roomType]);
-                foreach (var uncompletedAchievement in uncompletedAchievements)
+                foreach (var uncompletedAchievement in uncompletedRoomTypeAchievements)
+                {
+                    _unlockedAchievements.Remove(uncompletedAchievement);
+                }
+                
+                DecrementTypeCount(
+                    signal.Room.WindowCount == 0 ? _placedRoomsWithoutWindowsCounts : _placedRoomsWithWindowsCounts,
+                    roomType);
+                var uncompletedRoomTypeWindowAchievements = _unlockedAchievements
+                    .Where(a => a.AchievementType == AchievementType.RoomTypeWindowCount
+                                && !IsUnlocked(a)
+                                && a.RoomType == roomType
+                                && (a.WithWindows && _placedRoomsWithWindowsCounts[roomType] <= 0 || 
+                                    !a.WithWindows && _placedRoomsWithoutWindowsCounts[roomType] <= 0));
+                foreach (var uncompletedAchievement in uncompletedRoomTypeWindowAchievements)
                 {
                     _unlockedAchievements.Remove(uncompletedAchievement);
                 }
@@ -118,5 +147,41 @@ namespace _Scripts.Achievements
         }
 
         private bool IsUnlocked(Achievement a) => _unlockedAchievements.Any(unlockedAchievement => unlockedAchievement.Id == a.Id);
+        
+        private static void IncrementTypeCount<T>(Dictionary<T, int> roomTypeCountDictionary, T type)
+        {
+            if (roomTypeCountDictionary.TryGetValue(type, out var roomTypeCount))
+            {
+                roomTypeCountDictionary[type] = roomTypeCount + 1;
+            }
+            else
+            {
+                roomTypeCountDictionary.Add(type, 1);
+            }
+        }
+        
+        private static void DecrementTypeCount<T>(Dictionary<T, int> roomTypeCountDictionary, T type)
+        {
+            if (roomTypeCountDictionary.TryGetValue(type, out var roomTypeCount))
+            {
+                roomTypeCountDictionary[type] = roomTypeCount - 1;
+            }
+            else
+            {
+                roomTypeCountDictionary.Add(type, 0);
+            }
+        }
+
+        private static void SetTypeCount<T>(Dictionary<T, int> roomTypeCountDictionary, T type, int value)
+        {
+            if (roomTypeCountDictionary.TryGetValue(type, out _))
+            {
+                roomTypeCountDictionary[type] = value;
+            }
+            else
+            {
+                roomTypeCountDictionary.Add(type, value);
+            }
+        }
     }
 }

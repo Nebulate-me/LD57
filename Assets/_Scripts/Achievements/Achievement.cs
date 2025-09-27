@@ -20,10 +20,12 @@ namespace _Scripts.Achievements
         [FormerlySerializedAs("apartmentTypeCount")] [SerializeField, ShowIf(nameof(IsApartmentTypeCountAchievementType))] private int apartmentRoomCountType = 0;
         [SerializeField, ShowIf(nameof(IsApartmentTypeCountAchievementType))] private int requiredCompletedApartments = 1;
 
-        [SerializeField, ShowIf(nameof(IsRoomTypeCountAchievementType))]
+        [SerializeField, ShowIf(nameof(IsRoomTypeCountOrWindowCountAchievementType))]
         private RoomType roomType = RoomType.Hallway;
         [SerializeField, ShowIf(nameof(IsRoomTypeCountAchievementType))] 
         private int requiredRooms = 1;
+        [FormerlySerializedAs("requiredWindows")] [SerializeField, ShowIf(nameof(IsRoomTypeWindowCountAchievementType))] 
+        private bool withWindows = false;
         
         public string Id => name;
         public string Title => title;
@@ -34,8 +36,11 @@ namespace _Scripts.Achievements
         public bool IsApartmentTypeCountAchievementType => achievementType == AchievementType.ApartmentTypeCount;
         public int ApartmentRoomCountType => apartmentRoomCountType;
         public int RequiredCompletedApartments => requiredCompletedApartments;
+        public bool IsRoomTypeCountOrWindowCountAchievementType => IsRoomTypeCountAchievementType || IsRoomTypeWindowCountAchievementType;
         public bool IsRoomTypeCountAchievementType => achievementType == AchievementType.RoomTypeCount;
         public RoomType RoomType => roomType;
         public int RequiredRooms => requiredRooms;
+        public bool IsRoomTypeWindowCountAchievementType => achievementType == AchievementType.RoomTypeWindowCount;
+        public bool WithWindows => withWindows;
     }
 }

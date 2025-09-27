@@ -5,5 +5,6 @@ namespace _Scripts.Achievements
         None = 0,
         ApartmentTypeCount = 1,
         RoomTypeCount = 2,
+        RoomTypeWindowCount = 3,
     }
 }
