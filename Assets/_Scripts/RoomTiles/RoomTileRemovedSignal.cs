@@ -4,13 +4,10 @@ namespace _Scripts.RoomTiles
 {
     public readonly struct RoomTileRemovedSignal
     {
-        private readonly DungeonRoomTileView room;
-
+        public DungeonRoomTileView RoomTile { get; }
         public RoomTileRemovedSignal(DungeonRoomTileView dungeonRoom)
         {
-            room = dungeonRoom;
+            RoomTile = dungeonRoom;
         }
-
-        public DungeonRoomTileView Room => room;
     }
 }

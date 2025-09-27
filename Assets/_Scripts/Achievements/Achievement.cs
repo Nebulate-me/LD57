@@ -1,3 +1,5 @@
+using _Scripts.Rooms;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -14,16 +16,26 @@ namespace _Scripts.Achievements
         
         [Header("Conditions")]
         [SerializeField] private AchievementType achievementType;
-        [FormerlySerializedAs("apartmentTypeCount")] [SerializeField] private int apartmentRoomCountType = 0;
-        [SerializeField] private int requiredCompletedApartments = 1;
+        
+        [FormerlySerializedAs("apartmentTypeCount")] [SerializeField, ShowIf(nameof(IsApartmentTypeCountAchievementType))] private int apartmentRoomCountType = 0;
+        [SerializeField, ShowIf(nameof(IsApartmentTypeCountAchievementType))] private int requiredCompletedApartments = 1;
 
+        [SerializeField, ShowIf(nameof(IsRoomTypeCountAchievementType))]
+        private RoomType roomType = RoomType.Hallway;
+        [SerializeField, ShowIf(nameof(IsRoomTypeCountAchievementType))] 
+        private int requiredRooms = 1;
+        
         public string Id => name;
         public string Title => title;
         public string Description => description;
         public string ConditionText => conditionText;
         public int Points => points;
         public AchievementType AchievementType => achievementType;
+        public bool IsApartmentTypeCountAchievementType => achievementType == AchievementType.ApartmentTypeCount;
         public int ApartmentRoomCountType => apartmentRoomCountType;
         public int RequiredCompletedApartments => requiredCompletedApartments;
+        public bool IsRoomTypeCountAchievementType => achievementType == AchievementType.RoomTypeCount;
+        public RoomType RoomType => roomType;
+        public int RequiredRooms => requiredRooms;
     }
 }

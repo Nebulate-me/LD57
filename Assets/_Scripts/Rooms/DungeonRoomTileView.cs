@@ -251,9 +251,9 @@ namespace _Scripts.Rooms
         
         private void OnRoomTileRemoved(RoomTileRemovedSignal signal)
         {
-            if (!signal.Room.GridPosition.IsAdjacent(GridPosition)) return;
+            if (!signal.RoomTile.GridPosition.IsAdjacent(GridPosition)) return;
 
-            RemoveAdjacentTile(signal.Room);
+            RemoveAdjacentTile(signal.RoomTile);
             UpdatePotentialGhostTileDirections();
             UpdateDoors();
         }
