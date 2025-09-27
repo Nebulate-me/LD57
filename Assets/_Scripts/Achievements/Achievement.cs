@@ -18,7 +18,7 @@ namespace _Scripts.Achievements
         [SerializeField] private AchievementType achievementType;
         
         [FormerlySerializedAs("apartmentTypeCount")] [SerializeField, ShowIf(nameof(IsApartmentTypeCountAchievementType))] private int apartmentRoomCountType = 0;
-        [SerializeField, ShowIf(nameof(IsApartmentTypeCountAchievementType))] private int requiredCompletedApartments = 1;
+        [FormerlySerializedAs("requiredCompletedApartments")] [SerializeField, ShowIf(nameof(IsApartmentCountAchievementType))] private int requiredApartments = 1;
 
         [SerializeField, ShowIf(nameof(IsRoomTypeCountOrWindowCountAchievementType))]
         private RoomType roomType = RoomType.Hallway;
@@ -33,14 +33,16 @@ namespace _Scripts.Achievements
         public string ConditionText => conditionText;
         public int Points => points;
         public AchievementType AchievementType => achievementType;
+        public bool IsApartmentCountAchievementType => IsApartmentTypeCountAchievementType || IsHallwaylessApartmentCountAchievementType;
         public bool IsApartmentTypeCountAchievementType => achievementType == AchievementType.ApartmentTypeCount;
         public int ApartmentRoomCountType => apartmentRoomCountType;
-        public int RequiredCompletedApartments => requiredCompletedApartments;
+        public int RequiredApartments => requiredApartments;
         public bool IsRoomTypeCountOrWindowCountAchievementType => IsRoomTypeCountAchievementType || IsRoomTypeWindowCountAchievementType;
         public bool IsRoomTypeCountAchievementType => achievementType == AchievementType.RoomTypeCount;
         public RoomType RoomType => roomType;
         public int RequiredRooms => requiredRooms;
         public bool IsRoomTypeWindowCountAchievementType => achievementType == AchievementType.RoomTypeWindowCount;
         public bool WithWindows => withWindows;
+        public bool IsHallwaylessApartmentCountAchievementType => achievementType == AchievementType.HallwaylessApartmentCount;
     }
 }

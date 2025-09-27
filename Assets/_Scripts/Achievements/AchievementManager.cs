@@ -1,8 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Missions.Apartment;
 using _Scripts.Rooms;
+using _Scripts.Utils;
 using Signals;
 using UnityEngine;
 using Utilities;
@@ -16,6 +16,7 @@ namespace _Scripts.Achievements
         private readonly List<Achievement> _scoredAchievements = new();
         private readonly List<Achievement> _unlockedAchievements = new();
         private readonly Dictionary<int, int> _completedApartmentRoomCounts = new();
+        private int _completedHallwaylessApartmentCount = 0;
         private readonly Dictionary<RoomType, int> _placedRoomCounts = new();
         private readonly Dictionary<RoomType, int> _placedRoomsWithWindowsCounts = new();
         private readonly Dictionary<RoomType, int> _placedRoomsWithoutWindowsCounts = new();
@@ -47,21 +48,26 @@ namespace _Scripts.Achievements
         private void OnApartmentMissionCompleted(ApartmentMissionCompletedSignal signal)
         {
             var apartmentRoomCountType = signal.Dto.ApartmentRoomCountType;
-            if (_completedApartmentRoomCounts.TryGetValue(apartmentRoomCountType, out var roomCount))
-            {
-                _completedApartmentRoomCounts[apartmentRoomCountType] = roomCount + 1;
-            }
-            else
-            {
-                _completedApartmentRoomCounts.Add(apartmentRoomCountType, 1);
-            }
+            IncrementTypeCount(_completedApartmentRoomCounts, apartmentRoomCountType);
 
             var completedAchievements = allAchievements
                 .Where(a => a.AchievementType == AchievementType.ApartmentTypeCount
                             && !IsUnlocked(a)
                             && a.ApartmentRoomCountType == apartmentRoomCountType
-                            && a.RequiredCompletedApartments <= _completedApartmentRoomCounts[apartmentRoomCountType]);
+                            && a.RequiredApartments <= _completedApartmentRoomCounts[apartmentRoomCountType]);
             foreach (var completedAchievement in completedAchievements)
+            {
+                _unlockedAchievements.Add(completedAchievement);
+            }
+
+            if (signal.RoomsToUse.None(room => room.HasType(RoomType.Hallway))) 
+                _completedHallwaylessApartmentCount++;
+            
+            var completedHallwaylessAchievements = allAchievements
+                .Where(a => a.AchievementType == AchievementType.HallwaylessApartmentCount
+                            && !IsUnlocked(a)
+                            && a.RequiredApartments <= _completedHallwaylessApartmentCount);
+            foreach (var completedAchievement in completedHallwaylessAchievements)
             {
                 _unlockedAchievements.Add(completedAchievement);
             }

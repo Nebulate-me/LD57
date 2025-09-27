@@ -125,7 +125,7 @@ namespace _Scripts.Missions
                 missionHandSize++;
 
             _soundManager.PlaySound(SoundType.CompleteMission);
-            SignalsHub.DispatchAsync(new ApartmentMissionCompletedSignal(apartmentMissionCard.Dto, roomScore));
+            SignalsHub.DispatchAsync(new ApartmentMissionCompletedSignal(apartmentMissionCard.Dto, roomScore, roomsToUse));
             _lastCompletedMissionName = apartmentMissionCard.Dto.Name;
 
             StartCoroutine(UpdateMissionCoroutine());
