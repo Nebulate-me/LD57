@@ -60,11 +60,13 @@ namespace _Scripts.Missions
         private void OnRoomPlaced(RoomPlacedSignal signal)
         {
             UpdateMissions();
+            UpdateRoomConnectivity();
         }
-        
+
         private void OnRoomTileRemoved(RoomTileRemovedSignal signal)
         {
             UpdateMissions();
+            UpdateRoomConnectivity();
         }
         
         private void OnLevelSetupCompleted(LevelSetupCompletedSignal signal)
@@ -175,6 +177,26 @@ namespace _Scripts.Missions
             RefillMissionHand();
             SignalsHub.DispatchAsync(new MissionsUpdatedSignal());
         }
+        
+        private void UpdateRoomConnectivity()
+        {
+            var roomsToCheck = _dungeonGridManager.Rooms.Where(room => room.HasType(RoomType.Shared)).ToList();
+            var unconnectedRooms = _dungeonGridManager.Rooms.Where(room => !room.HasType(RoomType.Shared)).ToList();
+
+            while (roomsToCheck.TryRemoveFirst(out var room))
+            {
+                unconnectedRooms.Remove(room);
+                room.IsConnected = true;
+                roomsToCheck.AddRange(room.AdjacentRooms
+                    .Where(adjacentRoom => unconnectedRooms.Contains(adjacentRoom) && !roomsToCheck.Contains(adjacentRoom)));
+            }
+            
+            foreach (var room in unconnectedRooms)
+            {
+                room.IsConnected = false;
+            }
+
+        }
 
         private void RefillMissionHand()
         {
@@ -261,6 +283,7 @@ namespace _Scripts.Missions
         {
             if (inputSearch.IsCompleted)
             {
+                
                 roomsToUse = inputSearch.UsedRooms;
                 return true;
             }
@@ -300,6 +323,14 @@ namespace _Scripts.Missions
                 return new ApartmentMissionSearchDto(requirements, usedRooms, inputSearch.RemainingWindowCount - roomOption.WindowCount);
             }).ToList();
             return !outputSearchOptions.IsEmpty();
+        }
+
+        private void SetRoomsConnected(List<DungeonRoomModel> rooms)
+        {
+            foreach (var room in rooms)
+            {
+                room.IsConnected = true;
+            }
         }
     }
 

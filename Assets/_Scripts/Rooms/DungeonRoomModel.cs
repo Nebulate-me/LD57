@@ -16,6 +16,7 @@ namespace _Scripts.Rooms
         private readonly List<DungeonRoomTileView> _roomTiles;
         private List<DungeonRoomModel> _adjacentRooms;
         private bool _isUsed;
+        private bool _isConnected;
 
         public DungeonRoomModel(RoomDto roomDto, List<DungeonRoomTileView> roomTiles, List<DungeonRoomModel> adjacentRooms)
         {
@@ -38,6 +39,19 @@ namespace _Scripts.Rooms
             }
         }
 
+        public bool IsConnected
+        {
+            get => _isConnected;
+            set
+            {
+                _isConnected = value;
+                foreach (var roomTile in _roomTiles)
+                {
+                    roomTile.IsConnected = _isConnected;
+                }
+            }
+        }
+
         public int WindowCount => _roomTiles.Sum(roomTile => roomTile.WindowCount);
         public int TileCount => _roomTiles.Count;
 
@@ -51,7 +65,7 @@ namespace _Scripts.Rooms
 
         public List<DungeonRoomTileView> Tiles => _roomTiles;
 
-        public bool IsAdjacent(List<DungeonRoomTileView> otherRoomTiles)
+        public bool IsAdjacent(IEnumerable<IDungeonRoomTileView> otherRoomTiles)
         {
             foreach (var otherRoomTile in otherRoomTiles)
             {

@@ -14,7 +14,11 @@ namespace _Scripts.Rooms
         bool UndoLastRoomPlacement();
         Bounds GetLevelBounds();
         Bounds GetRoomBoundsBasedOnTiles();
+        public List<DungeonRoomModel> GetAdjacentRooms(IEnumerable<IDungeonRoomTileView> selectedRoomTiles);
         bool IsTileAdjacentToLevelBounds(Vector2Int gridPosition, RoomDirection key);
+
+        bool IsTileAdjacentDoor(Vector2Int gridPosition, RoomDirection direction,
+            out DungeonRoomTileView adjacentTile);
         bool IsTileAdjacentToDoorOrEmpty(Vector2Int gridPosition, RoomDirection direction, out DungeonRoomTileView adjacentTile);
         Vector2Int WorldToGrid(Vector2 transformPosition);
         void UnloadLevel();

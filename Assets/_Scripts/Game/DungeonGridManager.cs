@@ -112,18 +112,18 @@ namespace _Scripts.Game
             adjacentAnyDirections = new List<RoomDirection>();
             adjacentClosedDirections = new List<RoomDirection>();
 
-            var adjacentRooms = _roomTiles.Where(room => room.GridPosition.ManhattanDistance(roomPosition) == 1).ToList();
+            var adjacentRoomsTiles = _roomTiles.Where(room => room.GridPosition.ManhattanDistance(roomPosition) == 1).ToList();
 
-            if (adjacentRooms.IsEmpty())
+            if (adjacentRoomsTiles.IsEmpty())
                 return false;
 
-            foreach (var adjacentRoom in adjacentRooms)
+            foreach (var adjacentRoomTile in adjacentRoomsTiles)
             {
-                var adjacentRoomDirection = (adjacentRoom.GridPosition - roomPosition).FromVector2Int();
+                var adjacentRoomDirection = (adjacentRoomTile.GridPosition - roomPosition).FromVector2Int();
                 var invertedAdjacentRoomDirection = adjacentRoomDirection.Invert();
-                if (adjacentRoom.OpenDirections.Contains(invertedAdjacentRoomDirection))
+                if (adjacentRoomTile.OpenDirections.Contains(invertedAdjacentRoomDirection))
                     adjacentOpenDirections.Add(adjacentRoomDirection);
-                else if (adjacentRoom.DoorDirections.Contains(invertedAdjacentRoomDirection))
+                else if (adjacentRoomTile.DoorDirections.Contains(invertedAdjacentRoomDirection))
                     adjacentAnyDirections.Add(adjacentRoomDirection);
                 else
                     adjacentClosedDirections.Add(adjacentRoomDirection);
@@ -261,7 +261,7 @@ namespace _Scripts.Game
                 SignalsHub.DispatchAsync(new RoomTilePlacedSignal(dungeonRoomTile));
             }
 
-            var adjacentRooms = _rooms.Where(room => room.IsAdjacent(selectedRoomTiles)).ToList();
+            var adjacentRooms = GetAdjacentRooms(selectedRoomTiles);
             var roomModel = new DungeonRoomModel(selectedRoomDto, selectedRoomTiles, adjacentRooms);
             foreach (var adjacentRoom in adjacentRooms)
             {
@@ -277,6 +277,11 @@ namespace _Scripts.Game
 
             soundManager.PlaySound(SoundType.PlaceRoom);
             _roomGhostInstance.gameObject.SetActive(false);
+        }
+
+        public List<DungeonRoomModel> GetAdjacentRooms(IEnumerable<IDungeonRoomTileView> selectedRoomTiles)
+        {
+            return _rooms.Where(room => room.IsAdjacent(selectedRoomTiles)).ToList();
         }
 
         public IReadOnlyList<DungeonRoomTileView> RoomTiles => _roomTiles;
@@ -301,6 +306,14 @@ namespace _Scripts.Game
         {
             var adjacentPosition = gridPosition + direction.ToVector2Int();
             return IsPositionInsideLevelBounds(gridPosition) && !IsPositionInsideLevelBounds(adjacentPosition);
+        }
+
+        public bool IsTileAdjacentDoor(Vector2Int gridPosition, RoomDirection direction,
+            out DungeonRoomTileView adjacentTile)
+        {
+            var adjacentPosition = gridPosition + direction.ToVector2Int();
+            return _roomTiles.TryGetFirst(tile => tile.GridPosition == adjacentPosition, out adjacentTile) && 
+                   adjacentTile.DoorDirections.Contains(direction.Invert());
         }
         
         public bool IsTileAdjacentToDoorOrEmpty(Vector2Int gridPosition, RoomDirection direction, out DungeonRoomTileView adjacentTile)

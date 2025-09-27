@@ -11,12 +11,15 @@ namespace _Scripts.RoomTiles
         [FormerlySerializedAs("roomName")] [SerializeField] private string tileName;
         [FormerlySerializedAs("sprite")] [SerializeField] private Sprite usedSprite;
         [SerializeField] private Sprite unusedSprite;
+        [SerializeField] private Sprite connectedSprite;
+        
         [SerializeField] private List<RoomDirection> openDirections = new();
         [SerializeField] private List<RoomDirection> doorDirections = new();
 
         public string TileName => tileName;
         public Sprite UsedSprite => usedSprite;
         public Sprite UnusedSprite => unusedSprite;
+        public Sprite ConnectedSprite => connectedSprite;
         public List<RoomDirection> OpenDirections => openDirections;
         public List<RoomDirection> DoorDirections => doorDirections;
 

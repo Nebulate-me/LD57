@@ -14,7 +14,7 @@ using Zenject;
 
 namespace _Scripts.Rooms
 {
-    public class DungeonRoomTileView : MonoBehaviour, IPoolableResource
+    public class DungeonRoomTileView : MonoBehaviour, IDungeonRoomTileView, IPoolableResource
     {
         [SerializeField] private Transform wallSpriteTransform;
         [SerializeField] private SpriteRenderer wallRenderer;
@@ -32,6 +32,7 @@ namespace _Scripts.Rooms
         [ShowInInspector, ReadOnly] private List<RoomDirection> openDirections = new();
         [ShowInInspector, ReadOnly] private List<RoomDirection> doorDirections = new();
         [ShowInInspector, ReadOnly] private bool _isUsed = false;
+        [ShowInInspector, ReadOnly] private bool _isConnected = false;
         [ShowInInspector, ReadOnly] private int _windowCount = 0;
 
         [Inject] private IDungeonGridManager _dungeonGridManager;
@@ -55,11 +56,20 @@ namespace _Scripts.Rooms
             set
             {
                 _isUsed = value;
-                wallRenderer.sprite = _isUsed ? _tileDto.UsedSprite : _tileDto.UnusedSprite;
+                UpdateWallSprite();
                 UpdateDoors();
             }
         }
-        
+
+        public bool IsConnected
+        {
+            set
+            {
+                _isConnected = value;
+                UpdateWallSprite();
+            }
+        }
+
         public RoomFloorColor FloorSprite
         {
             set => floorRenderer.sprite = _roomRegistry.GetRoomFloorSprite(value);
@@ -76,7 +86,7 @@ namespace _Scripts.Rooms
             floorRenderer.sprite = roomFloorSprite;
 
             wallSpriteTransform.rotation = direction.ToRotation();
-            wallRenderer.sprite = _tileDto.UnusedSprite;
+            UpdateWallSprite();
             
             furnitureSpriteTransform.rotation = direction.Rotate(roomTileCell.FurnitureDirection).ToRotation();
             furnitureRenderer.gameObject.SetActive(roomTileCell.FurnitureSprite != null);
@@ -117,6 +127,17 @@ namespace _Scripts.Rooms
         {
             _potentialGhostTileDirections =
                 doorDirections.Where(doorDirection => !_adjacentTiles.ContainsKey(doorDirection)).ToList();
+        }
+        
+        private void UpdateWallSprite()
+        {
+            if (_isUsed)
+            {
+                wallRenderer.sprite = _tileDto.UsedSprite;
+                return;
+            }
+            
+            wallRenderer.sprite = _isConnected ? _tileDto.ConnectedSprite : _tileDto.UnusedSprite;
         }
 
         private void UpdateDoors()

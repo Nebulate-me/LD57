@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using _Scripts.Utils;
 using Signals;
 using Sirenix.OdinInspector;
@@ -26,10 +27,13 @@ namespace _Scripts.Rooms
         {
             if (roomDto == null) return; // erroneous case
             ResetCurrentRoomDto(roomDto, roomDirection, isValid: true);
+            
+            var isConnected = _dungeonGridManager.GetAdjacentRooms(_roomTileGhostViews.Cast<IDungeonRoomTileView>()).Any(room => room.IsConnected);
 
             foreach (var tileGhostView in _roomTileGhostViews)
             {
                 tileGhostView.Color = validPlacementColor;
+                tileGhostView.IsConnected = isConnected;
             }
         }
 

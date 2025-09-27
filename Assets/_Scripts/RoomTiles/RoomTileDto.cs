@@ -14,6 +14,7 @@ namespace _Scripts.RoomTiles
         [SerializeField] private string name;
         [SerializeField] private Sprite usedSprite;
         [SerializeField] private Sprite unusedSprite;
+        [SerializeField] private Sprite connectedSprite;
         [SerializeField] private List<RoomDirection> openDirections;
         [SerializeField] private List<RoomDirection> doorDirections;
         [SerializeField] private bool isRotatable;
@@ -23,6 +24,7 @@ namespace _Scripts.RoomTiles
             name = roomTile.TileName;
             usedSprite = roomTile.UsedSprite;
             unusedSprite = roomTile.UnusedSprite;
+            connectedSprite = roomTile.ConnectedSprite;
             openDirections = roomTile.OpenDirections.Rotate(roomDirection);
             doorDirections = roomTile.DoorDirections.Rotate(roomDirection);
             isRotatable = GetIsRotatable();
@@ -36,6 +38,7 @@ namespace _Scripts.RoomTiles
             name = roomTileDto.Name;
             usedSprite = roomTileDto.UsedSprite;
             unusedSprite = roomTileDto.UnusedSprite;
+            connectedSprite = roomTileDto.ConnectedSprite;
 
             openDirections = dtoOpenDirections;
             doorDirections = dtoDoorDirections;
@@ -52,6 +55,7 @@ namespace _Scripts.RoomTiles
         public string Name => name;
         public Sprite UsedSprite => usedSprite;
         public Sprite UnusedSprite => unusedSprite;
+        public Sprite ConnectedSprite => connectedSprite;
         public List<RoomDirection> OpenDirections => openDirections;
         public List<RoomDirection> DoorDirections => doorDirections;
         public bool IsRotatable => isRotatable;

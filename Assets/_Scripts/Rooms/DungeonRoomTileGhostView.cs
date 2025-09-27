@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using _Scripts.RoomTiles;
 using _Scripts.Utils;
 using UnityEngine;
@@ -6,7 +7,7 @@ using Zenject;
 
 namespace _Scripts.Rooms
 {
-    public class DungeonRoomTileGhostView : MonoBehaviour
+    public class DungeonRoomTileGhostView : MonoBehaviour, IDungeonRoomTileView
     {
         [SerializeField] private Transform wallSpriteTransform;
         [SerializeField] private SpriteRenderer wallSpriteRenderer;
@@ -22,14 +23,26 @@ namespace _Scripts.Rooms
 
         [Inject] private IRoomRegistry _roomRegistry;
         [Inject] private IDungeonGridManager _dungeonGridManager;
+        
+        private RoomTileCellDto _roomTile;
 
         public Color Color
         {
             set => wallSpriteRenderer.color = value;
         }
+        
+        public bool IsConnected
+        {
+            set => wallSpriteRenderer.sprite = value ? _roomTile.Tile.ConnectedSprite : _roomTile.Tile.UnusedSprite;
+        }
+        
+        public Vector2Int GridPosition { get; private set; }
+        public List<RoomDirection> DoorDirections { get; private set; }
 
         public void SetUp(RoomTileCellDto roomTileCell, RoomDto roomDto)
         {
+            _roomTile = roomTileCell;
+            
             wallSpriteRenderer.sprite = roomTileCell.Tile.UnusedSprite;
             wallSpriteTransform.rotation = roomTileCell.Direction.ToRotation();
             
@@ -39,10 +52,10 @@ namespace _Scripts.Rooms
 
             floorRenderer.sprite = _roomRegistry.SharedRoomFloorSprite;
             
-            var tilePosition = _dungeonGridManager.WorldToGrid(transform.position.ToVector2());
+            GridPosition = _dungeonGridManager.WorldToGrid(transform.position.ToVector2());
             foreach (var (windowDirection, windowObject) in windowObjects)
             {
-                var isWindowActive = _dungeonGridManager.IsTileAdjacentToLevelBounds(tilePosition, windowDirection);
+                var isWindowActive = _dungeonGridManager.IsTileAdjacentToLevelBounds(GridPosition, windowDirection);
                 windowObject.SetActive(isWindowActive);
             }
 
@@ -50,7 +63,8 @@ namespace _Scripts.Rooms
             {
                 doorObject.SetActive(false);            
             }
-            
+
+            DoorDirections = roomTileCell.Tile.DoorDirections;
             foreach (var doorDirection in roomTileCell.Tile.DoorDirections)
             {
                 var door = doorObjects[doorDirection];
@@ -63,7 +77,7 @@ namespace _Scripts.Rooms
                 }
                 
                 var isAdjacentDoorOrEmpty =
-                    _dungeonGridManager.IsTileAdjacentToDoorOrEmpty(tilePosition, doorDirection, out var adjacentTile);
+                    _dungeonGridManager.IsTileAdjacentToDoorOrEmpty(GridPosition, doorDirection, out var adjacentTile);
                 if (!isAdjacentDoorOrEmpty)
                 {
                     door.SetActive(false);

@@ -15,5 +15,6 @@ MonoBehaviour:
   tileName: Reliquary
   usedSprite: {fileID: -85964116, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
   unusedSprite: {fileID: 694358247, guid: f432cee1a88f1c24f9e7962e2c1405b9, type: 3}
+  connectedSprite: {fileID: 51949632, guid: 6d4173ed6a55d1e40a8135e4adb4cdd3, type: 3}
   openDirections: 
   doorDirections: 
