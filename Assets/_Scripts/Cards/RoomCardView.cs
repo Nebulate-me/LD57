@@ -98,7 +98,7 @@ namespace _Scripts.Cards
                 var roomTileCellView = _prefabPool.Spawn(roomTileCellPrefab, roomCellContainer).GetComponent<RoomTileCellView>();
                 roomTileCellView.SetUp(roomTileCell);
                 roomTileCellView.transform.position = roomCellContainer.transform.position +
-                                                      (roomTileCell.Position.ToVector3() - roomCenter)* cellSize;
+                                                      (roomTileCell.Position.ToVector3() - roomCenter) * cellSize;
                 _roomTilCellViews.Add(roomTileCellView);
             }
         }
