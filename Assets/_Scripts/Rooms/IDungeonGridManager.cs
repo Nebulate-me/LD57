@@ -23,5 +23,8 @@ namespace _Scripts.Rooms
         Vector2Int WorldToGrid(Vector2 transformPosition);
         void UnloadLevel();
         void LoadLevel(Level level);
+
+        void ShowTutorialGhostRoom(Vector2Int gridPosition, RoomDto roomDto, RoomDirection direction);
+        void HideTutorialGhostRoom();
     }
 }

@@ -44,6 +44,7 @@ namespace _Scripts.Mascot
         [Inject] private IGameTimerController _gameTimerController;
         [Inject] private IHandManager _handManager;
         [Inject] private IScreenManager _screenManager;
+        [Inject] private IDungeonGridManager _gridManager;
 
         private Coroutine showRoutine;
         private Coroutine typeRoutine;
@@ -164,7 +165,8 @@ namespace _Scripts.Mascot
                 stepConfig.ActionType != MascotTutorialActionType.RoomPlaced ||
                 signal.Room == null ||
                 !stepConfig.SelectedRoomCard.IsEqual(signal.Room)) return;
-            
+         
+            _gridManager.HideTutorialGhostRoom();
             StartCoroutine(ShowPopupAndNextStepCoroutine());
         }
         
@@ -215,6 +217,7 @@ namespace _Scripts.Mascot
                 return;
             }
 
+            SetTutorialTarget(stepConfig);
             _gameTimerController.ResumeTimer();
             Hide();
         }
@@ -289,7 +292,6 @@ namespace _Scripts.Mascot
                                 stepTarget.transform.position.z
                             );
                     }
-
                     break;
                 }
                 case MascotTutorialTargetType.Building:
@@ -300,7 +302,7 @@ namespace _Scripts.Mascot
                     }
                     else if (stepConfig.BuildingPanelTargetType == MascotTutorialBuildingTargetType.Space)
                     {
-                           
+                        _gridManager.ShowTutorialGhostRoom(stepConfig.BuildingSpaceRoomPosition, stepConfig.BuildingSpaceRoom.ToDto(), stepConfig.BuildingSpaceRoomDirection);
                     }
                     break;
                 }

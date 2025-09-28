@@ -4,6 +4,7 @@ using _Scripts.Utils;
 using Signals;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.LightTransport.PostProcessing;
 using Utilities;
 using Utilities.Prefabs;
 using Zenject;
@@ -25,6 +26,16 @@ namespace _Scripts.Rooms
         private bool _isConnected;
         
         public bool IsConnected => _isConnected;
+
+        public float Alpha
+        {
+            set {
+                foreach (var tileGhostView in _roomTileGhostViews)
+                {
+                    tileGhostView.Alpha = value;
+                }
+            }
+        }
 
         public void SetUpValid(RoomDto roomDto, RoomDirection roomDirection)
         {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
@@ -34,6 +35,7 @@ namespace _Scripts.Game
 
         private DungeonRoomTileGhostView _roomTileGhostInstance;
         private DungeonRoomGhostView _roomGhostInstance;
+        private DungeonRoomGhostView _tutorialGhostInstance;
         private List<DungeonRoomTileView> _roomTiles = new();
         [ShowInInspector, ReadOnly] private List<DungeonRoomModel> _rooms = new();
         [ShowInInspector, ReadOnly] private Stack<DungeonRoomModel> _lastPlacedRooms = new();
@@ -50,6 +52,9 @@ namespace _Scripts.Game
             
             _roomGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
                 .GetComponent<DungeonRoomGhostView>();
+            _tutorialGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
+                .GetComponent<DungeonRoomGhostView>();
+            HideTutorialGhostRoom();
         }
 
         private void Update()
@@ -363,6 +368,20 @@ namespace _Scripts.Game
             var size = new Vector3(maxX - minX, maxY - minY);
             
             return new Bounds(center, size);
+        }
+
+        public void ShowTutorialGhostRoom(Vector2Int gridPosition, RoomDto roomDto, RoomDirection direction)
+        {
+            var snappedPosition = GridToWorld(gridPosition);
+            _tutorialGhostInstance.transform.position = snappedPosition;
+            _tutorialGhostInstance.SetUpValid(roomDto, direction);
+            _tutorialGhostInstance.Alpha = 0.25f; // TODO: Parametrize
+            _tutorialGhostInstance.gameObject.SetActive(true);   
+        }
+
+        public void HideTutorialGhostRoom()
+        {
+            _tutorialGhostInstance.gameObject.SetActive(false);   
         }
     }
 }

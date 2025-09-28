@@ -30,6 +30,23 @@ namespace _Scripts.Rooms
         {
             set => wallSpriteRenderer.color = value;
         }
+
+        public float Alpha
+        {
+            set
+            {
+                SetRendererAlpha(wallSpriteRenderer, value);
+                SetRendererAlpha(floorRenderer, value);
+                SetRendererAlpha(furnitureSpriteRenderer, value);
+            }
+        }
+
+        private static void SetRendererAlpha(SpriteRenderer spriteRenderer, float value)
+        {
+            var newColor = spriteRenderer.color;
+            newColor.a = value;
+            spriteRenderer.color = newColor;
+        }
         
         public bool IsConnected
         {
