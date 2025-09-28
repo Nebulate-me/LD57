@@ -34,6 +34,7 @@ namespace _Scripts.Cards
         [SerializeField] private Sprite selectedCardBackgroundSprite;
 
         [Inject] private IHandManager _handManager;
+        [Inject] private IGameTimerController _gameTimerController;
         [Inject] private IPrefabPool _prefabPool;
 
         [ShowInInspector, ReadOnly] private bool _isEnabled;
@@ -146,6 +147,7 @@ namespace _Scripts.Cards
         public void OnDespawn()
         {
             Deselect();
+            _isHovered = false;
             foreach (var cellView in _roomTilCellViews)
             {
                 _prefabPool.Despawn(cellView.gameObject);
@@ -155,6 +157,7 @@ namespace _Scripts.Cards
 
         public void OnSpawn()
         {
+            SetIsEnabled(_gameTimerController.IsRunning);
             Deselect();
         }
     }

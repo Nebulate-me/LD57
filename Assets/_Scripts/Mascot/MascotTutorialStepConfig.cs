@@ -27,7 +27,7 @@ namespace _Scripts.Mascot
         private bool IsTargetBottomPanel => targetType == MascotTutorialTargetType.BottomPanel;
         private bool IsTargetBuilding => targetType == MascotTutorialTargetType.Building;
         private bool IsBottomPanelTargetTypeRoomCard => bottomPanelTargetType == MascotTutorialBottomPanelTargetType.RoomCard;
-        private bool IsBuildingTargetTypeSpace => buildingTargetType == MascotTutorialBuildingTargetType.Space;
+        private bool IsBuildingTargetTypeSpace => IsTargetBuilding && buildingTargetType == MascotTutorialBuildingTargetType.Space;
         private bool IsActionTypeRoomCardSelectedOrPlaced => IsActionTypeRoomCardSelected || IsActionTypeRoomPlaced;
         private bool IsActionTypeRoomCardSelected => actionType == MascotTutorialActionType.RoomCardSelected;
         private bool IsActionTypeRoomPlaced => actionType == MascotTutorialActionType.RoomPlaced;
