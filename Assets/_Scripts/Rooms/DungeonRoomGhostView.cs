@@ -22,18 +22,24 @@ namespace _Scripts.Rooms
 
         private RoomDto _currentRoomDto;
         private List<DungeonRoomTileGhostView> _roomTileGhostViews = new();
+        private bool _isConnected;
+        
+        public bool IsConnected => _isConnected;
 
         public void SetUpValid(RoomDto roomDto, RoomDirection roomDirection)
         {
             if (roomDto == null) return; // erroneous case
             ResetCurrentRoomDto(roomDto, roomDirection, isValid: true);
             
-            var isConnected = _dungeonGridManager.GetAdjacentRooms(_roomTileGhostViews.Cast<IDungeonRoomTileView>()).Any(room => room.IsConnected);
+            _isConnected = _dungeonGridManager.GetAdjacentRooms(_roomTileGhostViews.Cast<IDungeonRoomTileView>())
+                .Any(room =>
+                    (!room.HasType(RoomType.Shared) || roomDto.HasAnyRoomTypes(RoomTypeExtensions.ApartmentStartingRoomTypes)) && 
+                    room.IsConnected);
 
             foreach (var tileGhostView in _roomTileGhostViews)
             {
                 tileGhostView.Color = validPlacementColor;
-                tileGhostView.IsConnected = isConnected;
+                tileGhostView.IsConnected = _isConnected;
             }
         }
 
@@ -42,11 +48,13 @@ namespace _Scripts.Rooms
             if (roomDto == null) return; // erroneous case
             
             ResetCurrentRoomDto(roomDto, roomDirection, isValid: false);
-            
+
+            _isConnected = false;
             
             foreach (var tileGhostView in _roomTileGhostViews)
             {
                 tileGhostView.Color = invalidPlacementColor;
+                tileGhostView.IsConnected = _isConnected;
             }
         }
         

@@ -45,9 +45,10 @@ namespace _Scripts.Rooms
             set
             {
                 _isConnected = value;
+                
                 foreach (var roomTile in _roomTiles)
                 {
-                    roomTile.IsConnected = _isConnected;
+                    roomTile.IsConnected = _isConnected && !HasType(RoomType.Shared);
                 }
             }
         }

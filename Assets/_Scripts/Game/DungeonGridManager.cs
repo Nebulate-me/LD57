@@ -256,6 +256,7 @@ namespace _Scripts.Game
                 var tileGridPosition = gridPosition + roomTileCell.Position - startingTilePosition;
                 dungeonRoomTile.transform.position = GridToWorld(tileGridPosition);
                 dungeonRoomTile.SetUp(roomTileCell, tileGridPosition, roomFloorSprite, selectedRoomDto);
+                dungeonRoomTile.IsConnected = _roomGhostInstance && _roomGhostInstance.IsConnected;
                 _roomTiles.Add(dungeonRoomTile);
                 selectedRoomTiles.Add(dungeonRoomTile);
                 SignalsHub.DispatchAsync(new RoomTilePlacedSignal(dungeonRoomTile));

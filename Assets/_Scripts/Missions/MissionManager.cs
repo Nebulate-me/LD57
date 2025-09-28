@@ -324,14 +324,6 @@ namespace _Scripts.Missions
             }).ToList();
             return !outputSearchOptions.IsEmpty();
         }
-
-        private void SetRoomsConnected(List<DungeonRoomModel> rooms)
-        {
-            foreach (var room in rooms)
-            {
-                room.IsConnected = true;
-            }
-        }
     }
 
     internal class ApartmentMissionSearchDto
