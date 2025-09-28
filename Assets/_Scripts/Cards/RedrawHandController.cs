@@ -15,7 +15,8 @@ namespace _Scripts.Cards
         [SerializeField] private Button redrawHandButton;
         [SerializeField] private int redrawCostScore = 5;
 
-        [ReadOnly, ShowInInspector] private bool isDisabled = true;
+        [Space, SerializeField] private bool disablePermanently = false; // FIXME: Not usable in the Tutorial
+        [ReadOnly, ShowInInspector] private bool _isDisabled = true;
 
         [Inject] private IHandManager _handManager;
         [Inject] private IScoreManager _scoreManager;
@@ -53,13 +54,13 @@ namespace _Scripts.Cards
 
         private void SetDisabled(bool disabled)
         {
-            isDisabled = disabled;
-            redrawHandButton.interactable = !disabled;
+            _isDisabled = disabled;
+            redrawHandButton.interactable = !disabled && !disablePermanently;
         }
         
         private void RedrawHand()
         {
-            if (isDisabled)  return;
+            if (_isDisabled)  return;
             
             _handManager.RedrawRoomHand();
             _scoreManager.SubtractScore(redrawCostScore);
