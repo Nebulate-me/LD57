@@ -57,7 +57,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 82827f3efef31d54b8f719793083f539, type: 2}
   - {fileID: 11400000, guid: a78e16d43c9c42c47b72489cebe978c2, type: 2}
   - {fileID: 11400000, guid: 292aba9d5e3b62a468fce3a20ab5572f, type: 2}
+  - {fileID: 11400000, guid: 65206c5c23fe19944ab937b19c367957, type: 2}
+  - {fileID: 11400000, guid: 520cd83ac03311541947d4b50f1c4f6d, type: 2}
   initialMissions:
   - {fileID: 11400000, guid: d6ed78f5435d5264baea8cdc6acdfe80, type: 2}
-  missionsToComplete: 6
+  missionsToComplete: 5
   showPorch: 0
