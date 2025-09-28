@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Scripts.Popups.LevelFinished;
 using _Scripts.Utils;
 using ModestTree;
+using Signals;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Utilities.RandomService;
@@ -23,14 +26,29 @@ namespace _Scripts.Rooms
 
         [Inject] private IRandomService _randomService;
         
-        public Sprite UnusedRoomFloorSprite => floorColorSprites.TryGetValue(unusedRoomFloorColor, out var roomFloorSprite) ? roomFloorSprite : null;
-        public Sprite SharedRoomFloorSprite => floorColorSprites.TryGetValue(sharedRoomFloorColor, out var roomFloorSprite) ? roomFloorSprite : null;
+        public Sprite UnusedRoomFloorSprite => floorColorSprites.GetValueOrDefault(unusedRoomFloorColor);
+        public Sprite SharedRoomFloorSprite => floorColorSprites.GetValueOrDefault(sharedRoomFloorColor);
         public RoomFloorColor UnusedRoomColor => unusedRoomFloorColor;
         public RoomFloorColor HighlightColor => highlightFloorColor;
-        
+
+        private void OnEnable()
+        {
+            SignalsHub.AddListener<StartNextLevelSignal>(OnStartNextLevelSignal);
+        }
+
+        private void OnDisable()
+        {
+            SignalsHub.RemoveListener<StartNextLevelSignal>(OnStartNextLevelSignal);
+        }
+
+        private void OnStartNextLevelSignal(StartNextLevelSignal signal)
+        {
+            _usedFloorColors.Clear();
+        }
+
         public Sprite GetRoomTypeIcon(RoomType roomType)
         {
-            return roomTypeSprites.TryGetValue(roomType, out var roomIcon) ? roomIcon : defaultRoomTypeIcon;
+            return roomTypeSprites.GetValueOrDefault(roomType, defaultRoomTypeIcon);
         }
 
         public Sprite GetRoomFloorSprite(RoomFloorColor color)
