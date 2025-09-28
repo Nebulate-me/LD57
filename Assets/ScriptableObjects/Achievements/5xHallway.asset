@@ -18,10 +18,11 @@ MonoBehaviour:
     \u041D\u043E \u0432\u0435\u0434\u044C \u0437\u0430\u043A\u0430\u0437\u0447\u0438\u043A
     \u043F\u0440\u043E\u0441\u0438\u043B '\u043F\u0440\u043E\u0441\u0442\u043E\u0440\u043D\u043E',
     \u0442\u0430\u043A?"
-  conditionText: "\u041F\u043E\u0441\u0442\u0440\u043E\u0438\u043B 5 \u043A\u043E\u0440\u0438\u0434\u043E\u0440\u043E\u0432"
+  conditionText: "5 \u043A\u043E\u0440\u0438\u0434\u043E\u0440\u043E\u0432"
   points: 5
   achievementType: 2
   apartmentRoomCountType: 3
-  requiredCompletedApartments: 1
+  requiredApartments: 1
   roomType: 7
   requiredRooms: 5
+  withWindows: 0

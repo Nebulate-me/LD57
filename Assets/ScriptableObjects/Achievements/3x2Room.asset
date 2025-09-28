@@ -16,9 +16,11 @@ MonoBehaviour:
   description: "\u041E\u0434\u043D\u0430 \u043A\u043E\u043C\u043D\u0430\u0442\u0430
     \u0445\u043E\u0440\u043E\u0448\u043E, \u0430 \u0434\u0432\u0435 - \u0435\u0449\u0435
     \u043B\u0443\u0447\u0448\u0435!"
-  conditionText: "\u0421\u0434\u0430\u043B 3 \u0434\u0432\u0443\u0445\u043A\u043E\u043C\u043D\u0430\u0442\u043D\u044B\u0435
-    \u043A\u0432\u0430\u0440\u0442\u0438\u0440\u044B"
+  conditionText: "3 \u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0434\u0432\u0443\u0448\u043A\u0438"
   points: 40
   achievementType: 1
   apartmentRoomCountType: 2
-  requiredCompletedApartments: 3
+  requiredApartments: 3
+  roomType: 7
+  requiredRooms: 1
+  withWindows: 0
