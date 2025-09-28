@@ -12,6 +12,7 @@ namespace _Scripts.Mascot
         Windows = 3,
         Space = 4,
         Doors = 5,
+        HighlightWindows = 6
     }
     
     [Serializable]

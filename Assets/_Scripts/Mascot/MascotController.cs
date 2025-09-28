@@ -207,6 +207,12 @@ namespace _Scripts.Mascot
 
             if (stepConfig.ActionType == MascotTutorialActionType.ClickAny)
             {
+                if (stepConfig.TargetType == MascotTutorialTargetType.Building && stepConfig.BuildingPanelTargetType ==
+                    MascotTutorialBuildingTargetType.HighlightWindows)
+                {
+                    SignalsHub.DispatchAsync(new UnhighlightWindowsSignal());
+                }
+                
                 ShowNextStep();
                 return;
             }
@@ -303,6 +309,10 @@ namespace _Scripts.Mascot
                     else if (stepConfig.BuildingPanelTargetType == MascotTutorialBuildingTargetType.Space)
                     {
                         _gridManager.ShowTutorialGhostRoom(stepConfig.BuildingSpaceRoomPosition, stepConfig.BuildingSpaceRoom.ToDto(), stepConfig.BuildingSpaceRoomDirection);
+                    } 
+                    else if (stepConfig.BuildingPanelTargetType == MascotTutorialBuildingTargetType.HighlightWindows)
+                    {
+                        SignalsHub.DispatchAsync(new HighlightWindowsSignal());
                     }
                     break;
                 }

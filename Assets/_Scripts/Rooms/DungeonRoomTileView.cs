@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Scripts.Mascot;
 using _Scripts.Missions.Apartment;
 using _Scripts.RoomTiles;
 using _Scripts.Utils;
@@ -26,6 +27,9 @@ namespace _Scripts.Rooms
         [Space]
         [SerializeField] private RoomDirectionToGameObjectDictionary doorObjects = new();
         [SerializeField] private RoomDirectionToGameObjectDictionary windowObjects = new();
+        [Space]
+        [SerializeField] private Color regularWindowColor = Color.white;
+        [SerializeField] private Color highlightedWindowColor = Color.red;
 
         [ShowInInspector, ReadOnly] private Vector2Int gridPosition;
         [ShowInInspector, ReadOnly] private RoomDirection direction;
@@ -73,6 +77,17 @@ namespace _Scripts.Rooms
         public RoomFloorColor FloorSprite
         {
             set => floorRenderer.sprite = _roomRegistry.GetRoomFloorSprite(value);
+        }
+
+        public Color WindowColor
+        {
+            set
+            {
+                foreach (var windowObject in windowObjects.Values)
+                {
+                    windowObject.GetComponent<SpriteRenderer>().color = value;
+                }
+            }
         }
 
         public void SetUp(RoomTileCellDto roomTileCell, Vector2Int initialGridPosition, Sprite roomFloorSprite,
@@ -220,6 +235,8 @@ namespace _Scripts.Rooms
             SignalsHub.AddListener<RoomTileRemovedSignal>(OnRoomTileRemoved);
             SignalsHub.AddListener<DungeonRoomGhostViewMovedSignal>(OnGhostViewMoved);
             SignalsHub.AddListener<ApartmentMissionCompletedSignal>(OnMissionCompleted);
+            SignalsHub.AddListener<HighlightWindowsSignal>(OnHighlightWindows);
+            SignalsHub.AddListener<UnhighlightWindowsSignal>(OnUnhighlightWindows);
         }
 
         public void OnDespawn()
@@ -228,11 +245,14 @@ namespace _Scripts.Rooms
             _tileDto = null;
             _adjacentTiles = new RoomDirectionToDungeonRoomTileViewDictionary();
             _adjacentGhostTiles = new RoomDirectionToDungeonRoomTileCellDtoDictionary();
+            WindowColor = regularWindowColor;
 
             SignalsHub.RemoveListener<RoomTilePlacedSignal>(OnRoomTilePlaced);
             SignalsHub.RemoveListener<RoomTileRemovedSignal>(OnRoomTileRemoved);
             SignalsHub.RemoveListener<DungeonRoomGhostViewMovedSignal>(OnGhostViewMoved);
             SignalsHub.RemoveListener<ApartmentMissionCompletedSignal>(OnMissionCompleted);
+            SignalsHub.RemoveListener<HighlightWindowsSignal>(OnHighlightWindows);
+            SignalsHub.RemoveListener<UnhighlightWindowsSignal>(OnUnhighlightWindows);
         }
 
         private void OnMissionCompleted(ApartmentMissionCompletedSignal signal)
@@ -282,6 +302,16 @@ namespace _Scripts.Rooms
                 }
             }
             UpdateDoors();
+        }
+        
+        private void OnUnhighlightWindows(UnhighlightWindowsSignal signal)
+        {
+            WindowColor = regularWindowColor;
+        }
+
+        private void OnHighlightWindows(HighlightWindowsSignal signal)
+        {
+            WindowColor = highlightedWindowColor;
         }
 
         private void AddAdjacentTile(DungeonRoomTileView dungeonRoomTileView)
