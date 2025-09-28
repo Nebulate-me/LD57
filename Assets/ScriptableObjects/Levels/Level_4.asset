@@ -41,6 +41,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cf20cf8a37bd50444aa98ebd6bd8398d, type: 2}
   - {fileID: 11400000, guid: e6ab93a5429c8154fb5754e65699c776, type: 2}
   - {fileID: 11400000, guid: 4b63c69263018d7499bda5f446f95ea4, type: 2}
+  - {fileID: 11400000, guid: 52a5e13b1fe2a904c9901388e6e751d3, type: 2}
   initialRooms:
   - {fileID: 11400000, guid: e982d24cd887b4e44aaecdef34b622c7, type: 2}
   - {fileID: 11400000, guid: 8132dac8c200e634f9c545e8c3c89bd2, type: 2}
@@ -57,7 +58,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 82827f3efef31d54b8f719793083f539, type: 2}
   - {fileID: 11400000, guid: a78e16d43c9c42c47b72489cebe978c2, type: 2}
   - {fileID: 11400000, guid: 292aba9d5e3b62a468fce3a20ab5572f, type: 2}
-  - {fileID: 11400000, guid: 65206c5c23fe19944ab937b19c367957, type: 2}
   - {fileID: 11400000, guid: 520cd83ac03311541947d4b50f1c4f6d, type: 2}
   initialMissions:
   - {fileID: 11400000, guid: d6ed78f5435d5264baea8cdc6acdfe80, type: 2}
