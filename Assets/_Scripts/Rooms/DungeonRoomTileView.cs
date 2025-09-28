@@ -85,7 +85,7 @@ namespace _Scripts.Rooms
             {
                 foreach (var windowObject in windowObjects.Values)
                 {
-                    windowObject.GetComponent<SpriteRenderer>().color = value;
+                    if (windowObject !=null) windowObject.GetComponent<SpriteRenderer>().color = value;
                 }
             }
         }
