@@ -342,6 +342,10 @@ MonoBehaviour:
   placeRoomSound: {fileID: 8300000, guid: 4aac60447c523df439d992077091bfbe, type: 3}
   completeMissionSound: {fileID: 8300000, guid: a5504e8c8f5a6cf4d8445d2e23c77a5d, type: 3}
   defeatSound: {fileID: 8300000, guid: 8b0b6ae49d0490f46937bea80b7591c5, type: 3}
+  redrawHandSound: {fileID: 8300000, guid: cc10f1be9d1f9b5459e51ce507427a7f, type: 3}
+  undoPlaceRoomSound: {fileID: 8300000, guid: 2249194503d019747bcc26049bd054c5, type: 3}
+  completeLevelSound: {fileID: 8300000, guid: 3153c18f49a554540ad3f4a2ed9281a5, type: 3}
+  completeGameSound: {fileID: 8300000, guid: c769b869d6e2bc54d96c06a73e69e79c, type: 3}
 --- !u!82 &6310118371499214439
 AudioSource:
   m_ObjectHideFlags: 0

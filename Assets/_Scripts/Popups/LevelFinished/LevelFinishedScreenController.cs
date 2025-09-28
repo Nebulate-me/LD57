@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _Scripts.Achievements;
+using _Scripts.Game;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Popups.GameFinished;
@@ -63,6 +64,7 @@ namespace _Scripts.Popups.LevelFinished
         [Inject] private IGameTimerController _gameTimerController;
         [Inject] private IScreenManager _screenManager;
         [Inject] private IAchievementManager _achievementManager;
+        [Inject] private ISoundManager _soundManager;
         [Inject] private IPrefabPool _prefabPool;
 
         protected override PopupType Type => PopupType.LevelFinished;
@@ -179,6 +181,7 @@ namespace _Scripts.Popups.LevelFinished
             await UniTask.WhenAll(new List<UniTask> {octopusMove, sunglassesMove, popupFade});
             await medalCanvaGroup.DOFade(1f, sunglassesMoveDuration - halfOctopusMoveDuration)
                 .AsyncWaitForCompletion().AsUniTask();
+            _soundManager.PlaySound(_scoreManager.IsGameFinished ? SoundType.CompleteGame : SoundType.CompleteLevel);
         }
     }
 }

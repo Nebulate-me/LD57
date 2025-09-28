@@ -23,6 +23,7 @@ namespace _Scripts.Game
         [Inject] private IDungeonGridManager _dungeonGridManager;
         [Inject] private IGameTimerController _gameTimerController;
         [Inject] private IScoreManager _scoreManager;
+        [Inject] private ISoundManager _soundManager;
 
         private void OnEnable()
         {
@@ -66,6 +67,7 @@ namespace _Scripts.Game
         
         private void OnUndo()
         {
+            _soundManager.PlaySound(SoundType.UndoPlaceRoom);
             _dungeonGridManager.UndoLastRoomPlacement();
             _scoreManager.SubtractScore(redrawCostScore);
             SetIsEnabled(_dungeonGridManager.CanUndoRoomPlacement);

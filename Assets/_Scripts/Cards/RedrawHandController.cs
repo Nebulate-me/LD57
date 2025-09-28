@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Game;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using Signals;
@@ -20,6 +21,7 @@ namespace _Scripts.Cards
 
         [Inject] private IHandManager _handManager;
         [Inject] private IScoreManager _scoreManager;
+        [Inject] private ISoundManager _soundManager;
 
         private void OnEnable()
         {
@@ -62,6 +64,7 @@ namespace _Scripts.Cards
         {
             if (_isDisabled)  return;
             
+            _soundManager.PlaySound(SoundType.RedrawHand);
             _handManager.RedrawRoomHand();
             _scoreManager.SubtractScore(redrawCostScore);
         }

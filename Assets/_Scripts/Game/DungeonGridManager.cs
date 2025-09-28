@@ -281,7 +281,9 @@ namespace _Scripts.Game
             handManager.TryPlaySelectRoomCard();
             handManager.RefillRoomHand();
 
-            soundManager.PlaySound(SoundType.PlaceRoom);
+            if (!selectedRoomDto.HasRoomType(RoomType.Shared))
+                soundManager.PlaySound(SoundType.PlaceRoom);
+            
             _roomGhostInstance.gameObject.SetActive(false);
         }
 

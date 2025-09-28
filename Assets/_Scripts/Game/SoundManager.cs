@@ -10,7 +10,11 @@ namespace _Scripts.Game
         [SerializeField] private AudioClip placeRoomSound;
         [SerializeField] private AudioClip completeMissionSound;
         [SerializeField] private AudioClip defeatSound;
-        
+        [SerializeField] private AudioClip redrawHandSound;
+        [SerializeField] private AudioClip undoPlaceRoomSound;
+        [SerializeField] private AudioClip completeLevelSound;
+        [SerializeField] private AudioClip completeGameSound;
+
         public void PlaySound(SoundType type)
         {
             switch (type)
@@ -25,6 +29,18 @@ namespace _Scripts.Game
                     break;
                 case SoundType.Defeat:
                     source.PlayOneShot(defeatSound);
+                    break;
+                case SoundType.RedrawHand:
+                    source.PlayOneShot(redrawHandSound);
+                    break;
+                case SoundType.UndoPlaceRoom:
+                    source.PlayOneShot(undoPlaceRoomSound);
+                    break;
+                case SoundType.CompleteLevel:
+                    source.PlayOneShot(completeLevelSound);
+                    break;
+                case SoundType.CompleteGame:
+                    source.PlayOneShot(completeGameSound);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);

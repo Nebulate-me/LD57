@@ -6,5 +6,9 @@ namespace _Scripts.Game
         PlaceRoom = 1,
         CompleteMission = 2,
         Defeat = 3,
+        RedrawHand = 4,
+        UndoPlaceRoom = 5,
+        CompleteLevel = 6,
+        CompleteGame = 7,
     }
 }
