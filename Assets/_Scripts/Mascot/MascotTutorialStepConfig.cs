@@ -16,6 +16,7 @@ namespace _Scripts.Mascot
         [ShowIf(nameof(IsBottomPanelTargetTypeRoomCard)), SerializeField] private Room bottomPanelTargetRoom;
         
         [ShowIf(nameof(IsTargetBuilding)), SerializeField] private MascotTutorialBuildingTargetType buildingTargetType;
+        
         [ShowIf(nameof(IsBuildingTargetTypeSpace)), SerializeField] private Vector2Int bottomLeftTargetCoordinate;
         [ShowIf(nameof(IsBuildingTargetTypeSpace)), SerializeField] private Vector2Int topRightTargetCoordinate;
 

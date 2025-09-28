@@ -295,7 +295,13 @@ namespace _Scripts.Mascot
                 case MascotTutorialTargetType.Building:
                 {
                     if (buildingTutorialTargets.TryGetValue(stepConfig.BuildingPanelTargetType, out var stepTarget))
+                    {
                         stepTarget.SetActive(true);
+                    }
+                    else if (stepConfig.BuildingPanelTargetType == MascotTutorialBuildingTargetType.Space)
+                    {
+                           
+                    }
                     break;
                 }
                 case MascotTutorialTargetType.None:
