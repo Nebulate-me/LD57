@@ -100,7 +100,7 @@ namespace _Scripts.Popups.LevelFinished
             }
             
             achievementContainer.DespawnChildren(_prefabPool);
-            foreach (var unlockedAchievement in _achievementManager.GetUnlockedAchievements())
+            foreach (var unlockedAchievement in _achievementManager.GetUnscoredAchievements())
             {
                 var achievementView = _prefabPool.Spawn(achievementViewPrefab, achievementContainer).GetComponent<AchievementView>();
                 achievementView.SetUp(unlockedAchievement);
@@ -134,6 +134,7 @@ namespace _Scripts.Popups.LevelFinished
 
         private void OnContinueButtonClicked()
         {
+            _achievementManager.ScoreUnlockedAchievements();
             if (_scoreManager.IsGameFinished)
             {
                 _screenManager.GoToHighScoreScreen();
@@ -147,6 +148,7 @@ namespace _Scripts.Popups.LevelFinished
 
         private void OnBackToMainMenuButtonClicked()
         {
+            _achievementManager.ScoreUnlockedAchievements();
             _screenManager.GoToMainMenuScreen();
         }
 

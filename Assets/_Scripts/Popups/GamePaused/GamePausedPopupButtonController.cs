@@ -17,7 +17,7 @@ namespace _Scripts.Popups.GamePaused
         
         private void OnDisable()
         {
-            button.onClick.AddListener(OnClick);
+            button.onClick.RemoveListener(OnClick);
         }
 
         private void OnClick()

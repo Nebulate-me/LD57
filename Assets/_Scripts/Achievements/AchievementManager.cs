@@ -143,13 +143,23 @@ namespace _Scripts.Achievements
             return _unlockedAchievements;
         }
 
-        public int ScoreUnlockedAchievements()
+        public IEnumerable<Achievement> GetUnscoredAchievements()
+        {
+            return _unlockedAchievements.Except(_scoredAchievements);
+        }
+
+        public int GetUnlockedAchievementsScore()
         {
             var unscoredAchievements = _unlockedAchievements.Where(a => !_scoredAchievements.Contains(a)).ToList();
             var unlockedSum = unscoredAchievements.Sum(a => a.Points);
-            _scoredAchievements.AddRange(unscoredAchievements);
-            
+
             return unlockedSum;
+        }
+
+        public void ScoreUnlockedAchievements()
+        {
+            var unscoredAchievements = _unlockedAchievements.Where(a => !_scoredAchievements.Contains(a)).ToList();
+            _scoredAchievements.AddRange(unscoredAchievements);
         }
 
         private bool IsUnlocked(Achievement a) => _unlockedAchievements.Any(unlockedAchievement => unlockedAchievement.Id == a.Id);
