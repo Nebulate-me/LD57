@@ -77,7 +77,7 @@ namespace _Scripts.Visuals
                     if (IsPositionWithinLevel(treePosition)) continue;
                     if ((isXOdd && !isYOdd) || (!isXOdd && isYOdd)) continue;
                     
-                    var tree = _prefabPool.Spawn(treePrefab);
+                    var tree = _prefabPool.Spawn(treePrefab, levelPlantParent);
                     tree.transform.position = treePosition;
                     _plants.Add(tree);
                 }
