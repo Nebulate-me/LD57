@@ -114,7 +114,6 @@ namespace _Scripts.Popups.LevelFinished
             base.OnHidePopup();
 
             bodyCanvasGroup.alpha = 0;
-            _gameTimerController.StartTimer();
         }
 
         protected override void SetupSubscriptions()
@@ -142,6 +141,7 @@ namespace _Scripts.Popups.LevelFinished
             }
 
             HidePopup();
+            _gameTimerController.StartTimer(); // ? Should the timer listen to the signal instead?
             SignalsHub.DispatchAsync(new StartNextLevelSignal());
         }
 

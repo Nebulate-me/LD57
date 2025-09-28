@@ -77,12 +77,10 @@ namespace _Scripts.Game.Timer
             if (!_isEnabled) return;
             if (!_isPaused)
             {
-                // _gameTimerController.PauseTimer();
                 SignalsHub.DispatchAsync(new ShowPopupSignal(PopupType.GamePaused));
             }
             else
             {
-                // _gameTimerController.StartTimer();
                 SignalsHub.DispatchAsync(new HidePopupSignal());
             }
         }

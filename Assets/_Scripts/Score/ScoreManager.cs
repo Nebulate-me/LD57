@@ -147,14 +147,6 @@ namespace _Scripts.Score
             return currentRank;
         }
         
-
-        public void RestartGame()
-        {
-            // TODO: Ask in a popup whether Player really wants to restart
-            string currentSceneName = SceneManager.GetActiveScene().name;
-            SceneManager.LoadScene(currentSceneName);
-        }
-        
         public void StartGame()
         {
             IsGameFinished = false;

@@ -100,7 +100,7 @@ namespace _Scripts.Popups.GamePaused
         private void OnReturnToGame()
         {
             HidePopup();
-            _gameTimerController.StartTimer();
+            _gameTimerController.ResumeTimer();
         }
         
         private void OnExitToMainMenu()
