@@ -79,7 +79,7 @@ namespace _Scripts.Screens
         {
 #if UNITY_EDITOR
             EditorApplication.ExitPlaymode();
-#elif UNITY_STANDALONE_WIN
+#elif UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
             Application.Quit();
 #endif
         }

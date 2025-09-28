@@ -15,6 +15,8 @@ namespace _Scripts.Game
         [SerializeField] private Button undoButton;
         [SerializeField] private int redrawCostScore = 5;
         
+        [Space, SerializeField] private bool disablePermanently = false; // FIXME: Not usable in the Tutorial
+        
         [ShowInInspector, ReadOnly] private bool _isEnabled = false;
         [ShowInInspector, ReadOnly] private bool _isPaused = false;
         
@@ -77,7 +79,7 @@ namespace _Scripts.Game
         
         private void SetIsEnabled(bool isEnabled)
         {
-            _isEnabled = isEnabled;
+            _isEnabled = isEnabled && !disablePermanently;
             UpdateButtonInteractable();
         }
 
