@@ -223,7 +223,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 510, y: -30}
-  m_SizeDelta: {x: 218.96, y: 100}
+  m_SizeDelta: {x: 218.96, y: 125}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4830660616878579067
 CanvasRenderer:
@@ -554,7 +554,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2906513987418195209
 RectTransform:
   m_ObjectHideFlags: 0
@@ -695,7 +695,7 @@ RectTransform:
   m_Father: {fileID: 5919872911174161104}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1081,7 +1081,7 @@ RectTransform:
   m_Father: {fileID: 350870312255224519}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1158,7 +1158,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 592, y: 592}
-  m_SizeDelta: {x: 218.96, y: 100}
+  m_SizeDelta: {x: 300, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1187132413674882170
 CanvasRenderer:
@@ -1393,7 +1393,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6218339182986037175}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -1545,12 +1545,12 @@ MonoBehaviour:
   octopusTransform: {fileID: 5773883090125228614}
   octopusAnimator: {fileID: 4190469353233125134}
   octopusInitialPosition: {x: 511.4001, y: 0, z: 0}
-  octopusFinalPosition: {x: 1658.5, y: 0, z: 0}
+  octopusFinalPosition: {x: 1755.77, y: 0, z: 0}
   octopusMoveDuration: 2
   octopusTurnDuration: 1.25
   sunglassesTransform: {fileID: 7293765333712838650}
   sunglassesInitialPosition: {x: 515, y: 592, z: 0}
-  sunglassesFinalPosition: {x: 515, y: 76, z: 0}
+  sunglassesFinalPosition: {x: 515, y: 110.4, z: 0}
   sunglassesMoveDuration: 1
   medalCanvaGroup: {fileID: 9005409021389036213}
 --- !u!1 &6404754262184244726
@@ -1713,7 +1713,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8572070937960032653
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2805,11 +2805,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 193371153793695723, guid: a516ea7f781b13b4582155e77a645989, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 320
+      value: 480
       objectReference: {fileID: 0}
     - target: {fileID: 193371153793695723, guid: a516ea7f781b13b4582155e77a645989, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 320
+      value: 480
       objectReference: {fileID: 0}
     - target: {fileID: 193371153793695723, guid: a516ea7f781b13b4582155e77a645989, type: 3}
       propertyPath: m_LocalPosition.x
