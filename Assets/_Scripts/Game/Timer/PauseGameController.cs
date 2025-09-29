@@ -75,7 +75,7 @@ namespace _Scripts.Game.Timer
         private void OnPauseButtonClicked()
         {
             if (!_isEnabled) return;
-            if (!_isPaused)
+            if (!_isPaused || _gameTimerController.PauseLockedByTutorial)
             {
                 SignalsHub.DispatchAsync(new ShowPopupSignal(PopupType.GamePaused));
             }

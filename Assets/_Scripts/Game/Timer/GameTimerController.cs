@@ -23,7 +23,7 @@ namespace _Scripts.Game.Timer
 
         public float RemainingSeconds { get; private set; }
         public bool IsRunning { get; private set; }
-        
+        public bool PauseLockedByTutorial { get; set; }
 
         private void Awake()
         {
@@ -67,17 +67,19 @@ namespace _Scripts.Game.Timer
             SignalsHub.DispatchAsync(new GameTimerStartedSignal());
         }
 
-        public void PauseTimer()
+        public void PauseTimer(bool isTutorial = false)
         {
+            if (isTutorial) PauseLockedByTutorial = true;
             IsRunning = false;
             SignalsHub.DispatchAsync(new GameTimerPausedSignal());
         }
 
-        public void ResumeTimer()
+        public void ResumeTimer(bool isTutorial = false)
         {
-            if (RemainingSeconds > 0f)
+            if (RemainingSeconds > 0f && (isTutorial || !PauseLockedByTutorial))
             {
                 IsRunning = true;
+                PauseLockedByTutorial = false;
                 SignalsHub.DispatchAsync(new GameTimerStartedSignal());
             }
         }

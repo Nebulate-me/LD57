@@ -60,6 +60,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   popup: {fileID: 5008999760835612163}
   showOnStartUp: 0
+  nextLevelButton: {fileID: 7807158365449277350}
+  disableNextLevelButton: 0
   buttonTooltip: {fileID: 4364108985076371687}
   buttonTooltipTexts:
     keyData: 010000000200000003000000
@@ -333,7 +335,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: -903166840, guid: 70aa5fa4c93d70b418151d7eb584e292, type: 3}
     m_PressedSprite: {fileID: -903166840, guid: 70aa5fa4c93d70b418151d7eb584e292, type: 3}
     m_SelectedSprite: {fileID: -903166840, guid: 70aa5fa4c93d70b418151d7eb584e292, type: 3}
-    m_DisabledSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 1547852844, guid: 70aa5fa4c93d70b418151d7eb584e292, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -469,7 +471,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: -903166840, guid: 70aa5fa4c93d70b418151d7eb584e292, type: 3}
     m_PressedSprite: {fileID: -903166840, guid: 70aa5fa4c93d70b418151d7eb584e292, type: 3}
     m_SelectedSprite: {fileID: -903166840, guid: 70aa5fa4c93d70b418151d7eb584e292, type: 3}
-    m_DisabledSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 1547852844, guid: 70aa5fa4c93d70b418151d7eb584e292, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -670,7 +672,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: -903166840, guid: 70aa5fa4c93d70b418151d7eb584e292, type: 3}
     m_PressedSprite: {fileID: -903166840, guid: 70aa5fa4c93d70b418151d7eb584e292, type: 3}
     m_SelectedSprite: {fileID: -903166840, guid: 70aa5fa4c93d70b418151d7eb584e292, type: 3}
-    m_DisabledSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 1547852844, guid: 70aa5fa4c93d70b418151d7eb584e292, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted

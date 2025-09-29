@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Game;
 using _Scripts.Game.Timer;
 using _Scripts.Missions;
 using _Scripts.Rooms;
@@ -7,6 +8,7 @@ using Plugins.Sirenix.Odin_Inspector.Modules;
 using Signals;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace _Scripts.Popups.GamePaused
@@ -14,6 +16,9 @@ namespace _Scripts.Popups.GamePaused
     public class GamePausedPopupController : BasePopupController
     {
         protected override PopupType Type => PopupType.GamePaused;
+        
+        [SerializeField] private Button nextLevelButton;
+        [SerializeField] private bool disableNextLevelButton;
         
         [Header("Button Tooltip")]
         [SerializeField] private TextMeshProUGUI buttonTooltip;
@@ -23,6 +28,7 @@ namespace _Scripts.Popups.GamePaused
         [Inject] private IScreenManager _screenManager;
         [Inject] private IScoreManager _scoreManager;
         [Inject] private IDungeonGridManager _dungeonGridManager;
+        [Inject]  private IGameManager _gameManager;
 
         private void Start()
         {
@@ -50,7 +56,8 @@ namespace _Scripts.Popups.GamePaused
         protected override void OnShowPopup()
         {
             base.OnShowPopup();
-            
+
+            nextLevelButton.interactable = !disableNextLevelButton && _gameManager.NextLevelExists;
             _gameTimerController.PauseTimer();
         }
         

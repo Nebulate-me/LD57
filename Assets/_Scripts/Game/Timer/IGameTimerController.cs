@@ -5,9 +5,10 @@ namespace _Scripts.Game.Timer
     public interface IGameTimerController
     {
         UnityEvent OnTimerFinished { get; }
-        public bool IsRunning { get; }
+        bool IsRunning { get; }
+        bool PauseLockedByTutorial { get; set; }
         void StartTimer();
-        void ResumeTimer();
-        void PauseTimer();
+        void PauseTimer(bool isTutorial = false);
+        void ResumeTimer(bool isTutorial = false);
     }
 }

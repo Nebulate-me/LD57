@@ -224,7 +224,7 @@ namespace _Scripts.Mascot
             }
 
             SetTutorialTarget(stepConfig);
-            _gameTimerController.ResumeTimer();
+            _gameTimerController.ResumeTimer(isTutorial: true);
             Hide();
         }
 
@@ -325,7 +325,7 @@ namespace _Scripts.Mascot
 
         private void SetTutorialAction(MascotTutorialStepConfig stepConfig)
         {
-            _gameTimerController.PauseTimer();
+            _gameTimerController.PauseTimer(isTutorial: true);
         }
 
         private IEnumerator FadeInThenType()

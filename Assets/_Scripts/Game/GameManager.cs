@@ -95,5 +95,7 @@ namespace _Scripts.Game
             level = levels[_currentLevelIndex];
             return true;
         }
+
+        public bool NextLevelExists => _currentLevelIndex < levels.Count - 1;
     }
 }
