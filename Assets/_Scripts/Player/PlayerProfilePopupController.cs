@@ -37,8 +37,6 @@ namespace _Scripts.Player
                 group.interactable = false;
                 group.blocksRaycasts = false;
             }
-
-            gameObject.SetActive(false);
         }
 
         private void OnEnable()
@@ -64,8 +62,7 @@ namespace _Scripts.Player
             }
 
             RefreshUI();
-
-            gameObject.SetActive(true);
+            
             if (group) StartCoroutine(Fade(0f, 1f, fadeDuration, true));
         }
 
@@ -75,10 +72,6 @@ namespace _Scripts.Player
             if (group)
             {
                 StartCoroutine(Fade(1f, 0f, fadeDuration, false));
-            }
-            else
-            {
-                gameObject.SetActive(false);
             }
         }
         
@@ -221,7 +214,6 @@ namespace _Scripts.Player
             {
                 group.interactable = false;
                 group.blocksRaycasts = false;
-                gameObject.SetActive(false);
             }
         }
     }

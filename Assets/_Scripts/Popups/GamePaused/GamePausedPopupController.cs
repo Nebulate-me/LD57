@@ -105,6 +105,7 @@ namespace _Scripts.Popups.GamePaused
         
         private void OnExitToMainMenu()
         {
+            _scoreManager.FinishLevel(_dungeonGridManager.EmptyRoomTilesCount);
             _screenManager.GoToMainMenuScreen();
         }
         

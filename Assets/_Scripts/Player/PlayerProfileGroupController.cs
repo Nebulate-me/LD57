@@ -31,12 +31,14 @@ namespace _Scripts.Player
 
         private void OpenPlayerNamePopup()
         {
+            playerProfilePopupController.gameObject.SetActive(true);
             playerProfilePopupController.Open();
         }
         
         private void OnPlayerProfilePopupClosed(PlayerProfilePopupClosedSignal signal)
         {
             UpdatePlayerProfileName();
+            playerProfilePopupController.gameObject.SetActive(false);
         }
 
         private void Start()
