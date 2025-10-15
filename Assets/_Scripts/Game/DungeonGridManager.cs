@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Scripts.Cards;
@@ -35,13 +34,16 @@ namespace _Scripts.Game
 
         private DungeonRoomTileGhostView _roomTileGhostInstance;
         private DungeonRoomGhostView _roomGhostInstance;
-        private DungeonRoomGhostView _tutorialGhostInstance;
         private List<DungeonRoomTileView> _roomTiles = new();
         [ShowInInspector, ReadOnly] private List<DungeonRoomModel> _rooms = new();
         [ShowInInspector, ReadOnly] private Stack<DungeonRoomModel> _lastPlacedRooms = new();
         [ShowInInspector, ReadOnly] private RoomDirection _currentDirection = RoomDirectionExtensions.Default;
 
         private IMaybe<Level> _maybeCurrentLevel = Maybe.Empty<Level>();
+
+        private bool _isTutorialRoomEnabled = false;
+        private DungeonRoomGhostView _tutorialGhostInstance;
+        private RoomSettings _tutorialRoomSettings;
 
         public void Initialize()
         {
@@ -150,6 +152,14 @@ namespace _Scripts.Game
 
         private bool IsRoomPositionValid(Vector2Int gridPosition, RoomDto roomDto, RoomDirection roomDirection)
         {
+            if (_isTutorialRoomEnabled &&
+                (gridPosition != _tutorialRoomSettings.GridPosition ||
+                 roomDirection != _tutorialRoomSettings.RoomDirection ||
+                 roomDto.Name != _tutorialRoomSettings.RoomDto.Name))
+            {
+                return false;
+            }
+            
             var rotatedRoomDto = roomDto.Rotate(roomDirection);
             var roomStartingPosition = rotatedRoomDto.StartingPosition;
             var roomPositions = rotatedRoomDto.Tiles
@@ -158,7 +168,6 @@ namespace _Scripts.Game
             if (!roomPositions.All(IsPositionEmpty) || !roomPositions.All(IsPositionInsideLevelBounds)) return false;
             
             var adjacentPositions = roomPositions.Where(IsPositionAdjacent).ToList();
-            // if (adjacentPositions.IsEmpty()) return false;
 
             return AreAllAdjacentPositionsValid(gridPosition, rotatedRoomDto, adjacentPositions);
         }
@@ -374,6 +383,9 @@ namespace _Scripts.Game
 
         public void ShowTutorialGhostRoom(Vector2Int gridPosition, RoomDto roomDto, RoomDirection direction)
         {
+            _isTutorialRoomEnabled = true;
+            _tutorialRoomSettings = new RoomSettings(roomDto, gridPosition, direction);
+            
             var snappedPosition = GridToWorld(gridPosition);
             _tutorialGhostInstance.transform.position = snappedPosition;
             _tutorialGhostInstance.SetUpValid(roomDto, direction);
@@ -383,6 +395,8 @@ namespace _Scripts.Game
 
         public void HideTutorialGhostRoom()
         {
+            _isTutorialRoomEnabled = false;
+            _tutorialRoomSettings = null;
             _tutorialGhostInstance.gameObject.SetActive(false);   
         }
     }

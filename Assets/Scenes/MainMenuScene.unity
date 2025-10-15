@@ -2297,7 +2297,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.125, y: 0.15}
   m_AnchorMax: {x: 0.375, y: 0.7}
-  m_AnchoredPosition: {x: 0, y: -0.000091552734}
+  m_AnchoredPosition: {x: 0, y: -0.00012207031}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1687916098
@@ -3571,6 +3571,10 @@ MonoBehaviour:
   placeRoomSound: {fileID: 8300000, guid: 4aac60447c523df439d992077091bfbe, type: 3}
   completeMissionSound: {fileID: 8300000, guid: a5504e8c8f5a6cf4d8445d2e23c77a5d, type: 3}
   defeatSound: {fileID: 8300000, guid: 8b0b6ae49d0490f46937bea80b7591c5, type: 3}
+  redrawHandSound: {fileID: 0}
+  undoPlaceRoomSound: {fileID: 0}
+  completeLevelSound: {fileID: 0}
+  completeGameSound: {fileID: 0}
 --- !u!4 &7329361128347121647
 Transform:
   m_ObjectHideFlags: 0
