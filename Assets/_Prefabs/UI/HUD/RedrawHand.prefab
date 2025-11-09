@@ -79,6 +79,7 @@ MonoBehaviour:
   container: {fileID: 6163865850066469679}
   redrawHandButton: {fileID: 5330046053479050737}
   redrawCostScore: 5
+  disablePermanently: 1
 --- !u!1 &2833063418565861251
 GameObject:
   m_ObjectHideFlags: 0
