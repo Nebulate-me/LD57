@@ -98,8 +98,11 @@ namespace _Scripts.Cards
             {
                 var roomTileCellView = _prefabPool.Spawn(roomTileCellPrefab, roomCellContainer).GetComponent<RoomTileCellView>();
                 roomTileCellView.SetUp(roomTileCell);
-                roomTileCellView.transform.position = roomCellContainer.transform.position +
-                                                      (roomTileCell.Position.ToVector3() - roomCenter) * cellSize;
+                // roomTileCellView.transform.position = roomCellContainer.transform.position + (roomTileCell.Position.ToVector3() - roomCenter) * cellSize;
+                var offset = (roomTileCell.Position.ToVector3() - roomCenter) * cellSize;
+                var rect = roomTileCellView.GetComponent<RectTransform>();
+                rect.anchoredPosition = offset;
+                
                 _roomTilCellViews.Add(roomTileCellView);
             }
         }

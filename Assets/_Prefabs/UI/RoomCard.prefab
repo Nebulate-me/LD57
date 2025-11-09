@@ -231,7 +231,7 @@ MonoBehaviour:
   roomIconContainer: {fileID: 8378325446116478048}
   roomCellContainer: {fileID: 4102322438012558091}
   roomTileCellPrefab: {fileID: 1656063877687298406, guid: 32c50fcf838e00248b65c332f5588a9c, type: 3}
-  cellSize: 0.45
+  cellSize: 49
   cardBackgroundImage: {fileID: 8769406929062773075}
   deselectedCardBackgroundSprite: {fileID: -2105231415, guid: 7e7547d4dc7cc9a4aa0e1461bf0bcdf7, type: 3}
   hoveredCardBackgroundSprite: {fileID: -69317486, guid: 7e7547d4dc7cc9a4aa0e1461bf0bcdf7, type: 3}
