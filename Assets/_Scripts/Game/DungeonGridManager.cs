@@ -23,14 +23,13 @@ namespace _Scripts.Game
         [Space]
         [SerializeField] private Vector2 mousePositionOffset;
         [SerializeField] private List<RectTransform> unclickableScreenAreas;
-        [SerializeField] private SpriteRenderer levelBuildingBackground;
 
-        [Inject] private IRoomRegistry roomRegistry;
-        [Inject] private IHandManager handManager;
-        [Inject] private IPrefabPool prefabPool;
-        [Inject] private IDungeonCameraController dungeonCameraController;
-        [Inject] private ISoundManager soundManager;
-        [Inject(Id = "uiCamera")] private Camera uiCamera;
+        [Inject] private IRoomRegistry _roomRegistry;
+        [Inject] private IHandManager _handManager;
+        [Inject] private IPrefabPool _prefabPool;
+        [Inject] private IDungeonCameraController _dungeonCameraController;
+        [Inject] private ISoundManager _soundManager;
+        [Inject(Id = "uiCamera")] private Camera _uiCamera;
 
         private DungeonRoomTileGhostView _roomTileGhostInstance;
         private DungeonRoomGhostView _roomGhostInstance;
@@ -41,7 +40,7 @@ namespace _Scripts.Game
 
         private IMaybe<Level> _maybeCurrentLevel = Maybe.Empty<Level>();
 
-        private bool _isTutorialRoomEnabled = false;
+        private bool _isTutorialRoomEnabled;
         private DungeonRoomGhostView _tutorialGhostInstance;
         private RoomSettings _tutorialRoomSettings;
 
@@ -49,19 +48,18 @@ namespace _Scripts.Game
         {
             _currentDirection = RoomDirectionExtensions.Default;
             _roomTiles = new List<DungeonRoomTileView>();
-            unclickableScreenAreas.Select(RectTransformUtility.CalculateRelativeRectTransformBounds)
-                .ToList();
+            // unclickableScreenAreas.Select(RectTransformUtility.CalculateRelativeRectTransformBounds);
             
-            _roomGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
+            _roomGhostInstance = _prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
                 .GetComponent<DungeonRoomGhostView>();
-            _tutorialGhostInstance = prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
+            _tutorialGhostInstance = _prefabPool.Spawn(dungeonRoomGhostPrefab, roomContainer)
                 .GetComponent<DungeonRoomGhostView>();
             HideTutorialGhostRoom();
         }
 
         private void Update()
         {
-            if (!handManager.SelectedRoomCardView.TryGetValue(out var selectedRoomCardView))
+            if (!_handManager.SelectedRoomCardView.TryGetValue(out var selectedRoomCardView))
             {
                 _roomGhostInstance.gameObject.SetActive(false);
                 return;
@@ -71,12 +69,12 @@ namespace _Scripts.Game
             {
                 _roomGhostInstance.gameObject.SetActive(false);
                 SignalsHub.DispatchAsync(new DungeonRoomGhostViewMovedSignal(null, isValid: false));
-                handManager.DeselectRoomCard();
+                _handManager.DeselectRoomCard();
                 return;
             }
 
-            var mouseUI = dungeonCameraController.GetMouseUIPosition();
-            if (unclickableScreenAreas.Any(area => RectTransformUtility.RectangleContainsScreenPoint(area, mouseUI, uiCamera)))
+            var mouseUI = _dungeonCameraController.GetMouseUIPosition();
+            if (unclickableScreenAreas.Any(area => RectTransformUtility.RectangleContainsScreenPoint(area, mouseUI, _uiCamera)))
             {
                 _roomGhostInstance.gameObject.SetActive(false);
                 return;
@@ -87,7 +85,7 @@ namespace _Scripts.Game
             if (Input.mouseScrollDelta.y != 0)
                 RotateGhostView(Input.mouseScrollDelta.y > 0);
 
-            Vector2 mouseWorld = dungeonCameraController.GetMouseWorldPosition();
+            Vector2 mouseWorld = _dungeonCameraController.GetMouseWorldPosition();
             var gridPosition = WorldToGrid(mouseWorld);
             var snappedPosition = GridToWorld(gridPosition);
             // Debug.Log($"Mouse Position {mouseWorld}, gridPosition {gridPosition}, snappedPosition {snappedPosition}");
@@ -220,7 +218,7 @@ namespace _Scripts.Game
             _lastPlacedRooms.Clear();
             foreach (var roomModel in _rooms)
             {
-                roomModel.ClearTiles(prefabPool);
+                roomModel.ClearTiles(_prefabPool);
             }
             _rooms.Clear();
             _roomTiles.Clear();
@@ -238,7 +236,6 @@ namespace _Scripts.Game
                 PlaceRoom(roomDto.Room.ToDto().Rotate(roomDto.Direction), roomDto.Position);
             }
             
-            levelBuildingBackground.size = level.LevelSize;
             SignalsHub.DispatchAsync(new LevelSetupCompletedSignal(level));
         }
 
@@ -260,12 +257,12 @@ namespace _Scripts.Game
             var selectedRoomTiles = new List<DungeonRoomTileView>();
             var roomFloorSprite =
                 selectedRoomDto.RoomTypes.Contains(RoomType.Shared)
-                    ? roomRegistry.SharedRoomFloorSprite
-                    : roomRegistry.UnusedRoomFloorSprite;
+                    ? _roomRegistry.SharedRoomFloorSprite
+                    : _roomRegistry.UnusedRoomFloorSprite;
             
             foreach (var roomTileCell in rotatedRoomDto.Tiles)
             {
-                var dungeonRoomTile = prefabPool.Spawn(dungeonRoomTilePrefab, roomContainer)
+                var dungeonRoomTile = _prefabPool.Spawn(dungeonRoomTilePrefab, roomContainer)
                     .GetComponent<DungeonRoomTileView>();
                 var tileGridPosition = gridPosition + roomTileCell.Position - startingTilePosition;
                 dungeonRoomTile.transform.position = GridToWorld(tileGridPosition);
@@ -287,11 +284,11 @@ namespace _Scripts.Game
                 _lastPlacedRooms.Push(roomModel);
             
             SignalsHub.DispatchAsync(new RoomPlacedSignal(roomModel));
-            handManager.TryPlaySelectRoomCard();
-            handManager.RefillRoomHand();
+            _handManager.TryPlaySelectRoomCard();
+            _handManager.RefillRoomHand();
 
             if (!selectedRoomDto.HasRoomType(RoomType.Shared))
-                soundManager.PlaySound(SoundType.PlaceRoom);
+                _soundManager.PlaySound(SoundType.PlaceRoom);
             
             _roomGhostInstance.gameObject.SetActive(false);
         }
@@ -357,8 +354,8 @@ namespace _Scripts.Game
                     SignalsHub.DispatchAsync(new RoomTileRemovedSignal(tileView));
                 }
                 SignalsHub.DispatchAsync(new RoomRemovedSignal(lastPlacedRoom));
-                lastPlacedRoom.ClearTiles(prefabPool);
-                handManager.TryUnplayLastCard();
+                lastPlacedRoom.ClearTiles(_prefabPool);
+                _handManager.TryUnplayLastCard();
                 
                 return true;
             }

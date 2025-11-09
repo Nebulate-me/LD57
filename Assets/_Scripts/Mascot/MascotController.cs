@@ -212,6 +212,10 @@ namespace _Scripts.Mascot
                 {
                     SignalsHub.DispatchAsync(new UnhighlightWindowsSignal());
                 }
+                if (stepConfig.TargetType == MascotTutorialTargetType.Building && stepConfig.BuildingPanelTargetType == MascotTutorialBuildingTargetType.Floor)
+                {
+                    SignalsHub.DispatchAsync(new UnhighlightFloorSignal());
+                }
                 
                 ShowNextStep();
                 return;
@@ -313,6 +317,10 @@ namespace _Scripts.Mascot
                     else if (stepConfig.BuildingPanelTargetType == MascotTutorialBuildingTargetType.HighlightWindows)
                     {
                         SignalsHub.DispatchAsync(new HighlightWindowsSignal());
+                    }
+                    else if (stepConfig.BuildingPanelTargetType == MascotTutorialBuildingTargetType.Floor)
+                    {
+                        SignalsHub.DispatchAsync(new HighlightFloorSignal());
                     }
                     break;
                 }

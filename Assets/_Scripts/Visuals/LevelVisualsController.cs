@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using _Scripts.Game;
+using _Scripts.Mascot;
 using Signals;
 using UnityEngine;
 using Utilities;
@@ -11,8 +11,11 @@ namespace _Scripts.Visuals
 {
     public class LevelVisualsController : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer levelBuildingBackground;
+        [SerializeField] private SpriteRenderer levelBuildingBackgroundHighlight;
         [SerializeField] private GameObject levelBuildingPorch;
         
+        [Space]
         [SerializeField] private Transform levelPlantParent;
         [SerializeField] private GameObject bushPrefab;
         [SerializeField] private GameObject treePrefab;
@@ -32,11 +35,15 @@ namespace _Scripts.Visuals
         private void OnEnable()
         {
             SignalsHub.AddListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
+            SignalsHub.AddListener<HighlightFloorSignal>(OnHighlightFloor);
+            SignalsHub.AddListener<UnhighlightFloorSignal>(OnUnhighlightFloor);
         }
 
         private void OnDisable()
         {
             SignalsHub.RemoveListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
+            SignalsHub.RemoveListener<HighlightFloorSignal>(OnHighlightFloor);
+            SignalsHub.RemoveListener<UnhighlightFloorSignal>(OnUnhighlightFloor);
         }
 
         private void OnDestroy()
@@ -57,6 +64,14 @@ namespace _Scripts.Visuals
         private void OnLevelSetupCompleted(LevelSetupCompletedSignal signal)
         {
             _level = signal.Level;
+            
+            levelBuildingBackground.size = _level.LevelSize;
+            var highlightScaleMultiplier = levelBuildingBackgroundHighlight.transform.localScale.x > 0
+                ? (1f / levelBuildingBackgroundHighlight.transform.localScale.x)
+                : 1f;
+            levelBuildingBackgroundHighlight.size = new Vector2(_level.LevelSize.x * highlightScaleMultiplier + 0.1f, _level.LevelSize.y * highlightScaleMultiplier + 0.1f);
+            levelBuildingBackgroundHighlight.gameObject.SetActive(false);
+            
             levelBuildingPorch.transform.position = new Vector3(0, -_level.HalfLevelSize.y - levelOffset.y, 0);
             levelBuildingPorch.SetActive(_level.ShowPorch);
 
@@ -84,6 +99,16 @@ namespace _Scripts.Visuals
             }
         }
 
+        private void OnHighlightFloor(HighlightFloorSignal signal)
+        {
+            levelBuildingBackgroundHighlight.gameObject.SetActive(true);
+        }
+        
+        private void OnUnhighlightFloor(UnhighlightFloorSignal signal)
+        {
+            levelBuildingBackgroundHighlight.gameObject.SetActive(false);
+        }
+        
         private bool IsPositionWithinLevel(Vector3 treePosition)
         {
             return treePosition.x >= -_level.HalfLevelSize.x - levelOffset.x 
