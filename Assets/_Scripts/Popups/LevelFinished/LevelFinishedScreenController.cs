@@ -179,9 +179,9 @@ namespace _Scripts.Popups.LevelFinished
             fireworksAnimator.gameObject.SetActive(false);
 
             await UniTask.WhenAll(new List<UniTask> {octopusMove, sunglassesMove, popupFade});
+            _soundManager.PlaySound(_scoreManager.IsGameFinished ? SoundType.CompleteGame : SoundType.CompleteLevel);
             await medalCanvaGroup.DOFade(1f, sunglassesMoveDuration - halfOctopusMoveDuration)
                 .AsyncWaitForCompletion().AsUniTask();
-            _soundManager.PlaySound(_scoreManager.IsGameFinished ? SoundType.CompleteGame : SoundType.CompleteLevel);
         }
     }
 }
