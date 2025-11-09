@@ -213,7 +213,7 @@ namespace _Scripts.Mascot
                     SignalsHub.DispatchAsync(new UnhighlightWindowsSignal());
                 }
                 if (stepConfig.TargetType == MascotTutorialTargetType.Building && 
-                    stepConfig.BuildingPanelTargetType is MascotTutorialBuildingTargetType.Floor or MascotTutorialBuildingTargetType.AllWindows)
+                    stepConfig.BuildingPanelTargetType is MascotTutorialBuildingTargetType.Floor or MascotTutorialBuildingTargetType.AllWindows or MascotTutorialBuildingTargetType.SharedRooms or MascotTutorialBuildingTargetType.Doors)
                 {
                     SignalsHub.DispatchAsync(new UnhighlightBuildingSignal());
                 }
@@ -311,7 +311,7 @@ namespace _Scripts.Mascot
                     {
                         stepTarget.SetActive(true);
                     }
-                    else switch (stepConfig.BuildingPanelTargetType)
+                    switch (stepConfig.BuildingPanelTargetType)
                     {
                         case MascotTutorialBuildingTargetType.Space:
                             _gridManager.ShowTutorialGhostRoom(stepConfig.BuildingSpaceRoomPosition, stepConfig.BuildingSpaceRoom.ToDto(), stepConfig.BuildingSpaceRoomDirection);
@@ -320,10 +320,10 @@ namespace _Scripts.Mascot
                             SignalsHub.DispatchAsync(new HighlightWindowsSignal());
                             break;
                         case MascotTutorialBuildingTargetType.Floor:
-                            SignalsHub.DispatchAsync(new HighlightBuildingSignal(BuildingHighlightType.Floor));
-                            break;
                         case MascotTutorialBuildingTargetType.AllWindows:
-                            SignalsHub.DispatchAsync(new HighlightBuildingSignal(BuildingHighlightType.AllWindows));
+                        case MascotTutorialBuildingTargetType.SharedRooms:
+                        case MascotTutorialBuildingTargetType.Doors:
+                            SignalsHub.DispatchAsync(new HighlightBuildingSignal(stepConfig.BuildingPanelTargetType));
                             break;
                     }
                     break;

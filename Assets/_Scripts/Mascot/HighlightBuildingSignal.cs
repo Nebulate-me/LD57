@@ -2,18 +2,12 @@ namespace _Scripts.Mascot
 {
     public readonly struct HighlightBuildingSignal
     {
-        public HighlightBuildingSignal(BuildingHighlightType buildingHighlightType)
+        public HighlightBuildingSignal(MascotTutorialBuildingTargetType targetType)
         {
-            BuildingHighlightType = buildingHighlightType;
+            TargetType = targetType;
         }
 
-        public BuildingHighlightType BuildingHighlightType { get; }
-    }
-
-    public enum BuildingHighlightType
-    {
-        Floor = 0,
-        AllWindows = 1
+        public MascotTutorialBuildingTargetType TargetType { get; }
     }
 
     public readonly struct UnhighlightBuildingSignal

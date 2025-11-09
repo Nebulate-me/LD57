@@ -12,11 +12,15 @@ namespace _Scripts.Visuals
 {
     public class LevelVisualsController : MonoBehaviour
     {
+        [SerializeField] private GameObject levelBuildingPorch;
+        
+        [Header("Level Background")]
         [SerializeField] private SpriteRenderer levelBuildingBackground;
         [SerializeField] private SpriteRenderer levelBuildingBackgroundHighlight;
         [SerializeField] private Sprite levelBuildingBackgroundHighlightFloorSprite;
         [SerializeField] private Sprite levelBuildingBackgroundHighlightAllWindowsSprite;
-        [SerializeField] private GameObject levelBuildingPorch;
+        [SerializeField] private GameObject levelBuildingSharedRoomsHighlight;
+        [SerializeField] private GameObject levelBuildingDoorsHighlight;
         
         [Space]
         [SerializeField] private Transform levelPlantParent;
@@ -74,6 +78,8 @@ namespace _Scripts.Visuals
                 : 1f;
             levelBuildingBackgroundHighlight.size = new Vector2(_level.LevelSize.x * highlightScaleMultiplier + 0.1f, _level.LevelSize.y * highlightScaleMultiplier + 0.1f);
             levelBuildingBackgroundHighlight.gameObject.SetActive(false);
+            levelBuildingSharedRoomsHighlight.SetActive(false);
+            levelBuildingDoorsHighlight.SetActive(false);
             
             levelBuildingPorch.transform.position = new Vector3(0, -_level.HalfLevelSize.y - levelOffset.y, 0);
             levelBuildingPorch.SetActive(_level.ShowPorch);
@@ -104,18 +110,32 @@ namespace _Scripts.Visuals
 
         private void OnHighlightFloor(HighlightBuildingSignal signal)
         {
-            levelBuildingBackgroundHighlight.sprite = signal.BuildingHighlightType switch
+            switch (signal.TargetType)
             {
-                BuildingHighlightType.Floor => levelBuildingBackgroundHighlightFloorSprite,
-                BuildingHighlightType.AllWindows => levelBuildingBackgroundHighlightAllWindowsSprite,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            levelBuildingBackgroundHighlight.gameObject.SetActive(true);
+                case MascotTutorialBuildingTargetType.Floor:
+                    levelBuildingBackgroundHighlight.sprite = levelBuildingBackgroundHighlightFloorSprite;
+                    levelBuildingBackgroundHighlight.gameObject.SetActive(true);
+                    break;
+                case MascotTutorialBuildingTargetType.SharedRooms:
+                    levelBuildingSharedRoomsHighlight.SetActive(true);
+                    break;
+                case MascotTutorialBuildingTargetType.AllWindows:
+                    levelBuildingBackgroundHighlight.sprite = levelBuildingBackgroundHighlightAllWindowsSprite;
+                    levelBuildingBackgroundHighlight.gameObject.SetActive(true);
+                    break;
+                case MascotTutorialBuildingTargetType.Doors:
+                    levelBuildingDoorsHighlight.SetActive(true);
+                    break;
+                case MascotTutorialBuildingTargetType.IndividualWindows:
+                    break;
+            }
         }
         
         private void OnUnhighlightFloor(UnhighlightBuildingSignal signal)
         {
             levelBuildingBackgroundHighlight.gameObject.SetActive(false);
+            levelBuildingSharedRoomsHighlight.SetActive(false);
+            levelBuildingDoorsHighlight.SetActive(false);
         }
         
         private bool IsPositionWithinLevel(Vector3 treePosition)
