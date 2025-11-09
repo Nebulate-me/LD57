@@ -9,10 +9,10 @@ namespace _Scripts.Mascot
         None = 0,
         Floor = 1,
         SharedRooms = 2,
-        Windows = 3,
+        AllWindows = 3,
         Space = 4,
         Doors = 5,
-        HighlightWindows = 6
+        IndividualWindows = 6
     }
     
     [Serializable]

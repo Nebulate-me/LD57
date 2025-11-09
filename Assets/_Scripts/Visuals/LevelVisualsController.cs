@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Scripts.Game;
 using _Scripts.Mascot;
@@ -13,6 +14,8 @@ namespace _Scripts.Visuals
     {
         [SerializeField] private SpriteRenderer levelBuildingBackground;
         [SerializeField] private SpriteRenderer levelBuildingBackgroundHighlight;
+        [SerializeField] private Sprite levelBuildingBackgroundHighlightFloorSprite;
+        [SerializeField] private Sprite levelBuildingBackgroundHighlightAllWindowsSprite;
         [SerializeField] private GameObject levelBuildingPorch;
         
         [Space]
@@ -35,15 +38,15 @@ namespace _Scripts.Visuals
         private void OnEnable()
         {
             SignalsHub.AddListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
-            SignalsHub.AddListener<HighlightFloorSignal>(OnHighlightFloor);
-            SignalsHub.AddListener<UnhighlightFloorSignal>(OnUnhighlightFloor);
+            SignalsHub.AddListener<HighlightBuildingSignal>(OnHighlightFloor);
+            SignalsHub.AddListener<UnhighlightBuildingSignal>(OnUnhighlightFloor);
         }
 
         private void OnDisable()
         {
             SignalsHub.RemoveListener<LevelSetupCompletedSignal>(OnLevelSetupCompleted);
-            SignalsHub.RemoveListener<HighlightFloorSignal>(OnHighlightFloor);
-            SignalsHub.RemoveListener<UnhighlightFloorSignal>(OnUnhighlightFloor);
+            SignalsHub.RemoveListener<HighlightBuildingSignal>(OnHighlightFloor);
+            SignalsHub.RemoveListener<UnhighlightBuildingSignal>(OnUnhighlightFloor);
         }
 
         private void OnDestroy()
@@ -99,12 +102,18 @@ namespace _Scripts.Visuals
             }
         }
 
-        private void OnHighlightFloor(HighlightFloorSignal signal)
+        private void OnHighlightFloor(HighlightBuildingSignal signal)
         {
+            levelBuildingBackgroundHighlight.sprite = signal.BuildingHighlightType switch
+            {
+                BuildingHighlightType.Floor => levelBuildingBackgroundHighlightFloorSprite,
+                BuildingHighlightType.AllWindows => levelBuildingBackgroundHighlightAllWindowsSprite,
+                _ => throw new ArgumentOutOfRangeException()
+            };
             levelBuildingBackgroundHighlight.gameObject.SetActive(true);
         }
         
-        private void OnUnhighlightFloor(UnhighlightFloorSignal signal)
+        private void OnUnhighlightFloor(UnhighlightBuildingSignal signal)
         {
             levelBuildingBackgroundHighlight.gameObject.SetActive(false);
         }

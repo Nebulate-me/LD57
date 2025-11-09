@@ -2789,6 +2789,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelBuildingBackground: {fileID: 1920105866}
   levelBuildingBackgroundHighlight: {fileID: 242664357}
+  levelBuildingBackgroundHighlightFloorSprite: {fileID: 21300000, guid: fbb9d9c22fa88df47bff9b76cf239eb2, type: 3}
+  levelBuildingBackgroundHighlightAllWindowsSprite: {fileID: 21300000, guid: e58cdcd527b1d94478b61647f3983bc1, type: 3}
   levelBuildingPorch: {fileID: 1831747427}
   levelPlantParent: {fileID: 1711788212}
   bushPrefab: {fileID: 2948367198746925109, guid: c11432844d3be39419baf7856e92f16a, type: 3}

@@ -578,6 +578,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2758773473071082521, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3211611134110783553, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -674,6 +678,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8634975206625717754, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
+      propertyPath: buildingTutorialTargets.keyData.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8634975206625717754, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
+      propertyPath: buildingTutorialTargets.valueData.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8634975206625717754, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
+      propertyPath: 'buildingTutorialTargets.keyData.Array.data[1]'
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8634975206625717754, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
+      propertyPath: 'buildingTutorialTargets.valueData.Array.data[1]'
+      value: 
+      objectReference: {fileID: 298156243}
     - target: {fileID: 8827970398212110682, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
       propertyPath: m_Name
       value: MascotController
@@ -775,7 +795,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6359233949810292390, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
+    - {fileID: 2758773473071082521, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
@@ -850,6 +872,11 @@ PrefabInstance:
 Camera:
   m_CorrespondingSourceObject: {fileID: 4909515090347517637, guid: baf205d6eb91def439e85c3ac6758857, type: 3}
   m_PrefabInstance: {fileID: 277608409}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &298156243 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4558272779427585688, guid: 60eb7c7c923e6fa4686a80eac9b672ff, type: 3}
+  m_PrefabInstance: {fileID: 158726058}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &315632889 stripped
 RectTransform:
@@ -3132,6 +3159,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelBuildingBackground: {fileID: 1920105866}
   levelBuildingBackgroundHighlight: {fileID: 50100093}
+  levelBuildingBackgroundHighlightFloorSprite: {fileID: 21300000, guid: fbb9d9c22fa88df47bff9b76cf239eb2, type: 3}
+  levelBuildingBackgroundHighlightAllWindowsSprite: {fileID: 21300000, guid: e58cdcd527b1d94478b61647f3983bc1, type: 3}
   levelBuildingPorch: {fileID: 1831747427}
   levelPlantParent: {fileID: 1249908880}
   bushPrefab: {fileID: 2948367198746925109, guid: c11432844d3be39419baf7856e92f16a, type: 3}

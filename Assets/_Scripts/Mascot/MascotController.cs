@@ -208,13 +208,14 @@ namespace _Scripts.Mascot
             if (stepConfig.ActionType == MascotTutorialActionType.ClickAny)
             {
                 if (stepConfig.TargetType == MascotTutorialTargetType.Building && stepConfig.BuildingPanelTargetType ==
-                    MascotTutorialBuildingTargetType.HighlightWindows)
+                    MascotTutorialBuildingTargetType.IndividualWindows)
                 {
                     SignalsHub.DispatchAsync(new UnhighlightWindowsSignal());
                 }
-                if (stepConfig.TargetType == MascotTutorialTargetType.Building && stepConfig.BuildingPanelTargetType == MascotTutorialBuildingTargetType.Floor)
+                if (stepConfig.TargetType == MascotTutorialTargetType.Building && 
+                    stepConfig.BuildingPanelTargetType is MascotTutorialBuildingTargetType.Floor or MascotTutorialBuildingTargetType.AllWindows)
                 {
-                    SignalsHub.DispatchAsync(new UnhighlightFloorSignal());
+                    SignalsHub.DispatchAsync(new UnhighlightBuildingSignal());
                 }
                 
                 ShowNextStep();
@@ -310,17 +311,20 @@ namespace _Scripts.Mascot
                     {
                         stepTarget.SetActive(true);
                     }
-                    else if (stepConfig.BuildingPanelTargetType == MascotTutorialBuildingTargetType.Space)
+                    else switch (stepConfig.BuildingPanelTargetType)
                     {
-                        _gridManager.ShowTutorialGhostRoom(stepConfig.BuildingSpaceRoomPosition, stepConfig.BuildingSpaceRoom.ToDto(), stepConfig.BuildingSpaceRoomDirection);
-                    } 
-                    else if (stepConfig.BuildingPanelTargetType == MascotTutorialBuildingTargetType.HighlightWindows)
-                    {
-                        SignalsHub.DispatchAsync(new HighlightWindowsSignal());
-                    }
-                    else if (stepConfig.BuildingPanelTargetType == MascotTutorialBuildingTargetType.Floor)
-                    {
-                        SignalsHub.DispatchAsync(new HighlightFloorSignal());
+                        case MascotTutorialBuildingTargetType.Space:
+                            _gridManager.ShowTutorialGhostRoom(stepConfig.BuildingSpaceRoomPosition, stepConfig.BuildingSpaceRoom.ToDto(), stepConfig.BuildingSpaceRoomDirection);
+                            break;
+                        case MascotTutorialBuildingTargetType.IndividualWindows:
+                            SignalsHub.DispatchAsync(new HighlightWindowsSignal());
+                            break;
+                        case MascotTutorialBuildingTargetType.Floor:
+                            SignalsHub.DispatchAsync(new HighlightBuildingSignal(BuildingHighlightType.Floor));
+                            break;
+                        case MascotTutorialBuildingTargetType.AllWindows:
+                            SignalsHub.DispatchAsync(new HighlightBuildingSignal(BuildingHighlightType.AllWindows));
+                            break;
                     }
                     break;
                 }
