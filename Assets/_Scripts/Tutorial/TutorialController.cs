@@ -19,8 +19,8 @@ namespace _Scripts.Game
         private int nextTutorialStepIndex;
         private IMaybe<TutorialStepConfig> maybeShownTutorialStep = Maybe.Empty<TutorialStepConfig>();
         
-        private const string TutorialCompletedKey = "TutorialCompleted";
-        private const int TutorialCompletedValue = 1;
+        private const string TUTORIAL_COMPLETED_KEY = "TutorialCompleted";
+        private const int TUTORIAL_COMPLETED_VALUE = 1;
 
         private void OnEnable()
         {
@@ -41,7 +41,7 @@ namespace _Scripts.Game
             helpPopover.SetActive(false);
             foreach (var tutorialStepConfig in tutorialSteps) tutorialStepConfig.Content.SetActive(false);
 
-            if (!PlayerPrefs.HasKey(TutorialCompletedKey) || PlayerPrefs.GetInt(TutorialCompletedKey) != TutorialCompletedValue)
+            if (!PlayerPrefs.HasKey(TUTORIAL_COMPLETED_KEY) || PlayerPrefs.GetInt(TUTORIAL_COMPLETED_KEY) != TUTORIAL_COMPLETED_VALUE)
             {
                 OnTriggerEvent(TutorialStepTrigger.None);   
             }
@@ -94,7 +94,7 @@ namespace _Scripts.Game
                 nextTutorialStepIndex++;
                 if (!IsValidStepIndex(nextTutorialStepIndex))
                 {
-                    PlayerPrefs.SetInt(TutorialCompletedKey, TutorialCompletedValue);
+                    PlayerPrefs.SetInt(TUTORIAL_COMPLETED_KEY, TUTORIAL_COMPLETED_VALUE);
                 }
             }
         }

@@ -1,10 +1,12 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace _Scripts.Game
 {
     public class SoundManager : MonoBehaviour, ISoundManager
     {
+        [SerializeField] private AudioMixer musicMixer;
         [SerializeField] private AudioSource source;
 
         [SerializeField] private AudioClip placeRoomSound;
@@ -14,6 +16,23 @@ namespace _Scripts.Game
         [SerializeField] private AudioClip undoPlaceRoomSound;
         [SerializeField] private AudioClip completeLevelSound;
         [SerializeField] private AudioClip completeGameSound;
+        
+        private const string MUSIC_VOLUME_KEY = "MusicVolume";
+
+        private void Start()
+        {
+            IsMusicOn = PlayerPrefs.GetFloat(MUSIC_VOLUME_KEY) > 0;
+        }
+
+        public bool IsMusicOn
+        {
+            get => PlayerPrefs.GetFloat(MUSIC_VOLUME_KEY) > 0f;
+            set
+            {
+                PlayerPrefs.SetFloat(MUSIC_VOLUME_KEY, value ? 1f : 0f);
+                musicMixer.SetFloat(MUSIC_VOLUME_KEY, value ? 0f : -80f);
+            }
+        }
 
         public void PlaySound(SoundType type)
         {
