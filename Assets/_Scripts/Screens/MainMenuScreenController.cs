@@ -33,7 +33,11 @@ namespace _Scripts.Screens
             gameScreenButton.onClick.AddListener(GoToGameScreen);
             highScoreScreenButton.onClick.AddListener(GoToHighScoreScreen);
             creditsButton.onClick.AddListener(ShowCredits);
+            #if !UNITY_WEBGL
             exitButton.onClick.AddListener(ExitGame);
+            #else
+            exitButton.gameObject.SetActive(false);
+            #endif
         }
 
         private void OnDisable()
@@ -42,7 +46,11 @@ namespace _Scripts.Screens
             gameScreenButton.onClick.RemoveListener(GoToGameScreen);
             highScoreScreenButton.onClick.RemoveListener(GoToHighScoreScreen);
             creditsButton.onClick.RemoveListener(ShowCredits);
+#if !UNITY_WEBGL
             exitButton.onClick.RemoveListener(ExitGame);
+#else
+            exitButton.gameObject.SetActive(false);
+#endif
         }
 
         private void Start()
