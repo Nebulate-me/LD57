@@ -1,8 +1,9 @@
+using Signals;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace _Scripts.Game
+namespace _Scripts.Game.Audio
 {
     public class MusicToggleController : MonoBehaviour
     {
@@ -16,6 +17,7 @@ namespace _Scripts.Game
         private void OnEnable()
         {
             musicToggleButton.onClick.AddListener(ToggleMusic);
+            SignalsHub.AddListener<UpdateAudioIconsSignal>(UpdateIcon);
         }
 
         private void Start()
@@ -26,17 +28,23 @@ namespace _Scripts.Game
         private void OnDisable()
         {
             musicToggleButton.onClick.RemoveListener(ToggleMusic);
+            SignalsHub.RemoveListener<UpdateAudioIconsSignal>(UpdateIcon);
         }
 
         private void ToggleMusic()
         {
-            _soundManager.IsMusicOn = !_soundManager.IsMusicOn;
+            _soundManager.IsMusicEnabled = !_soundManager.IsMusicEnabled;
+            UpdateIcon();
+        }
+        
+        private void UpdateIcon(UpdateAudioIconsSignal signal)
+        {
             UpdateIcon();
         }
 
         private void UpdateIcon()
         {
-            musicToggleIcon.sprite = _soundManager.IsMusicOn ? musicToggleOn : musicToggleOff;
+            musicToggleIcon.sprite = _soundManager.IsMusicEnabled ? musicToggleOn : musicToggleOff;
         }
     }
 }

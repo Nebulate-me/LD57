@@ -143,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b636bdb6c48a43da817a89b951d00d90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicMixer: {fileID: 24100000, guid: 8692f462b88707d4a89e58b4af5b5205, type: 2}
+  audioMixer: {fileID: 24100000, guid: 8692f462b88707d4a89e58b4af5b5205, type: 2}
   source: {fileID: 6073969494723209857}
   placeRoomSound: {fileID: 8300000, guid: 4aac60447c523df439d992077091bfbe, type: 3}
   completeMissionSound: {fileID: 8300000, guid: a5504e8c8f5a6cf4d8445d2e23c77a5d, type: 3}
