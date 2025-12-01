@@ -83,11 +83,15 @@ namespace _Scripts.Player
             if (existingPlayersDropdown)
             {
                 existingPlayersDropdown.ClearOptions();
-                var opts = _playerProfileService.Players.Select(p => new TMP_Dropdown.OptionData(p.Name)).ToList();
+                var opts = _playerProfileService.Players
+                    .OrderBy(p => p.Name)
+                    .Select(p => new TMP_Dropdown.OptionData(p.Name))
+                    .ToList();
                 existingPlayersDropdown.AddOptions(opts);
 
                 _selectedPlayerId = currentPlayer?.Id;
-                var index = Mathf.Max(0, _playerProfileService.Players.ToList().FindIndex(p => p.Id == _selectedPlayerId));
+                var index = Mathf.Max(0, _playerProfileService.Players.ToList()
+                    .FindIndex(p => p.Id == _selectedPlayerId));
                 if (_playerProfileService.Players.Count > 0)
                     existingPlayersDropdown.SetValueWithoutNotify(index);
             }
@@ -113,7 +117,9 @@ namespace _Scripts.Player
 
         private void OnDropdownChanged(int idx)
         {
-            var players = _playerProfileService.Players.ToList();
+            var players = _playerProfileService.Players
+                .OrderBy(player => player.Name)
+                .ToList();
             if (idx >= 0 && idx < players.Count)
             {
                 _selectedPlayerId = players[idx].Id;

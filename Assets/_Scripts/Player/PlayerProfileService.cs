@@ -18,6 +18,7 @@ namespace _Scripts.Player
         
         private const string DEFAULT_PLAYER_NAME = "Аноним";
         private const string FILE_NAME = "players.json";
+        private const string PRESET_RESOURCE_NAME = "preset_players"; // Resources/preset_players.json, do not move around
 #if UNITY_WEBGL && !UNITY_EDITOR
         private const string PLAYER_PREFS_KEY = "PLAYER_PROFILES_JSON_v1";
 #endif
@@ -72,7 +73,7 @@ namespace _Scripts.Player
         }
 
         /// <summary>
-        ///     Creates a new player with the given id+name. Returns false if id already exists.
+        /// Creates a new player with the given id+name. Returns false if id already exists.
         /// </summary>
         public bool TryCreatePlayer(string name, out PlayerProfile player)
         {
@@ -131,24 +132,31 @@ namespace _Scripts.Player
         }
 
         // ---------- Persistence ----------
-
         private void Load()
         {
+            Debug.Log($"[PlayerProfiles] > loading player profiles from {JsonPath}.");
             _players = new List<PlayerProfile>();
+
+            var presetPlayers = LoadPresetPlayers();
+
             string json = string.Empty;
 #if UNITY_WEBGL && !UNITY_EDITOR
-            try
-            {
-                if (PlayerPrefs.HasKey(PLAYER_PREFS_KEY))
-                {
-                    json = PlayerPrefs.GetString(PLAYER_PREFS_KEY, "{}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"[PlayerProfiles] WebGL load failed: {ex}");
-                return;
-            }
+    try
+    {
+        if (PlayerPrefs.HasKey(PLAYER_PREFS_KEY))
+        {
+            json = PlayerPrefs.GetString(PLAYER_PREFS_KEY, "{}");
+        }
+    }
+    catch (Exception ex)
+    {
+        Debug.LogError($"[PlayerProfiles] WebGL load failed: {ex}");
+        // fall back to presets only
+        _players = presetPlayers;
+        SetCurrentPlayerDefault();
+        RemoveDuplicateIds();
+        return;
+    }
 #else
             try
             {
@@ -160,27 +168,36 @@ namespace _Scripts.Player
             catch (Exception ex)
             {
                 Debug.LogError($"[PlayerProfiles] Load failed: {ex}");
+                // fall back to presets only
+                _players = presetPlayers;
+                SetCurrentPlayerDefault();
+                RemoveDuplicateIds();
                 return;
             }
 #endif
-            var data = JsonUtility.FromJson<PlayerProfilesData>(json) ?? new PlayerProfilesData();
-            _players = data.players;
-                    
-            if (TryGetPlayerById(data.currentPlayerId, out var currentPlayer))
+
+            var savedData = string.IsNullOrWhiteSpace(json)
+                ? new PlayerProfilesData()
+                : JsonUtility.FromJson<PlayerProfilesData>(json) ?? new PlayerProfilesData();
+
+            var savedPlayers = savedData.players ?? new List<PlayerProfile>();
+            
+            _players = MergePlayers(presetPlayers, savedPlayers);
+            
+            if (!string.IsNullOrEmpty(savedData.currentPlayerId) &&
+                TryGetPlayerById(savedData.currentPlayerId, out var currentPlayer))
             {
                 CurrentPlayer = currentPlayer;
             }
             else
             {
-                Debug.LogError($"[PlayerProfiles] Could not get the current player by id: [{data.currentPlayerId}]");
+                Debug.LogWarning($"[PlayerProfiles] Could not get the current player by id: [{savedData.currentPlayerId}]");
                 SetCurrentPlayerDefault();
             }
-            
+
             RemoveDuplicateIds();
         }
-
         
-
         private void Save(bool clear = false)
         {
             if (CurrentPlayer == null)
@@ -237,6 +254,62 @@ namespace _Scripts.Player
                 if (string.IsNullOrEmpty(id) || !seen.Add(id))
                     _players.RemoveAt(i);
             }
+        }
+        
+        private List<PlayerProfile> LoadPresetPlayers()
+        {
+            try
+            {
+                var textAsset = Resources.Load<TextAsset>(PRESET_RESOURCE_NAME);
+                if (textAsset == null || string.IsNullOrWhiteSpace(textAsset.text))
+                {
+                    Debug.Log("[PlayerProfiles] No preset_players.json found in Resources or it's empty.");
+                    return new List<PlayerProfile>();
+                }
+
+                var data = JsonUtility.FromJson<PlayerProfilesData>(textAsset.text);
+                var presetPlayers =  data?.players ?? new List<PlayerProfile>();
+                return presetPlayers.Where(player => player.Score > 0).ToList();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[PlayerProfiles] Failed to load preset players: {ex}");
+                return new List<PlayerProfile>();
+            }
+        }
+        
+        /// <summary>
+        /// Merge preset and saved players by Id. Saved overrides preset on conflicts.
+        /// </summary>
+        private List<PlayerProfile> MergePlayers(
+            List<PlayerProfile> presetPlayers,
+            List<PlayerProfile> savedPlayers)
+        {
+            var dict = new Dictionary<string, PlayerProfile>(StringComparer.Ordinal);
+
+            if (presetPlayers != null)
+            {
+                foreach (var p in presetPlayers)
+                {
+                    if (p == null || string.IsNullOrEmpty(p.Id)) continue;
+                    dict[p.Id] = p;
+                }
+            }
+
+            if (savedPlayers != null)
+            {
+                foreach (var p in savedPlayers)
+                {
+                    if (p == null || string.IsNullOrEmpty(p.Id)) continue;
+                    
+                    dict[p.Id] = p; 
+                }
+            }
+
+            return dict.Values
+                .OrderByDescending(p => p.Score)
+                .ThenBy(p => p.CreatedUtc)
+                .ToList();
         }
     }
 }

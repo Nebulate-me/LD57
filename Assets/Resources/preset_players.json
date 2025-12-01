@@ -1,0 +1,305 @@
+{
+    "currentPlayerId": "671cf611-39cf-436d-8df5-464f5188a8ce",
+    "players": [
+        {
+            "id": "8654d046-2009-4920-8c2b-7ca62cc818df",
+            "name": "Аноним",
+            "score": 0,
+            "createdUtcTicks": 638941049720087040
+        },
+        {
+            "id": "5554060f-1108-4bb2-a7ec-045135cd9a34",
+            "name": "Марина",
+            "score": 245,
+            "createdUtcTicks": 638941052736954400
+        },
+        {
+            "id": "37afd515-8222-4606-8a14-820ac90913e1",
+            "name": "Вера",
+            "score": 232,
+            "createdUtcTicks": 638947415164487740
+        },
+        {
+            "id": "8a20443f-c8d3-482b-8b9a-2841e03cb06e",
+            "name": "Евгений 1и3 концепт двелопмент",
+            "score": 10,
+            "createdUtcTicks": 638948042662009870
+        },
+        {
+            "id": "4f71e565-e1b0-4f25-a701-7ee36021e4d9",
+            "name": "Артем Рышков 1и3 ГП",
+            "score": 169,
+            "createdUtcTicks": 638948053308323170
+        },
+        {
+            "id": "ffc835b4-c382-4818-bf3a-f7493d2b977c",
+            "name": "Виктория",
+            "score": 132,
+            "createdUtcTicks": 638948070132836110
+        },
+        {
+            "id": "63f901e5-1c0a-427b-8e78-f4efbf968f60",
+            "name": "Андрей Дермейко",
+            "score": 0,
+            "createdUtcTicks": 638948093010876040
+        },
+        {
+            "id": "ebe05234-56c3-46b2-a2aa-6a15314125fb",
+            "name": "даниил",
+            "score": 5,
+            "createdUtcTicks": 638948110813904340
+        },
+        {
+            "id": "7d88491d-237d-4545-bcd7-3dbcef000c70",
+            "name": "даша",
+            "score": 66,
+            "createdUtcTicks": 638948113162382600
+        },
+        {
+            "id": "f46f0e40-3c0b-466b-8dcc-c3ab3de0c699",
+            "name": "алла",
+            "score": 54,
+            "createdUtcTicks": 638948122124189430
+        },
+        {
+            "id": "a8b19c30-4da3-4ba4-aa3d-a0c992ca9383",
+            "name": "Димасик",
+            "score": 224,
+            "createdUtcTicks": 638948133427347120
+        },
+        {
+            "id": "a646520b-98a9-4688-8d0d-f6f6ea4d0b9b",
+            "name": "Роман",
+            "score": 39,
+            "createdUtcTicks": 638948147170015720
+        },
+        {
+            "id": "17f7233a-afc8-40b6-bc90-1f4ad589a897",
+            "name": "Екатерина",
+            "score": 0,
+            "createdUtcTicks": 638948152868619970
+        },
+        {
+            "id": "336fa18a-7170-47c2-b1ca-8daf365c0269",
+            "name": "егор Атлас Девелопмент",
+            "score": 50,
+            "createdUtcTicks": 638948172657227190
+        },
+        {
+            "id": "a0a36618-c667-492a-94c7-a99465552eb9",
+            "name": "Павел Талан",
+            "score": 93,
+            "createdUtcTicks": 638948194279275600
+        },
+        {
+            "id": "15a38253-4974-446b-938b-dc58a310fab0",
+            "name": "Степан",
+            "score": 38,
+            "createdUtcTicks": 638948253230455230
+        },
+        {
+            "id": "86465110-e6d5-4042-97fa-e3dba5448552",
+            "name": "Никита",
+            "score": 53,
+            "createdUtcTicks": 638948259404867070
+        },
+        {
+            "id": "8bd920f3-6300-4e89-be79-2f71f2959bc1",
+            "name": "Алексей",
+            "score": 164,
+            "createdUtcTicks": 638948273246498930
+        },
+        {
+            "id": "4241ccb1-df90-48ff-bab3-bc8ce460bd16",
+            "name": "Кирилл",
+            "score": 77,
+            "createdUtcTicks": 638948280203341320
+        },
+        {
+            "id": "8d568b18-8130-48c2-8440-01d5b40f23bd",
+            "name": "Марина Рахманова Талан",
+            "score": 48,
+            "createdUtcTicks": 638948287422036180
+        },
+        {
+            "id": "671cf611-39cf-436d-8df5-464f5188a8ce",
+            "name": "Тимофей РАЗУМ",
+            "score": 952,
+            "createdUtcTicks": 638948297742589970
+        },
+        {
+            "id": "edac0f43-2507-42f5-b5e8-5e501d39589d",
+            "name": "Саша Самолет",
+            "score": 241,
+            "createdUtcTicks": 638948319629565300
+        },
+        {
+            "id": "0d3bef89-9102-4ddb-8524-f1468a6005e9",
+            "name": "serz",
+            "score": 50,
+            "createdUtcTicks": 638948908380931890
+        },
+        {
+            "id": "4c1cce94-f7f0-479f-8feb-95ac50944712",
+            "name": "Александр Курорт Ключи Лучший Курорт РФ",
+            "score": 191,
+            "createdUtcTicks": 638948994505756810
+        },
+        {
+            "id": "ae62eede-2d90-4919-9df1-21dfc51efa01",
+            "name": "Мария СТП",
+            "score": 97,
+            "createdUtcTicks": 638949008357586640
+        },
+        {
+            "id": "6f5559d0-45dd-4101-8363-0b14e852495b",
+            "name": "Алехандро сергеевич",
+            "score": 35,
+            "createdUtcTicks": 638949043848206880
+        },
+        {
+            "id": "74d51d08-954b-4327-86b2-b712260b435e",
+            "name": "Роман Мокряков",
+            "score": 80,
+            "createdUtcTicks": 638949052069734560
+        },
+        {
+            "id": "cdaa854f-f55f-4304-b5db-a557fcc75bed",
+            "name": "Екатерина 4Д",
+            "score": 0,
+            "createdUtcTicks": 638949078087250440
+        },
+        {
+            "id": "a179f0d5-0402-4bc6-95b4-7f7b3767bb90",
+            "name": "Kosaraefs",
+            "score": 35,
+            "createdUtcTicks": 638949146526091580
+        },
+        {
+            "id": "4b5b0b63-c0b7-4164-923a-5804e696a4e6",
+            "name": "Ната",
+            "score": 211,
+            "createdUtcTicks": 638949783616234620
+        },
+        {
+            "id": "7883e89e-a783-47ef-ab46-5203d80af82b",
+            "name": "марго",
+            "score": 82,
+            "createdUtcTicks": 638949823097825210
+        },
+        {
+            "id": "b5e8335a-52db-4c11-aabe-af0502279362",
+            "name": "Илья",
+            "score": 190,
+            "createdUtcTicks": 638949830132861820
+        },
+        {
+            "id": "cf075ca0-398f-4447-bef6-2606be351ea7",
+            "name": "Виктор",
+            "score": 329,
+            "createdUtcTicks": 638949842127478230
+        },
+        {
+            "id": "b7e7bc26-8301-4d93-87cf-97168cd157e1",
+            "name": "ФД1",
+            "score": 110,
+            "createdUtcTicks": 638949854171323920
+        },
+        {
+            "id": "050b9e30-996c-4db0-b10c-12a3ca93b6c7",
+            "name": "Никита Лит3Д",
+            "score": 326,
+            "createdUtcTicks": 638949870079670000
+        },
+        {
+            "id": "dfada6a2-d513-421a-81d4-58586d40a2c0",
+            "name": "Александр Попов",
+            "score": 102,
+            "createdUtcTicks": 638949888412147430
+        },
+        {
+            "id": "e2bed170-e2f1-4e1e-bc45-cac56473970f",
+            "name": "Константин Хитров",
+            "score": 50,
+            "createdUtcTicks": 638949947165317890
+        },
+        {
+            "id": "3dcdf636-c784-468a-97df-0001036829af",
+            "name": "НИКИТА ХРИДИН",
+            "score": 130,
+            "createdUtcTicks": 638949967543753980
+        },
+        {
+            "id": "cd4f44b3-2250-48e4-8b8d-d7e593da8552",
+            "name": "АРТЕМ",
+            "score": 50,
+            "createdUtcTicks": 638949984769820600
+        },
+        {
+            "id": "5b78d661-87d6-427f-8459-497573b49242",
+            "name": "Илья Тач",
+            "score": 369,
+            "createdUtcTicks": 638950012135699590
+        },
+        {
+            "id": "cfc17e3e-f877-4028-ace8-173817f6db91",
+            "name": "лев",
+            "score": 252,
+            "createdUtcTicks": 638950640680331130
+        },
+        {
+            "id": "672f50ab-14cb-4fbf-a037-087b811d60e9",
+            "name": "Ilya",
+            "score": 92,
+            "createdUtcTicks": 638950663580411790
+        },
+        {
+            "id": "8c95b595-3212-4eb3-ae6b-ced9f9fe91a0",
+            "name": "Яна",
+            "score": 161,
+            "createdUtcTicks": 638950686062368820
+        },
+        {
+            "id": "df9b02f1-fdda-4bc4-8114-d1dbd95dacd8",
+            "name": "ДАРИНА",
+            "score": 178,
+            "createdUtcTicks": 638950697191135120
+        },
+        {
+            "id": "568fc7da-4fb3-40b9-a983-e7135049423a",
+            "name": "polina",
+            "score": 185,
+            "createdUtcTicks": 638950725912546000
+        },
+        {
+            "id": "615e9655-a061-4638-affa-d579840b5b48",
+            "name": "daniil",
+            "score": 55,
+            "createdUtcTicks": 638950758429914650
+        },
+        {
+            "id": "71d1d789-a4ca-4bdd-bd99-e3e7e024db21",
+            "name": "Polina",
+            "score": 99,
+            "createdUtcTicks": 638950764360261240
+        },
+        {
+            "id": "aa52564c-b275-466a-a6f1-187e011f08b8",
+            "name": "Uli",
+            "score": 94,
+            "createdUtcTicks": 638950773508653400
+        },
+        {
+            "id": "d77d6030-5d64-4d97-b7a3-0e9501d47f09",
+            "name": "Danya",
+            "score": 49,
+            "createdUtcTicks": 638950803378379550
+        },
+        {
+            "id": "7de09aa1-7dcf-490e-a934-b01be67d8777",
+            "name": "Asya",
+            "score": 0,
+            "createdUtcTicks": 638950811511837930
+        }
+    ]
+}
